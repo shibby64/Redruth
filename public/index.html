@@ -1,77 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Record</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
   <link href="\css\index.css" rel="stylesheet" />
 </head>
+
 <body class="pt-5">
   <div class="container">
     <h1 class="text-center">Record Your Voice</h1>
-    
-      <button id="myBtn">Open Recorder</button>
-      <div id="myModal" class="modal">
-        <div class="modal-content">
-          <span class="close">&times;</span>
-          <div class="record-button-container text-center mt-5">
+
+    <button id="myBtn">Open Recorder</button>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="record-button-container text-center mt-5">
           <h6>All information is optional and only used to add context to your recording</h6>
-          <form method = "post" action ="/insert" name ="record-data" id="record-data" autocomplete="on">
+          <form method="post" action="/insert" name="record-data" id="record-data" autocomplete="on">
             <div>
-            <label for="project">Project</label>
-            <select id="project">
-              <option value="rebirth">Rebirth</option>
-              <option value="none">None</option>
-            </select>
+              <label for="project">Project</label>
+              <select id="project">
+                <option value="rebirth">Rebirth</option>
+                <option value="none">None</option>
+              </select>
             </div>
             <div>
-            <label for="prompt">Prompt</label>
-            <select id="prompt">
-              <option value="question1">Question1</option>
-              <option value="question2">Question2</option>
-              <option value="question3">Question3</option>
-            </select>
+              <label for="prompt">Prompt</label>
+              <select id="prompt">
+                <option value="question1">Question1</option>
+                <option value="question2">Question2</option>
+                <option value="question3">Question3</option>
+              </select>
             </div>
             <div>
               <label for="title">Add a title for your recording</label>
-                <input type ="text" name = "title" id = "title" placeholder="Title"></input>
-              </div>
-              <div>
-                <label for="comments">Additional comments</label>
-                  <textarea id = "comments" name = "comments" rows="2" cols="50" placeholder="Comments"></textarea>
-              </div>
-              <div>
-                <label for="Name">Full Name</label>
-                <input type ="text" id = "Name" placeholder="Name"></input>
-                <label for="Postal">Postal Code</label>
-                <input type ="text" id = "Postal" placeholder="123456789"></input>
-              </div>
-              <div>
-                <label for="Phone">Phone#</label>
-                <input type="number" id = "Phone" rows="1" cols="15" placeholder="12345123456" maxlength="11" minlength="10">
-                </input>
-                <label for="email">Email</label>
-                <input type="email" id = "email" placeholder="sue@redruth.com"></input>
-              </div>
-              <div class="recorded-audio-container mt-5 d-none flex-column justify-content-center align-items-center" 
-                  id="recordedAudioContainer">
+              <input type="text" name="title" id="title" placeholder="Title"></input>
+            </div>
+            <div>
+              <label for="comments">Additional comments</label>
+              <textarea id="comments" name="comments" rows="2" cols="50" placeholder="Comments"></textarea>
+            </div>
+            <div>
+              <label for="Name">Full Name</label>
+              <input type="text" id="Name" name="fullName" placeholder="Name"></input>
+              <label for="Postal">Postal Code</label>
+              <input type="text" id="Postal" name="postCode" placeholder="123456789"></input>
+            </div>
+            <div>
+              <label for="Phone">Phone#</label>
+              <input type="number" id="Phone" name="phone" rows="1" cols="15" placeholder="12345123456" maxlength="11"
+                minlength="10">
+              </input>
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="sue@redruth.com"></input>
+            </div>
+            <div class="recorded-audio-container mt-5 d-none flex-column justify-content-center align-items-center"
+              id="recordedAudioContainer">
               <div class="actions mt-3">
-              <button type="submit" name = "submit" class="btn btn-success rounded-pill" id="saveButton">Save</button>
-                <button class="btn btn-danger rounded-pill" id="discardButton">Discard</button> 
+                <button type="submit" name="submit" class="btn btn-success rounded-pill" id="saveButton">Save</button>
+                <button class="btn btn-danger rounded-pill" id="discardButton">Discard</button>
               </div>
             </div>
           </form>
-            <button class="bg-transparent border btn record-button rounded-circle shadow-sm text-center" id="recordButton">
-              <img src="/images/microphone.png" alt="Record" class="img-fluid" />
-            </button>
-          </div>
+          <button class="bg-transparent border btn record-button rounded-circle shadow-sm text-center"
+            id="recordButton">
+            <img src="/images/microphone.png" alt="Record" class="img-fluid" />
+          </button>
         </div>
       </div>
-      
-    
+    </div>
+
+
     <h2 class="mt-3">Saved Recordings</h2>
     <div class="recordings row" id="recordings">
 
@@ -80,4 +84,5 @@
   <script src="/js/modal.js"></script>
   <script src="/js/record.js"></script>
 </body>
+
 </html>
