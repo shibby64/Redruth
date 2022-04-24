@@ -2,6 +2,7 @@
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
+const bodyParser = require("body-parser")
 const multer = require('multer');
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://127.0.0.1:27017';
@@ -18,6 +19,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 const app = express();
+app.use(bodyParser.urlencoded({extended:true}));
 const port = process.env.PORT || 3000;
 
 app.use(express.static('public/assets'));
@@ -51,14 +53,17 @@ MongoClient.connect(url, {
   if (err) {
       return console.log(err);
   }
-  app.post("/", function(req, res) {
+  app.post("/insert", function(req, res) {
     title = req.body.title;
     comments = req.body.comments;
     console.log(req.body.title);
+    myFunction();
   });
   // Specify database you want to access
+  function myFunction(){
   const db = client.db('local');
   const record = db.collection('recordedData');
-  record.insertOne({ Title: `${title}`,  Comments: "comments"}, (err, result) => { });
+  record.insertOne({ Title: title,  Comments: comments}, (err, result) => { });
   console.log(`MongoDB Connected: ${url}`);
+  }
 });
