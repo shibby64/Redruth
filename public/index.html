@@ -19,7 +19,7 @@
           <span class="close">&times;</span>
           <div class="record-button-container text-center mt-5">
           <h6>All information is optional and only used to add context to your recording</h6>
-          <form method = "POST" action ="../index.js" id="record-data" autocomplete="on">
+          <form method = "post" action ="E:\documents\homework\CSCI 403\Redruth\index.js" name ="record-data" id="record-data" autocomplete="on">
             <div>
             <label for="project">Project</label>
             <select id="project">
@@ -37,11 +37,11 @@
             </div>
             <div>
               <label for="Title">Add a title for your recording</label>
-                <input type ="text" id = "Title" placeholder="Title"></input>
+                <input type ="text" name = "title" id = "Title" placeholder="Title"></input>
               </div>
               <div>
                 <label for="Comments">Additional comments</label>
-                  <textarea id = "Comments" rows="2" cols="50" placeholder="Comments"></textarea>
+                  <textarea id = "Comments" name = "comments" rows="2" cols="50" placeholder="Comments"></textarea>
               </div>
               <div>
                 <label for="Name">Full Name</label>
@@ -56,17 +56,20 @@
                 <label for="email">Email</label>
                 <input type="email" id = "email" placeholder="sue@redruth.com"></input>
               </div>
+              <div class="recorded-audio-container mt-5 d-none flex-column justify-content-center align-items-center" 
+                  id="recordedAudioContainer">
+              <div class="actions mt-3">
+              <button type="submit" data-target = "record-data" class="btn btn-success rounded-pill" id="saveButton">Save</button>
+                <button class="btn btn-danger rounded-pill" id="discardButton">Discard</button> 
+              </div>
+            </div>
           </form>
             <button class="bg-transparent border btn record-button rounded-circle shadow-sm text-center" id="recordButton">
               <img src="/images/microphone.png" alt="Record" class="img-fluid" />
             </button>
-            <div class="recorded-audio-container mt-5 d-none flex-column justify-content-center align-items-center" 
-                  id="recordedAudioContainer">
-              <div class="actions mt-3">
-                <button type="submit" class="btn btn-success rounded-pill" id="saveButton">Save</button>
-                <button class="btn btn-danger rounded-pill" id="discardButton">Discard</button>
-              </div>
-            </div>
+            
+                
+             
           </div>
         </div>
       </div>

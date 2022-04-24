@@ -6,20 +6,7 @@ const multer = require('multer');
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://127.0.0.1:27017';
 // Connect to the db
-MongoClient.connect(url, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}, (err, client) => {
-  if (err) {
-      return console.log(err);
-  }
 
-  // Specify database you want to access
-  const db = client.db('local');
-  const courses = db.collection('recordedData');
-  courses.insertOne({ name: 'Web Security' }, (err, result) => { });
-  console.log(`MongoDB Connected: ${url}`);
-});
 const storage = multer.diskStorage({
   destination(req, file, cb) {
     cb(null, 'uploads/');
@@ -54,4 +41,24 @@ app.get('/recordings', (req, res) => {
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
+});
+var title;
+var comments;
+MongoClient.connect(url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}, (err, client) => {
+  if (err) {
+      return console.log(err);
+  }
+  app.post("/", function(req, res) {
+    title = req.body.title;
+    comments = req.body.comments;
+    console.log(req.body.title);
+  });
+  // Specify database you want to access
+  const db = client.db('local');
+  const record = db.collection('recordedData');
+  record.insertOne({ Title: `${title}`,  Comments: "comments"}, (err, result) => { });
+  console.log(`MongoDB Connected: ${url}`);
 });
