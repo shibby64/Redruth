@@ -4,8 +4,10 @@ const fs = require('fs');
 const express = require('express');
 const bodyParser = require("body-parser")
 const multer = require('multer');
+const { waitForDebugger } = require('inspector');
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://127.0.0.1:27017';
+let aFile = "";
 // Connect to the db
 
 const storage = multer.diskStorage({
@@ -14,7 +16,8 @@ const storage = multer.diskStorage({
   },
   filename(req, file, cb) {
     const fileNameArr = file.originalname.split('.');
-    cb(null, `${Date.now()}.${fileNameArr[fileNameArr.length - 1]}`);
+    aFile = Date.now();
+    cb(null, `${aFile}.${fileNameArr[fileNameArr.length - 1]}`);
   },
 });
 const upload = multer({ storage });
@@ -44,8 +47,7 @@ app.get('/recordings', (req, res) => {
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
-var title;
-var comments;
+
 MongoClient.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -54,16 +56,61 @@ MongoClient.connect(url, {
       return console.log(err);
   }
   app.post("/insert", function(req, res) {
-    title = req.body.title;
-    comments = req.body.comments;
-    console.log(req.body.title);
-    myFunction();
+    var title = req.body.title;
+    var comments = req.body.comments;
+    var prompt = req.body.prompt;
+    var project = req.body.project;
+    var postCode = req.body.postCode;
+    var fullName  = req.body.fullName;
+    var email = req.body.email;
+    var phone = req.body.phone;
+    const timeStamp = TimeStamp();
+    var audio = "uploads/" + aFile + ".mp3";
+    console.log(aFile);
+    myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone);
   });
+  function TimeStamp(){
+    const currentDate = new Date();
+    var year = currentDate.getUTCFullYear();
+    var month = currentDate.getUTCMonth();
+    var day = currentDate.getUTCDate();
+    var hour = currentDate.getUTCHours() +1;
+    var minute = currentDate.getUTCMinutes();
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;
+  }
   // Specify database you want to access
-  function myFunction(){
   const db = client.db('local');
   const record = db.collection('recordedData');
-  record.insertOne({ Title: title,  Comments: comments}, (err, result) => { });
+  record.find().toArray(function(err, filed){
+    let i = 0;
+    while(i < filed.length){
+      var proj = filed[i].adminData.Project;
+      var prmt = filed[i].adminData.Prompt;
+      var pth = filed[i].Audio.url;
+      console.log("" + proj + " " + prmt + " " + pth)
+      i++;
+    }
+  });
+  function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone){
+  record.insertOne({ 
+    adminData:{
+      Project: project,
+      Prompt: prompt,
+      TimeStamp: timeStamp
+    },
+    Audio: {url: audio},
+    metaData: {
+      Title: title,  
+      Comments: comments,
+      PostalCode: postCode,
+      Name: fullName,
+      Email: email,
+      Phone: phone
+    }
+  }, (err, result) => { });
   console.log(`MongoDB Connected: ${url}`);
   }
+
+
 });
