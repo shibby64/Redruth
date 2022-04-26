@@ -76,6 +76,9 @@ MongoClient.connect(url, {
     var day = currentDate.getUTCDate();
     var hour = currentDate.getUTCHours() +1;
     var minute = currentDate.getUTCMinutes();
+    if (minute < 10){
+      minute = "0" + minute;
+    }
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;
   }
@@ -83,12 +86,16 @@ MongoClient.connect(url, {
   const db = client.db('local');
   const record = db.collection('recordedData');
   record.find().toArray(function(err, filed){
+  console.log(filed); // output all records
+    // app.get('/index', function(req, res){
+    //   res.render(__dirname + '/public/index.html', {filed:filed})
+    // })
     let i = 0;
     while(i < filed.length){
       var proj = filed[i].adminData.Project;
       var prmt = filed[i].adminData.Prompt;
       var pth = filed[i].Audio.url;
-      console.log("" + proj + " " + prmt + " " + pth)
+      //console.log("" + proj + " " + prmt + " " + pth)
       i++;
     }
   });
