@@ -87,9 +87,9 @@ MongoClient.connect(url, {
   const record = db.collection('recordedData');
   record.find().toArray(function(err, filed){
   console.log(filed); // output all records
-    // app.get('/index', function(req, res){
-    //   res.render(__dirname + '/public/index.html', {filed:filed})
-    // })
+  app.get('/saved', function(req,res) {
+    res.send(filed[0]);
+ });
     let i = 0;
     while(i < filed.length){
       var proj = filed[i].adminData.Project;
