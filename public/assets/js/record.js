@@ -37,6 +37,7 @@ function mediaRecorderStop() {
 }
 
 function record() {
+  /* this seems to not be working, maybe we can find a way to update this */
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     alert('Your browser does not support recording!');
     return;
@@ -44,6 +45,7 @@ function record() {
 
   // browser supports getUserMedia
   // change image in button
+  startCountDown = true;//begin timer countdown
   recordButtonImage.src = `/images/${mediaRecorder && mediaRecorder.state === 'recording' ? 'microphone' : 'stop'}.png`;
   if (!mediaRecorder) {
     // start recording
@@ -55,6 +57,11 @@ function record() {
         mediaRecorder.start();
         mediaRecorder.ondataavailable = mediaRecorderDataAvailable;
         mediaRecorder.onstop = mediaRecorderStop;
+        /* this doesn't seem to be working, need to find way to stop recording when time expires. */
+        if(time < 0){
+          clearInterval(countdown);
+          mediaRecorder.stop();
+        }
       })
       .catch((err) => {
         alert(`The following error occurred: ${err}`);
@@ -64,10 +71,34 @@ function record() {
   } else {
     // stop recording
     mediaRecorder.stop();
+    startCountDown = false;// stop countdown
+    countDownTimer.innerHTML = '';//make the counter disappear
+    time = 15 * 60;
   }
 }
 
+/* line that calls recording to start when user clicks microphone jpg */
 recordButton.addEventListener('click', record);
+
+/* variables for setting time limit */
+const startingMinutes = 15; //set this variable for desired time limit
+let time = startingMinutes * 60;
+
+/* grabbing html element */
+const countDownTimer = document.getElementById('countDownTimer');
+setInterval(countdown, 1000); 
+let startCountDown = false;
+
+function countdown() {
+    if(startCountDown){
+      const minutes = Math.floor(time / 60);
+      let seconds = time % 60;
+      seconds = seconds < 10 ? '0' + seconds : seconds;
+      countDownTimer.innerHTML = `${minutes}: ${seconds}`
+      time--;
+      time = time < 0 ? 0 : time; 
+    }
+}
 
 function resetRecording() {
   if (recordedAudioContainer.firstElementChild.tagName === 'AUDIO') {
