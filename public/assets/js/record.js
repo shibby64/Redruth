@@ -135,14 +135,17 @@ function createRecordingElement(file) {
   audio.src = file;
   audio.onended = (e) => {
     e.target.nextElementSibling.firstElementChild.src = 'images/play.png';
+    
   };
   recordingElement.appendChild(audio);
   const playButton = document.createElement('button');
+  playButton.setAttribute('id', 'aFile')
   playButton.classList.add('play-button', 'btn', 'border', 'shadow-sm', 'text-center', 'd-block', 'mx-auto');
   const playImage = document.createElement('img');
   playImage.src = '/images/play.png';
   playImage.classList.add('img-fluid');
   playButton.appendChild(playImage);
+
   playButton.addEventListener('click', playRecording);
   recordingElement.appendChild(playButton);
   return recordingElement;
