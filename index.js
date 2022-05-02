@@ -65,7 +65,7 @@ MongoClient.connect(url, {
     var email = req.body.email;
     var phone = req.body.phone;
     const timeStamp = TimeStamp();
-    var audio = "uploads/" + aFile + ".mp3";
+    var audio = "uploads\\" + aFile + ".mp3";
     console.log(aFile);
     myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone);
   });
@@ -80,24 +80,21 @@ MongoClient.connect(url, {
       minute = "0" + minute;
     }
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;
+    return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;//swap day month
   }
   // Specify database you want to access
   const db = client.db('local');
   const record = db.collection('recordedData');
   record.find().toArray(function(err, filed){
   console.log(filed); // output all records
-  app.get('/saved', function(req,res) {
-    res.send(filed[0]);
+  app.post('/url', function(req,res) {
+    return res.json({ success: true, filed });
  });
-    let i = 0;
-    while(i < filed.length){
-      var proj = filed[i].adminData.Project;
-      var prmt = filed[i].adminData.Prompt;
-      var pth = filed[i].Audio.url;
-      //console.log("" + proj + " " + prmt + " " + pth)
-      i++;
-    }
+  app.post('/saved', function(req,res) {
+    return res.json({ success: true, filed });
+ });
+
+
   });
   function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone){
   record.insertOne({ 
