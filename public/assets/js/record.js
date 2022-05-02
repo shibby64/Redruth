@@ -9,10 +9,25 @@ const saveAudioButton = document.getElementById('saveButton');
 const discardAudioButton = document.getElementById('discardButton');
 const recordingsContainer = document.getElementById('recordings');
 
+
 let chunks = []; // will be used later to record audio
 let mediaRecorder = null; // will be used later to record audio
 let audioBlob = null; // the blob that will hold the recorded audio
-
+let urlArr = [];
+urlPop();
+console.log(urlArr);
+function urlPop(){
+  fetch('/url', {method : 'POST'})
+  .then((object) => object.json())
+  .then((object) => {
+    if (object.success && object.filed) {
+      for(i = 0; i < object.filed.length; i++){
+          urlArr[i] = object.filed[i].Audio.url;
+      }
+    }
+  })
+  .catch((err) => console.error(err));
+}
 function mediaRecorderDataAvailable(e) {
   chunks.push(e.data);
 }
@@ -128,9 +143,10 @@ function playRecording(e) {
   }
 }
 
-function createRecordingElement(file) {
+function createRecordingElement(file, i) {
   const recordingElement = document.createElement('div');
   recordingElement.classList.add('col-lg-2', 'col', 'recording', 'mt-3');
+  recordingElement.setAttribute('id', 'cont' + i)
   const audio = document.createElement('audio');
   audio.src = file;
   audio.onended = (e) => {
@@ -151,22 +167,61 @@ function createRecordingElement(file) {
   return recordingElement;
 }
 
+function dbQuerry(){
+  fetch('/saved', {method : 'POST'})
+    .then((object) => object.json())
+    
+    .then((object) => {
+      console.log(object.filed)
+      if (object.success && object.filed) {
+        for(i = 0; i < object.filed.length; i++){
+            let recordingData = object.filed[i].adminData;
+            const pr = document.createElement('p');
+            const prnode = document.createTextNode("Project: " + recordingData.Project);
+            pr.appendChild(prnode);
+            const prelement = document.getElementById('cont' + i);
+            prelement.appendChild(pr);
+            const e = document.createElement('p');
+            e.style.backgroundColor = "cyan";
+            const node = document.createTextNode("Prompt: " + recordingData.Prompt);
+            e.appendChild(node);
+            const element = document.getElementById('cont' + i);
+            element.appendChild(e);
+            const ts = document.createElement('p');
+            const tsnode = document.createTextNode("Timestamp: " + recordingData.TimeStamp);
+            ts.appendChild(tsnode);
+            const tselement = document.getElementById('cont' + i);
+            tselement.appendChild(ts);
+        }
+      }
+    })
+  .catch((err) => console.error(err));
+};
 // fetch recordings
-function fetchRecordings() {
+ function fetchRecordings() {
+   
   fetch('/recordings')
     .then((response) => response.json())
     .then((response) => {
       if (response.success && response.files) {
         recordingsContainer.innerHTML = ''; // remove all children
+        let i =0;
         response.files.forEach((file) => {
-          const recordingElement = createRecordingElement(file);
-          // console.log(file, recordingElement);
-          recordingsContainer.appendChild(recordingElement);
+          console.log(file.substring(1, 14) /*+ " vs " + url[i].substring(9, 22)*/)
+          console.log(urlArr[i].substring(8, 21));
+          if(file.substring(1, 14) === urlArr[i].substring(8, 21)){
+            console.log(file);
+            const recordingElement = createRecordingElement(file, i);
+            recordingsContainer.appendChild(recordingElement);
+            i++
+          }
         });
       }
     })
+    
     .catch((err) => console.error(err));
-}
+    
+  }
 
 function saveRecording() {
   const formData = new FormData();
@@ -179,7 +234,9 @@ function saveRecording() {
     .then(() => {
       alert('Your recording is saved');
       resetRecording();
+      
       fetchRecordings();
+      setTimeout(() => dbQuerry() , 100);
     })
     .catch((err) => {
       console.error(err);
@@ -200,3 +257,6 @@ function discardRecording() {
 discardAudioButton.addEventListener('click', discardRecording);
 
 fetchRecordings();
+setTimeout(() => dbQuerry() , 100);
+
+

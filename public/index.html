@@ -39,11 +39,11 @@
             </div>
             <div>
               <label for="title">Add a title for your recording</label>
-              <input type="text" name="title" id="title" placeholder="Title"></input>
+              <input type="text" name="title" id="title" placeholder="Title" required></input>
             </div>
             <div>
               <label for="comments">Additional comments</label>
-              <textarea id="comments" name="comments" rows="2" cols="50" placeholder="Comments"></textarea>
+              <textarea id="comments" name="comments" rows="2" cols="50" placeholder="Comments" required></textarea>
             </div>
             <input type="checkbox" id="myCheck" onclick="checkFunction()"> If you would like to add more content or contact information</input>
             <div>
@@ -80,14 +80,17 @@
     <h2 class="mt-3">Saved Recordings</h2>
     <div class="recordings row" id="recordings">
         
-    </div >
-      <h6 id = "saved"></h6>
-  </div>    
+    </div>
+      <div class="row col-lg-8" ><h6 id = "saved1" class ="col-lg-3" ><h6 id = "saved2" class ="col-lg-3" ></h6>
+        <h6 id = "saved3" class ="col-lg-3" ></h6><h6 id = "saved4" class ="col-lg-3" ></h6>
+      </div>
+      <div class ="col-lg-3"></h6></div>
+    </div>    
   <script src="/js/checkbox.js"></script>
   <script src="/js/modal.js"></script>
   <script src="/js/record.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="/js/ajax.js"></script>
+  <!-- <script src="/js/ajax.js"></script> -->
 </body>
 
 </html>

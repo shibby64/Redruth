@@ -1,8 +1,9 @@
 
-
+//not currently being used
 
 $.ajax({
     url: '/saved',
+    method: "POST",
     complete: function(data) {
         var object = data.responseJSON;
         for(i = 0; i < object.length; i++){
@@ -24,16 +25,11 @@ $.ajax({
             ts.appendChild(tsnode);
             const tselement = document.getElementById("saved" + (i+1));
             tselement.appendChild(ts);
-            const url = document.createElement('audio');
-            //url.nextElementSibling.firstElementChild.src = 'images/play.png';
-            const urlnode = document.createTextNode("url: " + audioData.url);
-            // console.log(audioData.url);
-            // url.setAttribute('control', '');
-            url.src = '../../' + audioData.url;
-            url.style.backgroundColor = "cyan";
-            url.appendChild(urlnode);
-            const urlelement = document.getElementById("saved" + (i+1));
-            urlelement.appendChild(url);
+            const recordingsContainer = document.getElementById("saved" + (i+1));
+            const recordingElement = createRecordingElement('..\\'+audioData.url);
+            console.log(audioData.url, recordingElement);
+            recordingsContainer.appendChild(recordingElement);
         }
     }
   });
+  
