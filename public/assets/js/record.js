@@ -145,9 +145,14 @@ function playRecording(e) {
 
 function createRecordingElement(file, i) {
   const recordingElement = document.createElement('div');
-  recordingElement.classList.add('col-lg-2', 'col', 'recording', 'mt-3');
+  if(i === 0){
+    recordingElement.classList.add("slider-item", 'active');
+  } else {
+    recordingElement.classList.add("slider-item");
+  }
   recordingElement.setAttribute('id', 'cont' + i)
   const audio = document.createElement('audio');
+  //audio.classList.add('col-lg-2');
   audio.src = file;
   audio.onended = (e) => {
     e.target.nextElementSibling.firstElementChild.src = 'images/play.png';
@@ -155,8 +160,8 @@ function createRecordingElement(file, i) {
   };
   recordingElement.appendChild(audio);
   const playButton = document.createElement('button');
-  playButton.setAttribute('id', 'aFile')
-  playButton.classList.add('play-button', 'btn', 'border', 'shadow-sm', 'text-center', 'd-block', 'mx-auto');
+  playButton.setAttribute('id', 'aButton')
+  playButton.classList.add('play-button', 'btn', 'border', 'shadow-sm', 'text-center');
   const playImage = document.createElement('img');
   playImage.src = '/images/play.png';
   playImage.classList.add('img-fluid');
@@ -177,17 +182,20 @@ function dbQuerry(){
         for(i = 0; i < object.filed.length; i++){
             let recordingData = object.filed[i].adminData;
             const pr = document.createElement('p');
+            pr.classList.add('metaDataStyle');
             const prnode = document.createTextNode("Project: " + recordingData.Project);
             pr.appendChild(prnode);
             const prelement = document.getElementById('cont' + i);
             prelement.appendChild(pr);
             const e = document.createElement('p');
+            e.classList.add('metaDataStyle');
             e.style.backgroundColor = "cyan";
             const node = document.createTextNode("Prompt: " + recordingData.Prompt);
             e.appendChild(node);
             const element = document.getElementById('cont' + i);
             element.appendChild(e);
             const ts = document.createElement('p');
+            ts.classList.add('metaDataStyle');
             const tsnode = document.createTextNode("Timestamp: " + recordingData.TimeStamp);
             ts.appendChild(tsnode);
             const tselement = document.getElementById('cont' + i);
@@ -205,13 +213,12 @@ function dbQuerry(){
     .then((response) => {
       if (response.success && response.files) {
         recordingsContainer.innerHTML = ''; // remove all children
+        recordingsContainer.classList.add('col-lg-2');
         let i =0;
         response.files.forEach((file) => {
-          console.log(file.substring(1, 14) /*+ " vs " + url[i].substring(9, 22)*/)
-          console.log(urlArr[i].substring(8, 21));
           if(file.substring(1, 14) === urlArr[i].substring(8, 21)){
-            console.log(file);
             const recordingElement = createRecordingElement(file, i);
+            recordingElement.classList.add('col-lg-2');
             recordingsContainer.appendChild(recordingElement);
             i++
           }
