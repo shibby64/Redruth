@@ -98,7 +98,10 @@
   padding: 0;
   display: flex;
 }
-
+.next {
+  transform: translateX(20%);
+  transform: translatey(100%);
+}
 .slider-control-prev,
 .slider-control-next {
   position: absolute;
