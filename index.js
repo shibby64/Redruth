@@ -32,34 +32,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-/* admin page route */
-app.get('/admin.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/admin.html'));
-});
-
-/* get info from admin form */
-app.get('/admin', (req, res) => {
-  var project = req.query.project;
-  var prompt = req.query.prompt;
-  console.log(project, prompt);//testing
-
-  createNewTable(project, prompt);
-});
-
-/* create new collection */
-function createNewTable(project, prompt){
-  /* working, however will crash when you attempt to create a collection that already exists */
-  MongoClient.connect(url, function(err, db) {
-    if(err) throw err;
-    var dbase = db.db("local");
-    dbase.createCollection(project, function(err,res) {
-      if(err) throw err;
-      console.log("created collection");
-      db.close();
-    });
-  });
-}
-
 app.post('/record', upload.single('audio'), (req, res) => res.json({ success: true }));
 
 app.get('/recordings', (req, res) => {
@@ -94,8 +66,9 @@ MongoClient.connect(url, {
     var phone = req.body.phone;
     const timeStamp = TimeStamp();
     var audio = "uploads\\" + aFile + ".mp3";
+    const public = false;
     console.log(aFile);
-    myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone);
+    myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
   });
   function TimeStamp() {
     const currentDate = new Date();
@@ -112,9 +85,10 @@ MongoClient.connect(url, {
   }
   // Specify database you want to access
   const db = client.db('local');
-  const record = db.collection('recordedData');
+  const record = db.collection('recordedData');//temp change to test new collection created with admin page
   record.find().toArray(function (err, filed) {
-    console.log(filed); // output all records
+    //console.log(filed); // output all records
+    displayCollectionData(filed);
     app.post('/url', function (req, res) {
       return res.json({ success: true, filed });
     });
@@ -124,12 +98,13 @@ MongoClient.connect(url, {
 
 
   });
-  function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone) {
+  function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
     record.insertOne({
       adminData: {
         Project: project,
         Prompt: prompt,
-        TimeStamp: timeStamp
+        TimeStamp: timeStamp,
+        Public: public
       },
       Audio: { url: audio },
       metaData: {
@@ -143,5 +118,36 @@ MongoClient.connect(url, {
     }, (err, result) => { });
     console.log(`MongoDB Connected: ${url}`);
   }
-
 });
+
+/* admin page route */
+app.get('/admin.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
+/* get info from admin form */
+app.get('/admin', (req, res) => {
+  var project = req.query.project;
+  var prompt = req.query.prompt;
+  createNewTable(project, prompt);
+  console.log("project" + project, "prompt" + prompt);//testing
+});
+
+/* create new collection */
+function createNewTable(project, prompt) {
+  /* working, however will crash when you attempt to create a collection that already exists */
+  MongoClient.connect(url, function (err, db) {
+    if (err) throw err;
+    const dbase = db.db("local");
+    dbase.createCollection(project, function (err, res) {
+      if (err) throw err;
+      console.log("created collection");
+      dbase.close();
+    });
+  });
+}
+
+function displayCollectionData(data) {
+  //console.log(data);
+  
+}
