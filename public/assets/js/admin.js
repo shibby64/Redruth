@@ -36,9 +36,9 @@ function getCollections() {
                             'Email: ' + object.filed[i].metaData.Email + ', ' +
                             'Phone: ' + object.filed[i].metaData.Phone + ', ' 
                             ;
-                        const line = document.createElement('hr');
+                        const line = document.createElement('br');
 
-
+                        /* add data to html div */
                         dataContainer.appendChild(ad);
                         dataContainer.appendChild(audio);
                         dataContainer.appendChild(meta);

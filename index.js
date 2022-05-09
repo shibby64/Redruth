@@ -88,7 +88,6 @@ MongoClient.connect(url, {
   const record = db.collection('recordedData');//temp change to test new collection created with admin page
   record.find().toArray(function (err, filed) {
     //console.log(filed); // output all records
-    displayCollectionData(filed);
     app.post('/url', function (req, res) {
       return res.json({ success: true, filed });
     });
@@ -144,9 +143,4 @@ function createNewTable(project, prompt) {
       console.log("created collection");
     });
   });
-}
-
-function displayCollectionData(data) {
-  //console.log(data);
-  
 }
