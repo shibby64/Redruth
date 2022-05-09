@@ -142,7 +142,6 @@ function createNewTable(project, prompt) {
     dbase.createCollection(project, function (err, res) {
       if (err) throw err;
       console.log("created collection");
-      dbase.close();
     });
   });
 }

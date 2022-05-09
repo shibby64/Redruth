@@ -173,6 +173,7 @@ function createRecordingElement(file, i) {
 }
 
 function dbQuerry(){
+  console.log("here");
   fetch('/saved', {method : 'POST'})
     .then((object) => object.json())
     
