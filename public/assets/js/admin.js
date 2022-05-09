@@ -1,4 +1,4 @@
-setTimeout(() => getCollections() , 100);
+setTimeout(() => getCollections(), 100);
 
 /* grab records in the database and filter by ones that are not public */
 function getCollections() {
@@ -14,6 +14,7 @@ function getCollections() {
                     if (!isPublic) {
                         console.log("found false flag");
                         var dataContainer = document.getElementById('collections');
+
                         /* admin data */
                         var ad = document.createElement('div');
                         ad.innerHTML =
@@ -34,21 +35,43 @@ function getCollections() {
                             'PostalCode: ' + object.filed[i].metaData.PostalCode + ', ' +
                             'Name: ' + object.filed[i].metaData.Name + ', ' +
                             'Email: ' + object.filed[i].metaData.Email + ', ' +
-                            'Phone: ' + object.filed[i].metaData.Phone + ', ' 
+                            'Phone: ' + object.filed[i].metaData.Phone + ', '
                             ;
-                        const line = document.createElement('br');
+
+                        const space = document.createElement('br');
+
+                        /* create checkboxs */
+                        var checkBoxText = document.createElement('div');
+                        checkBoxText.innerHTML = 'Check to add to public site:';
+                        var checkBox = document.createElement('input');
+                        checkBox.type = 'checkbox';
+                        checkBox.onclick = myFunction();
+                        checkBox.id = i;
+
+                        /* create submit buttons */
+                        var submitButton = document.createElement('input');
+                        submitButton.type = 'submit';
+                        submitButton.value = 'add checked records to public site';
 
                         /* add data to html div */
                         dataContainer.appendChild(ad);
                         dataContainer.appendChild(audio);
                         dataContainer.appendChild(meta);
-                        dataContainer.appendChild(line);
+                        dataContainer.appendChild(checkBoxText);
+                        dataContainer.appendChild(checkBox);
+                        dataContainer.appendChild(submitButton);
+                        dataContainer.appendChild(space);
                     }
                 }
             }
         })
         .catch((err) => console.error(err));
 };
+
+function myFunction() {
+    console.log("hello world");
+}
+
 
 
 
