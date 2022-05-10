@@ -15,6 +15,11 @@ function getCollections() {
                         console.log("found false flag");
                         var dataContainer = document.getElementById('collections');
 
+                        /* id */
+                        var showId = document.createElement('div');
+                        showId.innerHTML = '_id: ' + object.filed[i]._id;
+                        var id = object.filed[i]._id;
+
                         /* admin data */
                         var ad = document.createElement('div');
                         ad.innerHTML =
@@ -27,6 +32,7 @@ function getCollections() {
                         var audio = document.createElement('div');
                         audio.innerHTML =
                             'url: ' + object.filed[i].Audio.url;
+
                         /* meta data */
                         var meta = document.createElement('div');
                         meta.innerHTML =
@@ -40,26 +46,26 @@ function getCollections() {
 
                         const space = document.createElement('br');
 
-                        /* create checkboxs */
-                        var checkBoxText = document.createElement('div');
-                        checkBoxText.innerHTML = 'Check to add to public site:';
-                        var checkBox = document.createElement('input');
-                        checkBox.type = 'checkbox';
-                        checkBox.onclick = myFunction();
-                        checkBox.id = i;
+                        /* create form */
+                        var form = document.createElement('form');
+                        form.action = '/updatePublic';
+                        form.method = 'get';
+                        form.name = 'makePublic';
 
                         /* create submit buttons */
                         var submitButton = document.createElement('input');
                         submitButton.type = 'submit';
-                        submitButton.value = 'add checked records to public site';
+                        submitButton.value = id;
+                        submitButton.placeholder = 'add record to site';
+                        submitButton.name = 'updatePublic';
 
                         /* add data to html div */
+                        dataContainer.appendChild(showId);
                         dataContainer.appendChild(ad);
                         dataContainer.appendChild(audio);
                         dataContainer.appendChild(meta);
-                        dataContainer.appendChild(checkBoxText);
-                        dataContainer.appendChild(checkBox);
-                        dataContainer.appendChild(submitButton);
+                        dataContainer.appendChild(form);
+                        form.appendChild(submitButton);
                         dataContainer.appendChild(space);
                     }
                 }
@@ -67,16 +73,6 @@ function getCollections() {
         })
         .catch((err) => console.error(err));
 };
-
-function myFunction() {
-    console.log("hello world");
-}
-
-
-
-
-
-
 
 /*
 old ajax code, didn't want to delete incase you want to keep it around. Feel free to delete. 

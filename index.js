@@ -85,7 +85,7 @@ MongoClient.connect(url, {
   }
   // Specify database you want to access
   const db = client.db('local');
-  const record = db.collection('recordedData');//temp change to test new collection created with admin page
+  const record = db.collection('test');//temp change to test new collection created with admin page
   record.find().toArray(function (err, filed) {
     //console.log(filed); // output all records
     app.post('/url', function (req, res) {
@@ -144,3 +144,10 @@ function createNewTable(project, prompt) {
     });
   });
 }
+
+/* gets record id to update public boolean from admin page */
+app.get('/updatePublic', (req, res) => {
+  var id = req.query.updatePublic;
+  console.log(id);
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
