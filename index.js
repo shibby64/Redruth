@@ -5,10 +5,13 @@ const express = require('express');
 const bodyParser = require("body-parser")
 const multer = require('multer');
 const { waitForDebugger } = require('inspector');
+const { ObjectId } = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://127.0.0.1:27017';
 let aFile = "";
 // Connect to the db
+
+var collection = 'test';
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -66,7 +69,6 @@ MongoClient.connect(url, {
     var phone = req.body.phone;
     const timeStamp = TimeStamp();
     var audio = "uploads\\" + aFile + ".mp3";
-    const public = false;
     console.log(aFile);
     myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
   });
@@ -85,7 +87,7 @@ MongoClient.connect(url, {
   }
   // Specify database you want to access
   const db = client.db('local');
-  const record = db.collection('test');//temp change to test new collection created with admin page
+  const record = db.collection(collection);//temp change to test new collection created with admin page
   record.find().toArray(function (err, filed) {
     //console.log(filed); // output all records
     app.post('/url', function (req, res) {
@@ -97,13 +99,12 @@ MongoClient.connect(url, {
 
 
   });
-  function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
+  function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone) {
     record.insertOne({
       adminData: {
         Project: project,
         Prompt: prompt,
         TimeStamp: timeStamp,
-        Public: public
       },
       Audio: { url: audio },
       metaData: {
@@ -149,14 +150,22 @@ function createNewTable(project, prompt) {
 app.get('/updatePublic', (req, res) => {
   var id = req.query.updatePublic;
   console.log('updating: ' + id);
-  /* update public boolean with record ID */
-  MongoClient.connect(url, function (err, db) {
-    if(err) throw err;
-    const dbase = db.db('local');
-    dbase.collection('test').updateOne({'_id' : id}, {$set: {Public: 'true' }}, function(err, res) {
-      if (err) throw err;
-      console.log('updated public');
-    });
-  });
+  updateTable(id);
   res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
+
+/* add public true to record ID */
+function updateTable(id) {
+  MongoClient.connect(url, function (err, db) {
+    if (err) throw err;
+    const dbase = db.db('local');
+    dbase.collection(collection)
+      .updateOne(
+        { '_id' : ObjectId(id) },
+        { $set: { Public: true } },
+        function (err, res) {
+          if (err) throw err;
+          console.log('updated public');
+        });
+  });
+}

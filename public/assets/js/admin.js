@@ -54,7 +54,8 @@ function getCollections() {
 
                         /* create label */
                         var label = document.createElement('div');
-                        label.innerHTML = 'add this record id to public site: ';
+                        label.innerHTML = 'Add this record id to public site: ';
+                        label.style.fontWeight = 'strong';
 
                         /* create submit buttons */
                         var submitButton = document.createElement('input');
