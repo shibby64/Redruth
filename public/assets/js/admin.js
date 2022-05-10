@@ -52,6 +52,10 @@ function getCollections() {
                         form.method = 'get';
                         form.name = 'makePublic';
 
+                        /* create label */
+                        var label = document.createElement('div');
+                        label.innerHTML = 'add this record id to public site: ';
+
                         /* create submit buttons */
                         var submitButton = document.createElement('input');
                         submitButton.type = 'submit';
@@ -59,11 +63,14 @@ function getCollections() {
                         submitButton.placeholder = 'add record to site';
                         submitButton.name = 'updatePublic';
 
-                        /* add data to html div */
+                        /* create delete button */
+
+                        /* create html */
                         dataContainer.appendChild(showId);
                         dataContainer.appendChild(ad);
                         dataContainer.appendChild(audio);
                         dataContainer.appendChild(meta);
+                        dataContainer.appendChild(label);
                         dataContainer.appendChild(form);
                         form.appendChild(submitButton);
                         dataContainer.appendChild(space);

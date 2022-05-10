@@ -148,6 +148,15 @@ function createNewTable(project, prompt) {
 /* gets record id to update public boolean from admin page */
 app.get('/updatePublic', (req, res) => {
   var id = req.query.updatePublic;
-  console.log(id);
+  console.log('updating: ' + id);
+  /* update public boolean with record ID */
+  MongoClient.connect(url, function (err, db) {
+    if(err) throw err;
+    const dbase = db.db('local');
+    dbase.collection('test').updateOne({'_id' : id}, {$set: {Public: 'true' }}, function(err, res) {
+      if (err) throw err;
+      console.log('updated public');
+    });
+  });
   res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
