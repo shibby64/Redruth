@@ -69,6 +69,7 @@ MongoClient.connect(url, {
     var phone = req.body.phone;
     const timeStamp = TimeStamp();
     var audio = "uploads\\" + aFile + ".mp3";
+    const public = false;
     console.log(aFile);
     myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
   });
@@ -99,7 +100,7 @@ MongoClient.connect(url, {
 
 
   });
-  function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone) {
+  function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
     record.insertOne({
       adminData: {
         Project: project,
@@ -114,7 +115,8 @@ MongoClient.connect(url, {
         Name: fullName,
         Email: email,
         Phone: phone
-      }
+      },
+      Public : public
     }, (err, result) => { });
     console.log(`MongoDB Connected: ${url}`);
   }
@@ -149,7 +151,6 @@ function createNewTable(project, prompt) {
 /* gets record id to update public boolean from admin page */
 app.get('/updatePublic', (req, res) => {
   var id = req.query.updatePublic;
-  console.log('updating: ' + id);
   updateTable(id);
   res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
@@ -165,7 +166,28 @@ function updateTable(id) {
         { $set: { Public: true } },
         function (err, res) {
           if (err) throw err;
-          console.log('updated public');
+          console.log('updated public flag for record ' + id);
         });
+  });
+}
+
+/* get record id from admin page to delete record */
+app.get('/deleteRecord', (req, res) => {
+  var id = req.query.deletePublic;
+  deleteRecord(id);
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
+/* delete record from collection */
+function deleteRecord(id) {
+  MongoClient.connect(url, function (err, db) {
+    if (err) throw err;
+    const dbase = db.db('local');//eliminates 'db.collection is not a function' TypeError
+    dbase.collection(collection).deleteOne({'_id' : ObjectId(id)}, 
+    function (err, res) {
+      if (err) throw err;
+      console.log('deleted record ' + id);
+    }
+    );
   });
 }

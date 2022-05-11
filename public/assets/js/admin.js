@@ -1,15 +1,13 @@
-setTimeout(() => getCollections(), 100);
-
 /* grab records in the database and filter by ones that are not public */
 function getCollections() {
     fetch('/saved', { method: 'POST' })
         .then((object) => object.json())
-
         .then((object) => {
             //console.log(object.filed)
             if (object.success && object.filed) {
                 for (i = 0; i < object.filed.length; i++) {
-                    let isPublic = object.filed[i].adminData.Public;
+                    let isPublic = object.filed[i].Public;
+                    console.log(isPublic);
                     /* filter by records with a false public flag */
                     if (!isPublic) {
                         console.log("found false flag");
@@ -23,7 +21,7 @@ function getCollections() {
                         /* admin data */
                         var ad = document.createElement('div');
                         ad.innerHTML =
-                            'Project: ' + object.filed[i].adminData.Project + ',  ' +
+                            'Collection: ' + object.filed[i].adminData.Project + ',  ' +
                             'prompt: ' + object.filed[i].adminData.Prompt + ',  ' +
                             'timeStamp: ' + object.filed[i].adminData.TimeStamp + ',  '
 
@@ -46,34 +44,41 @@ function getCollections() {
 
                         const space = document.createElement('br');
 
-                        /* create form */
-                        var form = document.createElement('form');
-                        form.action = '/updatePublic';
-                        form.method = 'get';
-                        form.name = 'makePublic';
+                        /* create update form */
+                        var updateForm = document.createElement('form');
+                        updateForm.action = '/updatePublic';
+                        updateForm.method = 'get';
+                        updateForm.name = 'makePublic';
 
-                        /* create label */
-                        var label = document.createElement('div');
-                        label.innerHTML = 'Add this record id to public site: ';
-                        label.style.fontWeight = 'strong';
-
-                        /* create submit buttons */
-                        var submitButton = document.createElement('input');
+                        /* create update submit button */
+                        var submitButton = document.createElement('button');
                         submitButton.type = 'submit';
                         submitButton.value = id;
-                        submitButton.placeholder = 'add record to site';
+                        submitButton.innerHTML = 'Add to public site';
                         submitButton.name = 'updatePublic';
 
-                        /* create delete button */
+                        /* create delete form */
+                        var deleteForm = document.createElement('form');
+                        deleteForm.action = '/deleteRecord';
+                        deleteForm.method = 'get';
+                        deleteForm.name = 'delete';
+
+                        /* create delete record button */
+                        var deleteButton = document.createElement('button');
+                        deleteButton.type  = 'submit';
+                        deleteButton.value = id;
+                        deleteButton.innerHTML = 'Delete this record';
+                        deleteButton.name = 'deletePublic';                        
 
                         /* create html */
                         dataContainer.appendChild(showId);
                         dataContainer.appendChild(ad);
                         dataContainer.appendChild(audio);
                         dataContainer.appendChild(meta);
-                        dataContainer.appendChild(label);
-                        dataContainer.appendChild(form);
-                        form.appendChild(submitButton);
+                        dataContainer.appendChild(updateForm);
+                        updateForm.appendChild(submitButton);
+                        dataContainer.appendChild(deleteForm);
+                        deleteForm.appendChild(deleteButton);
                         dataContainer.appendChild(space);
                     }
                 }
@@ -81,6 +86,8 @@ function getCollections() {
         })
         .catch((err) => console.error(err));
 };
+
+setTimeout(() => getCollections(), 100);
 
 /*
 old ajax code, didn't want to delete incase you want to keep it around. Feel free to delete. 
