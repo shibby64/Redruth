@@ -13,16 +13,17 @@ const recordingsContainer = document.getElementById('recordings');
 let chunks = []; // will be used later to record audio
 let mediaRecorder = null; // will be used later to record audio
 let audioBlob = null; // the blob that will hold the recorded audio
-let urlArr = [];
-urlPop();
-console.log(urlArr);
-function urlPop(){
-  fetch('/url', {method : 'POST'})
+let metaArr = [];
+let placeholder = [];
+metaGrab();
+console.log(metaArr);
+function metaGrab(){
+  fetch('/metaArr', {method : 'POST'})
   .then((object) => object.json())
   .then((object) => {
     if (object.success && object.filed) {
       for(i = 0; i < object.filed.length; i++){
-          urlArr[i] = object.filed[i].Audio.url;
+        metaArr[i] = object.filed[i];
       }
     }
   })
@@ -171,42 +172,35 @@ function createRecordingElement(file, i) {
   recordingElement.appendChild(playButton);
   return recordingElement;
 }
-
-function dbQuerry(){
-  console.log("here");
-  fetch('/saved', {method : 'POST'})
-    .then((object) => object.json())
-    
-    .then((object) => {
-      console.log(object.filed)
-      if (object.success && object.filed) {
-        for(i = 0; i < object.filed.length; i++){
-            let recordingData = object.filed[i].adminData;
-            const pr = document.createElement('p');
-            pr.classList.add('metaDataStyle');
-            const prnode = document.createTextNode("Project: " + recordingData.Project);
-            pr.appendChild(prnode);
-            const prelement = document.getElementById('cont' + i);
-            prelement.appendChild(pr);
-            const e = document.createElement('p');
-            e.classList.add('metaDataStyle');
-            e.style.backgroundColor = "cyan";
-            const node = document.createTextNode("Prompt: " + recordingData.Prompt);
-            e.appendChild(node);
-            const element = document.getElementById('cont' + i);
-            element.appendChild(e);
-            const ts = document.createElement('p');
-            ts.classList.add('metaDataStyle');
-            const tsnode = document.createTextNode("Timestamp: " + recordingData.TimeStamp);
-            ts.appendChild(tsnode);
-            const tselement = document.getElementById('cont' + i);
-            tselement.appendChild(ts);
-        }
+function metaData(){
+  for(i =0; i<metaArr.length; i++){
+    for(j=0; j<placeholder.length; j++){
+      if(metaArr[i].Audio.url.substring(8, 21) === placeholder[j]){
+        let recordingData = metaArr[i].adminData;
+        const project = document.createElement('p');
+        project.classList.add('metaDataStyle');
+        const projectNode = document.createTextNode("Project: " + recordingData.Project);
+        project.appendChild(projectNode);
+        const projectElement = document.getElementById('cont' + j);
+        projectElement.appendChild(project);
+        const prompt = document.createElement('p');
+        prompt.classList.add('metaDataStyle');
+        prompt.style.backgroundColor = "cyan";
+        const promptNode = document.createTextNode("Prompt: " + recordingData.Prompt);
+        prompt.appendChild(promptNode);
+        const promptElement = document.getElementById('cont' + j);
+        promptElement.appendChild(prompt);
+        const ts = document.createElement('p');
+        ts.classList.add('metaDataStyle');
+        const tsnode = document.createTextNode("Timestamp: " + recordingData.TimeStamp);
+        ts.appendChild(tsnode);
+        const tselement = document.getElementById('cont' + j);
+        tselement.appendChild(ts);
       }
-    })
-  .catch((err) => console.error(err));
+    }
+  }
 };
-// fetch recordings
+
  function fetchRecordings() {
    
   fetch('/recordings')
@@ -215,13 +209,14 @@ function dbQuerry(){
       if (response.success && response.files) {
         recordingsContainer.innerHTML = ''; // remove all children
         recordingsContainer.classList.add('col-lg-2');
-        let i =0;
         response.files.forEach((file) => {
-          if(file.substring(1, 14) === urlArr[i].substring(8, 21)){
-            const recordingElement = createRecordingElement(file, i);
-            recordingElement.classList.add('col-lg-2');
-            recordingsContainer.appendChild(recordingElement);
-            i++
+          for(i =0; i < metaArr.length; i++){
+            if(file.substring(1, 14) === metaArr[i].Audio.url.substring(8, 21) && metaArr[i].Public){
+              const recordingElement = createRecordingElement(file, i);
+              placeholder[i] = file.substring(1, 14);
+              recordingElement.classList.add('col-lg-2');
+              recordingsContainer.appendChild(recordingElement);
+            }
           }
         });
       }
@@ -242,9 +237,9 @@ function saveRecording() {
     .then(() => {
       alert('Your recording is saved');
       resetRecording();
-      
+      metaGrab();
       fetchRecordings();
-      setTimeout(() => dbQuerry() , 100);
+      setTimeout(() => metaData() , 200);
     })
     .catch((err) => {
       console.error(err);
@@ -265,6 +260,6 @@ function discardRecording() {
 discardAudioButton.addEventListener('click', discardRecording);
 
 fetchRecordings();
-setTimeout(() => dbQuerry() , 100);
+setTimeout(() => metaData() , 200);
 
 

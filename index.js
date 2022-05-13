@@ -91,7 +91,7 @@ MongoClient.connect(url, {
   const record = db.collection(collection);//temp change to test new collection created with admin page
   record.find().toArray(function (err, filed) {
     //console.log(filed); // output all records
-    app.post('/url', function (req, res) {
+    app.post('/metaArr', function (req, res) {
       return res.json({ success: true, filed });
     });
     app.post('/saved', function (req, res) {
