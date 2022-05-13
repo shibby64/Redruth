@@ -5,10 +5,13 @@ const express = require('express');
 const bodyParser = require("body-parser")
 const multer = require('multer');
 const { waitForDebugger } = require('inspector');
+const { ObjectId } = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://127.0.0.1:27017';
 let aFile = "";
 // Connect to the db
+
+var collection = 'test';
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -85,10 +88,9 @@ MongoClient.connect(url, {
   }
   // Specify database you want to access
   const db = client.db('local');
-  const record = db.collection('recordedData');//temp change to test new collection created with admin page
+  const record = db.collection(collection);//temp change to test new collection created with admin page
   record.find().toArray(function (err, filed) {
     //console.log(filed); // output all records
-    displayCollectionData(filed);
     app.post('/url', function (req, res) {
       return res.json({ success: true, filed });
     });
@@ -104,7 +106,6 @@ MongoClient.connect(url, {
         Project: project,
         Prompt: prompt,
         TimeStamp: timeStamp,
-        Public: public
       },
       Audio: { url: audio },
       metaData: {
@@ -114,7 +115,8 @@ MongoClient.connect(url, {
         Name: fullName,
         Email: email,
         Phone: phone
-      }
+      },
+      Public : public
     }, (err, result) => { });
     console.log(`MongoDB Connected: ${url}`);
   }
@@ -142,12 +144,50 @@ function createNewTable(project, prompt) {
     dbase.createCollection(project, function (err, res) {
       if (err) throw err;
       console.log("created collection");
-      dbase.close();
     });
   });
 }
 
-function displayCollectionData(data) {
-  //console.log(data);
-  
+/* gets record id to update public boolean from admin page */
+app.get('/updatePublic', (req, res) => {
+  var id = req.query.updatePublic;
+  updateTable(id);
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
+/* add public true to record ID */
+function updateTable(id) {
+  MongoClient.connect(url, function (err, db) {
+    if (err) throw err;
+    const dbase = db.db('local');
+    dbase.collection(collection)
+      .updateOne(
+        { '_id' : ObjectId(id) },
+        { $set: { Public: true } },
+        function (err, res) {
+          if (err) throw err;
+          console.log('updated public flag for record ' + id);
+        });
+  });
+}
+
+/* get record id from admin page to delete record */
+app.get('/deleteRecord', (req, res) => {
+  var id = req.query.deletePublic;
+  deleteRecord(id);
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
+/* delete record from collection */
+function deleteRecord(id) {
+  MongoClient.connect(url, function (err, db) {
+    if (err) throw err;
+    const dbase = db.db('local');//eliminates 'db.collection is not a function' TypeError
+    dbase.collection(collection).deleteOne({'_id' : ObjectId(id)}, 
+    function (err, res) {
+      if (err) throw err;
+      console.log('deleted record ' + id);
+    }
+    );
+  });
 }
