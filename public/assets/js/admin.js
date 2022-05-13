@@ -7,10 +7,9 @@ function getCollections() {
             if (object.success && object.filed) {
                 for (i = 0; i < object.filed.length; i++) {
                     let isPublic = object.filed[i].Public;
-                    console.log(isPublic);
+                    console.log('record public flag ' + isPublic);
                     /* filter by records with a false public flag */
                     if (!isPublic) {
-                        console.log("found false flag");
                         var dataContainer = document.getElementById('collections');
 
                         /* id */
@@ -24,12 +23,12 @@ function getCollections() {
                             'Collection: ' + object.filed[i].adminData.Project + ',  ' +
                             'prompt: ' + object.filed[i].adminData.Prompt + ',  ' +
                             'timeStamp: ' + object.filed[i].adminData.TimeStamp + ',  '
-
                             ;
                         /* audio */
                         var audio = document.createElement('div');
-                        audio.innerHTML =
-                            'url: ' + object.filed[i].Audio.url;
+                        /* audio.innerHTML =
+                            'url: ' + object.filed[i].Audio.url; */
+                        fetchRecordings(audio);
 
                         /* meta data */
                         var meta = document.createElement('div');
@@ -65,10 +64,10 @@ function getCollections() {
 
                         /* create delete record button */
                         var deleteButton = document.createElement('button');
-                        deleteButton.type  = 'submit';
+                        deleteButton.type = 'submit';
                         deleteButton.value = id;
                         deleteButton.innerHTML = 'Delete this record';
-                        deleteButton.name = 'deletePublic';                        
+                        deleteButton.name = 'deletePublic';
 
                         /* create html */
                         dataContainer.appendChild(showId);
@@ -88,6 +87,36 @@ function getCollections() {
 };
 
 setTimeout(() => getCollections(), 100);
+
+
+
+/* grab recording for playback on admin page */
+function fetchRecordings(audio) {
+    var metaArr = [];
+    let placeholder = [];
+    console.log('here');
+    fetch('/recordings', { method: 'GET' })
+        .then((response) => response.json())
+        .then((response) => {
+            if (response.success && response.files) {
+                console.log(response);
+                audio.innerHTML = ''; // remove all children
+                audio.classList.add('col-lg-2');
+                response.files.forEach((file) => {
+                    for (i = 0; i < metaArr.length; i++) {
+                        if (file.substring(1, 14) === metaArr[i].Audio.url.substring(8, 21) && metaArr[i].Public) {
+                            const recordingElement = createRecordingElement(file, i);
+                            placeholder[i] = file.substring(1, 14);
+                            recordingElement.classList.add('col-lg-2');
+                            audio.appendChild(recordingElement);
+                        }
+                    }
+                });
+            }
+        })
+        .catch((err) => console.error(err));
+}
+
 // refresh();
 // function refresh(){
 //     getCollections()
