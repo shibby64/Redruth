@@ -88,7 +88,11 @@ function getCollections() {
 };
 
 setTimeout(() => getCollections(), 100);
-
+// refresh();
+// function refresh(){
+//     getCollections()
+//     setInterval(refresh, 6000);
+// } 
 /*
 old ajax code, didn't want to delete incase you want to keep it around. Feel free to delete. 
 $.ajax({
