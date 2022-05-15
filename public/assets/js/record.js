@@ -17,17 +17,17 @@ let metaArr = [];
 let placeholder = [];
 metaGrab();
 console.log(metaArr);
-function metaGrab() {
-  fetch('/metaArr', { method: 'POST' })
-    .then((object) => object.json())
-    .then((object) => {
-      if (object.success && object.filed) {
-        for (i = 0; i < object.filed.length; i++) {
-          metaArr[i] = object.filed[i];
-        }
+function metaGrab(){
+  fetch('/metaArr', {method : 'POST'})
+  .then((object) => object.json())
+  .then((object) => {
+    if (object.success && object.filed) {
+      for(i = 0; i < object.filed.length; i++){
+        metaArr[i] = object.filed[i];
       }
-    })
-    .catch((err) => console.error(err));
+    }
+  })
+  .catch((err) => console.error(err));
 }
 function mediaRecorderDataAvailable(e) {
   chunks.push(e.data);
@@ -74,7 +74,7 @@ function record() {
         mediaRecorder.ondataavailable = mediaRecorderDataAvailable;
         mediaRecorder.onstop = mediaRecorderStop;
         /* this doesn't seem to be working, need to find way to stop recording when time expires. */
-        if (time < 0) {
+        if(time < 0){
           clearInterval(countdown);
           mediaRecorder.stop();
         }
@@ -102,18 +102,18 @@ let time = startingMinutes * 60;
 
 /* grabbing html element */
 const countDownTimer = document.getElementById('countDownTimer');
-setInterval(countdown, 1000);
+setInterval(countdown, 1000); 
 let startCountDown = false;
 
 function countdown() {
-  if (startCountDown) {
-    const minutes = Math.floor(time / 60);
-    let seconds = time % 60;
-    seconds = seconds < 10 ? '0' + seconds : seconds;
-    countDownTimer.innerHTML = `${minutes}: ${seconds}`
-    time--;
-    time = time < 0 ? 0 : time;
-  }
+    if(startCountDown){
+      const minutes = Math.floor(time / 60);
+      let seconds = time % 60;
+      seconds = seconds < 10 ? '0' + seconds : seconds;
+      countDownTimer.innerHTML = `${minutes}: ${seconds}`
+      time--;
+      time = time < 0 ? 0 : time; 
+    }
 }
 
 function resetRecording() {
@@ -159,7 +159,7 @@ function createRecordingElement(file, i) {
   audio.src = file;
   audio.onended = (e) => {
     e.target.nextElementSibling.firstElementChild.src = 'images/play.png';
-
+    
   };
   recordingElement.appendChild(audio);
   const playButton = document.createElement('button');
@@ -174,10 +174,10 @@ function createRecordingElement(file, i) {
   recordingElement.appendChild(playButton);
   return recordingElement;
 }
-function metaData() {
-  for (i = 0; i < metaArr.length; i++) {
-    for (j = 0; j < placeholder.length; j++) {
-      if (metaArr[i].Audio.url.substring(8, 21) === placeholder[j]) {
+function metaData(){
+  for(i =0; i<metaArr.length; i++){
+    for(j=0; j<placeholder.length; j++){
+      if(metaArr[i].Audio.url.substring(8, 21) === placeholder[j]){
         let recordingData = metaArr[i].adminData;
         const project = document.createElement('p');
         project.classList.add('metaDataStyle');
@@ -203,8 +203,8 @@ function metaData() {
   }
 };
 
-function fetchRecordings() {
-
+ function fetchRecordings() {
+   
   fetch('/recordings')
     .then((response) => response.json())
     .then((response) => {
@@ -212,8 +212,8 @@ function fetchRecordings() {
         recordingsContainer.innerHTML = ''; // remove all children
         recordingsContainer.classList.add('col-lg-2');
         response.files.forEach((file) => {
-          for (i = 0; i < metaArr.length; i++) {
-            if (file.substring(1, 14) === metaArr[i].Audio.url.substring(8, 21) && metaArr[i].Public) {
+          for(i =0; i < metaArr.length; i++){
+            if(file.substring(1, 14) === metaArr[i].Audio.url.substring(8, 21) && metaArr[i].Public){
               const recordingElement = createRecordingElement(file, i);
               placeholder[i] = file.substring(1, 14);
               recordingElement.classList.add('col-lg-2');
@@ -223,10 +223,10 @@ function fetchRecordings() {
         });
       }
     })
-
+    
     .catch((err) => console.error(err));
-
-}
+    
+  }
 
 function saveRecording() {
   const formData = new FormData();
@@ -241,7 +241,7 @@ function saveRecording() {
       resetRecording();
       metaGrab();
       fetchRecordings();
-      setTimeout(() => metaData(), 200);
+      setTimeout(() => metaData() , 200);
     })
     .catch((err) => {
       console.error(err);
@@ -262,6 +262,6 @@ function discardRecording() {
 discardAudioButton.addEventListener('click', discardRecording);
 
 fetchRecordings();
-setTimeout(() => metaData(), 200);
+setTimeout(() => metaData() , 200);
 
 
