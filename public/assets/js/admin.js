@@ -36,10 +36,9 @@ function getCollections() {
             if (object.success && object.filed) {
                 for (i = 0; i < object.filed.length; i++) {
                     let isPublic = object.filed[i].Public;
-                    console.log(isPublic);
+                    console.log('record public flag ' + isPublic);
                     /* filter by records with a false public flag */
                     if (!isPublic) {
-                        console.log("found false flag");
                         var dataContainer = document.getElementById('collections');
 
                         /* id */
@@ -53,12 +52,12 @@ function getCollections() {
                             'Collection: ' + object.filed[i].adminData.Project + ',  ' +
                             'prompt: ' + object.filed[i].adminData.Prompt + ',  ' +
                             'timeStamp: ' + object.filed[i].adminData.TimeStamp + ',  '
-
                             ;
                         /* audio */
                         var audio = document.createElement('div');
-                        audio.innerHTML =
-                            'url: ' + object.filed[i].Audio.url;
+                        /* audio.innerHTML =
+                            'url: ' + object.filed[i].Audio.url; */
+                        fetchRecordings(audio);
 
                         /* meta data */
                         var meta = document.createElement('div');
@@ -94,10 +93,10 @@ function getCollections() {
 
                         /* create delete record button */
                         var deleteButton = document.createElement('button');
-                        deleteButton.type  = 'submit';
+                        deleteButton.type = 'submit';
                         deleteButton.value = id;
                         deleteButton.innerHTML = 'Delete this record';
-                        deleteButton.name = 'deletePublic';                        
+                        deleteButton.name = 'deletePublic';
 
                         /* create html */
                         dataContainer.appendChild(showId);
@@ -118,6 +117,7 @@ function getCollections() {
 
 setTimeout(() => getCollections(), 100);
 
+
 function fetchRecordings() {
 
     fetch('/recordings')
@@ -136,6 +136,7 @@ function fetchRecordings() {
                         recordingElement.classList.add('col-lg-2');
                         recordingsContainer.appendChild(recordingElement);
                     }
+
                     }
                 });
             }
@@ -223,6 +224,7 @@ function metaData(){
                 const tselement = document.getElementById('cont' + j);
                 tselement.appendChild(ts);
             }
+
         }
     }
 };
