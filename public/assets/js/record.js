@@ -146,8 +146,10 @@ function playRecording(e) {
 
 function createRecordingElement(file, i) {
   const recordingElement = document.createElement('div');
-  if(i === 0){
+  let k = 0;
+  if(k === 0){
     recordingElement.classList.add("slider-item", 'active');
+    k++;
   } else {
     recordingElement.classList.add("slider-item");
   }

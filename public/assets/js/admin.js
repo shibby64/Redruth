@@ -1,3 +1,32 @@
+const recordButton = document.getElementById('recordButton');
+//const recordButtonImage = recordButton.firstElementChild;
+const recordedAudioContainer = document.getElementById('recordedAudioContainer');
+const saveAudioButton = document.getElementById('saveButton');
+const discardAudioButton = document.getElementById('discardButton');
+const recordingsContainer = document.getElementById('recordings');
+
+
+let chunks = []; // will be used later to record audio
+let mediaRecorder = null; // will be used later to record audio
+let audioBlob = null; // the blob that will hold the recorded audio
+let metaArr = [];
+let placeholder = [];
+metaGrab();
+console.log(metaArr);
+function metaGrab(){
+  fetch('/metaArr', {method : 'POST'})
+  .then((object) => object.json())
+  .then((object) => {
+    if (object.success && object.filed) {
+      for(i = 0; i < object.filed.length; i++){
+        metaArr[i] = object.filed[i];
+      }
+    }
+  })
+  .catch((err) => console.error(err));
+}
+
+
 /* grab records in the database and filter by ones that are not public */
 function getCollections() {
     fetch('/saved', { method: 'POST' })
@@ -88,42 +117,114 @@ function getCollections() {
 };
 
 setTimeout(() => getCollections(), 100);
-// refresh();
-// function refresh(){
-//     getCollections()
-//     setInterval(refresh, 6000);
-// } 
-/*
-old ajax code, didn't want to delete incase you want to keep it around. Feel free to delete. 
-$.ajax({
-    url: '/saved',
-    method: "POST",
-    complete: function(data) {
-        var object = data.responseJSON;
-        for(i = 0; i < object.length; i++){
-            let recordingData = object[i].adminData;
-            let audioData = object[i].Audio;
-            const pr = document.createElement('p');
-            const prnode = document.createTextNode("Project: " + recordingData.Project);
-            pr.appendChild(prnode);
-            const prelement = document.getElementById("saved" + (i+1));
-            prelement.appendChild(pr);
-            const e = document.createElement('p');
-            e.style.backgroundColor = "cyan";
-            const node = document.createTextNode("Prompt: " + recordingData.Prompt);
-            e.appendChild(node);
-            const element = document.getElementById("saved" + (i+1));
-            element.appendChild(e);
-            const ts = document.createElement('p');
-            const tsnode = document.createTextNode("Timestamp: " + recordingData.TimeStamp);
-            ts.appendChild(tsnode);
-            const tselement = document.getElementById("saved" + (i+1));
-            tselement.appendChild(ts);
-            const recordingsContainer = document.getElementById("saved" + (i+1));
-            const recordingElement = createRecordingElement('..\\'+audioData.url);
-            console.log(audioData.url, recordingElement);
-            recordingsContainer.appendChild(recordingElement);
+
+function fetchRecordings() {
+
+    fetch('/recordings')
+        
+        .then((response) => response.json())
+        .then((response) => {
+            console.log("fetch recordings");
+            if (response.success && response.files) {
+                recordingsContainer.innerHTML = ''; // remove all children
+                recordingsContainer.classList.add('col-lg-2');
+                response.files.forEach((file) => {
+                    for(i =0; i < metaArr.length; i++){
+                    if(file.substring(1, 14) === metaArr[i].Audio.url.substring(8, 21) && !metaArr[i].Public){
+                        const recordingElement = createRecordingElement(file, i);
+                        placeholder[i] = file.substring(1, 14);
+                        recordingElement.classList.add('col-lg-2');
+                        recordingsContainer.appendChild(recordingElement);
+                    }
+                    }
+                });
+            }
+        })
+    .catch((err) => console.error(err));
+}
+function createRecordingElement(file, i) {
+    const recordingElement = document.createElement('div');
+    let k = 0;
+    if(k === 0){
+      recordingElement.classList.add("slider-item", 'active');
+      k++;
+    } else {
+      recordingElement.classList.add("slider-item");
+    }
+    recordingElement.setAttribute('id', 'cont' + i)
+    const audio = document.createElement('audio');
+    //audio.classList.add('col-lg-2');
+    audio.src = file;
+    audio.onended = (e) => {
+      e.target.nextElementSibling.firstElementChild.src = 'images/play.png';
+      
+    };
+    recordingElement.appendChild(audio);
+    const playButton = document.createElement('button');
+    playButton.setAttribute('id', 'aButton')
+    playButton.classList.add('play-button', 'btn', 'border', 'shadow-sm', 'text-center');
+    const playImage = document.createElement('img');
+    playImage.src = '/images/play.png';
+    playImage.classList.add('img-fluid');
+    playButton.appendChild(playImage);
+  
+    playButton.addEventListener('click', playRecording);
+    recordingElement.appendChild(playButton);
+    return recordingElement;
+}
+function playRecording(e) {
+    let button = e.target;
+    if (button.tagName === 'IMG') {
+      // get parent button
+      button = button.parentElement;
+    }
+    const audio = button.previousElementSibling;
+    if (audio && audio.tagName === 'AUDIO') {
+      if (audio.paused) {
+        audio.play();
+        button.firstElementChild.src = 'images/pause.png';
+      } else {
+        audio.pause();
+        button.firstElementChild.src = 'images/play.png';
+      }
+    }
+}
+function resetRecording() {
+    if (recordedAudioContainer.firstElementChild.tagName === 'AUDIO') {
+      recordedAudioContainer.firstElementChild.remove();
+      // hide recordedAudioContainer
+      recordedAudioContainer.classList.add('d-none');
+      recordedAudioContainer.classList.remove('d-flex');
+    }
+    audioBlob = null;
+}
+function metaData(){
+    for(i =0; i<metaArr.length; i++){
+        for(j=0; j<placeholder.length; j++){
+            if(metaArr[i].Audio.url.substring(8, 21) === placeholder[j]){
+                let recordingData = metaArr[i].adminData;
+                const project = document.createElement('p');
+                project.classList.add('metaDataStyle');
+                const projectNode = document.createTextNode("Project: " + recordingData.Project);
+                project.appendChild(projectNode);
+                const projectElement = document.getElementById('cont' + j);
+                projectElement.appendChild(project);
+                const prompt = document.createElement('p');
+                prompt.classList.add('metaDataStyle');
+                prompt.style.backgroundColor = "cyan";
+                const promptNode = document.createTextNode("Prompt: " + recordingData.Prompt);
+                prompt.appendChild(promptNode);
+                const promptElement = document.getElementById('cont' + j);
+                promptElement.appendChild(prompt);
+                const ts = document.createElement('p');
+                ts.classList.add('metaDataStyle');
+                const tsnode = document.createTextNode("Timestamp: " + recordingData.TimeStamp);
+                ts.appendChild(tsnode);
+                const tselement = document.getElementById('cont' + j);
+                tselement.appendChild(ts);
+            }
         }
     }
-  });
-   */
+};
+    fetchRecordings();
+    setTimeout(() => metaData() , 200);
