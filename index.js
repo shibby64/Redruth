@@ -152,7 +152,8 @@ function createNewTable(project, prompt) {
 app.get('/updatePublic', (req, res) => {
   var id = req.query.updatePublic;
   updateTable(id);
-  res.sendFile(path.join(__dirname, 'public/admin.html'));
+  res.redirect('back');
+  //res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
 /* add public true to record ID */
@@ -175,7 +176,8 @@ function updateTable(id) {
 app.get('/deleteRecord', (req, res) => {
   var id = req.query.deletePublic;
   deleteRecord(id);
-  res.sendFile(path.join(__dirname, 'public/admin.html'));
+  res.redirect('back');
+  //res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
 /* delete record from collection */
