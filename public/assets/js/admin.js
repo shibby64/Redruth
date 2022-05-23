@@ -44,6 +44,10 @@ function getCollections() {
             console.log("found false flag");
             var dataContainer = document.getElementById('collections');
 
+            /* create individual containers */
+            var recordContainer = document.createElement('div');
+            recordContainer.setAttribute('id', 'cont' + i);
+
             /* id */
             var showId = document.createElement('div');
             showId.innerHTML = 'Record _id: ' + object.filed[i]._id;
@@ -57,8 +61,10 @@ function getCollections() {
               'timeStamp: ' + object.filed[i].adminData.TimeStamp + ',  '
 
               ;
+
             /* audio */
             var audio = document.createElement('div');
+
             /* get audio for playback */
             fetchRecordings(audio, id);
 
@@ -104,17 +110,19 @@ function getCollections() {
             /* create hr line */
             var hr = document.createElement('hr');
 
-            /* create html */
-            dataContainer.appendChild(showId);
-            dataContainer.appendChild(ad);
-            dataContainer.appendChild(audio);
-            dataContainer.appendChild(meta);
-            dataContainer.appendChild(updateForm);
+            /* put together html elements to create data container */
+            recordContainer.appendChild(showId);
+            recordContainer.appendChild(ad);
+            recordContainer.appendChild(audio);
+            recordContainer.appendChild(meta);
+            recordContainer.appendChild(updateForm);
             updateForm.appendChild(submitButton);
-            dataContainer.appendChild(deleteForm);
+            recordContainer.appendChild(deleteForm);
             deleteForm.appendChild(deleteButton);
-            dataContainer.appendChild(hr);
-            dataContainer.appendChild(space);
+            recordContainer.appendChild(hr);
+            recordContainer.appendChild(space);
+
+            dataContainer.appendChild(recordContainer);
           }
         }
       }
@@ -123,6 +131,11 @@ function getCollections() {
 };
 
 setTimeout(() => getCollections(), 100);
+
+/* delete html data container on update or delete */
+function removeDataContainer(dataContainer, id) {
+  
+}
 
 function fetchRecordings(audio, id) {
 
