@@ -13,7 +13,7 @@ let metaArr = [];
 let placeholder = [];
 
 metaGrab();
-console.log(metaArr);
+//console.log(metaArr);
 function metaGrab() {
   fetch('/metaArr', { method: 'POST' })
     .then((object) => object.json())
@@ -37,12 +37,14 @@ function getCollections() {
       if (object.success && object.filed) {
         for (i = 0; i < object.filed.length; i++) {
           let isPublic = object.filed[i].Public;
-          console.log(isPublic);
 
           /* filter by records with a false public flag */
           if (!isPublic) {
-            console.log("found false flag");
             var dataContainer = document.getElementById('collections');
+
+            /* create individual containers */
+            var recordContainer = document.createElement('div');
+            recordContainer.setAttribute('id', 'cont' + i);
 
             /* id */
             var showId = document.createElement('div');
@@ -57,8 +59,10 @@ function getCollections() {
               'timeStamp: ' + object.filed[i].adminData.TimeStamp + ',  '
 
               ;
+
             /* audio */
             var audio = document.createElement('div');
+
             /* get audio for playback */
             fetchRecordings(audio, id);
 
@@ -77,16 +81,17 @@ function getCollections() {
 
             /* create update form */
             var updateForm = document.createElement('form');
-            updateForm.action = '/updatePublic';
+            //updateForm.action = '/updatePublic';
             updateForm.method = 'get';
             updateForm.name = 'makePublic';
 
             /* create update submit button */
-            var submitButton = document.createElement('button');
-            submitButton.type = 'submit';
-            submitButton.value = id;
-            submitButton.innerHTML = 'Add to public site';
-            submitButton.name = 'updatePublic';
+            var updateButton = document.createElement('button');
+            updateButton.type = 'submit';
+            updateButton.value = id;
+            updateButton.innerHTML = 'Add to public site';
+            updateButton.name = 'updatePublic';
+            updateButton.addEventListener("click", removeDataContainer(i), false);
 
             /* create delete form */
             var deleteForm = document.createElement('form');
@@ -104,17 +109,20 @@ function getCollections() {
             /* create hr line */
             var hr = document.createElement('hr');
 
-            /* create html */
-            dataContainer.appendChild(showId);
-            dataContainer.appendChild(ad);
-            dataContainer.appendChild(audio);
-            dataContainer.appendChild(meta);
-            dataContainer.appendChild(updateForm);
-            updateForm.appendChild(submitButton);
-            dataContainer.appendChild(deleteForm);
+            /* put together html elements to create data container */
+            recordContainer.appendChild(showId);
+            recordContainer.appendChild(ad);
+            recordContainer.appendChild(audio);
+            recordContainer.appendChild(meta);
+            recordContainer.appendChild(updateForm);
+            updateForm.appendChild(updateButton);
+            recordContainer.appendChild(deleteForm);
             deleteForm.appendChild(deleteButton);
-            dataContainer.appendChild(hr);
-            dataContainer.appendChild(space);
+            recordContainer.appendChild(hr);
+            recordContainer.appendChild(space);
+
+            dataContainer.appendChild(recordContainer);
+
           }
         }
       }
@@ -124,13 +132,21 @@ function getCollections() {
 
 setTimeout(() => getCollections(), 100);
 
+/* delete html data container on update or delete */
+function removeDataContainer(i) {// problem with calling this function- it is getting called by default on page load, tried using the preventDefault() method but no luck. 
+  console.log("here!");
+  let div = "cont" + i;
+  element = document.getElementById(div);
+  //element.remove();
+}
+
 function fetchRecordings(audio, id) {
 
   fetch('/recordings')
 
     .then((response) => response.json())
     .then((response) => {
-      console.log("fetch recordings");
+      //.log("fetch recordings");
       if (response.success && response.files) {
         //audio.innerHTML = ''; // remove all children
         //audio.classList.add('col-lg-2');
