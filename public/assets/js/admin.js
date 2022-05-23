@@ -13,7 +13,7 @@ let metaArr = [];
 let placeholder = [];
 
 metaGrab();
-console.log(metaArr);
+//console.log(metaArr);
 function metaGrab() {
   fetch('/metaArr', { method: 'POST' })
     .then((object) => object.json())
@@ -37,11 +37,9 @@ function getCollections() {
       if (object.success && object.filed) {
         for (i = 0; i < object.filed.length; i++) {
           let isPublic = object.filed[i].Public;
-          console.log(isPublic);
 
           /* filter by records with a false public flag */
           if (!isPublic) {
-            console.log("found false flag");
             var dataContainer = document.getElementById('collections');
 
             /* create individual containers */
@@ -83,16 +81,17 @@ function getCollections() {
 
             /* create update form */
             var updateForm = document.createElement('form');
-            updateForm.action = '/updatePublic';
+            //updateForm.action = '/updatePublic';
             updateForm.method = 'get';
             updateForm.name = 'makePublic';
 
             /* create update submit button */
-            var submitButton = document.createElement('button');
-            submitButton.type = 'submit';
-            submitButton.value = id;
-            submitButton.innerHTML = 'Add to public site';
-            submitButton.name = 'updatePublic';
+            var updateButton = document.createElement('button');
+            updateButton.type = 'submit';
+            updateButton.value = id;
+            updateButton.innerHTML = 'Add to public site';
+            updateButton.name = 'updatePublic';
+            updateButton.addEventListener("click", removeDataContainer(i), false);
 
             /* create delete form */
             var deleteForm = document.createElement('form');
@@ -116,13 +115,14 @@ function getCollections() {
             recordContainer.appendChild(audio);
             recordContainer.appendChild(meta);
             recordContainer.appendChild(updateForm);
-            updateForm.appendChild(submitButton);
+            updateForm.appendChild(updateButton);
             recordContainer.appendChild(deleteForm);
             deleteForm.appendChild(deleteButton);
             recordContainer.appendChild(hr);
             recordContainer.appendChild(space);
 
             dataContainer.appendChild(recordContainer);
+
           }
         }
       }
@@ -133,8 +133,11 @@ function getCollections() {
 setTimeout(() => getCollections(), 100);
 
 /* delete html data container on update or delete */
-function removeDataContainer(dataContainer, id) {
-  
+function removeDataContainer(i) {// problem with calling this function- it is getting called by default on page load, tried using the preventDefault() method but no luck. 
+  console.log("here!");
+  let div = "cont" + i;
+  element = document.getElementById(div);
+  //element.remove();
 }
 
 function fetchRecordings(audio, id) {
@@ -143,7 +146,7 @@ function fetchRecordings(audio, id) {
 
     .then((response) => response.json())
     .then((response) => {
-      console.log("fetch recordings");
+      //.log("fetch recordings");
       if (response.success && response.files) {
         //audio.innerHTML = ''; // remove all children
         //audio.classList.add('col-lg-2');
