@@ -14,3 +14,24 @@ function checkFunction() {
     }
   }
 }
+function recordFunction() {
+  // Get the checkbox checkForm
+
+  for(i=0; i < document.getElementsByClassName("checkForm").length; i++){
+    document.getElementsByClassName("checkForm")[i].style.display = "inline-block";
+  }
+    for(i=0; i < document.getElementsByClassName("recForm").length; i++){
+      document.getElementsByClassName("recForm")[i].style.display = "block";
+    }
+
+}
+function recordReset() {
+  // Get the checkbox
+  for(i=0; i < document.getElementsByClassName("checkForm").length; i++){
+    document.getElementsByClassName("checkForm")[i].style.display = "none";
+  }
+    for(i=0; i < document.getElementsByClassName("recForm").length; i++){
+      document.getElementsByClassName("recForm")[i].style.display = "none";
+    }
+
+}
