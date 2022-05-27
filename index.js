@@ -4,11 +4,10 @@ const fs = require('fs');
 const express = require('express');
 const bodyParser = require("body-parser")
 const multer = require('multer');
-const { waitForDebugger } = require('inspector');
 const { ObjectId } = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://127.0.0.1:27017';
-let aFile = "";
+let aFile = 0;
 // Connect to the db
 
 var collection = 'test';
@@ -71,7 +70,9 @@ MongoClient.connect(url, {
     var audio = "uploads\\" + aFile + ".mp3";
     const public = false;
     console.log(aFile);
-    myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
+    if(aFile != 0){
+      myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
+    }
   });
   function TimeStamp() {
     const currentDate = new Date();
@@ -122,11 +123,17 @@ MongoClient.connect(url, {
   }
 });
 
+/* listen page route */
+app.get('/listen.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/listen.html'));
+});
 /* admin page route */
 app.get('/admin.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
-
+app.get('/saved.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/saved.html'));
+});
 /* get info from admin form */
 app.get('/admin', (req, res) => {
   var project = req.query.project;
