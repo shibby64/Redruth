@@ -1,0 +1,206 @@
+
+body{
+    background-color: #3c3d3d;
+    color: white;
+}
+
+#redruth{
+    color: #ff9f00;
+}
+
+form div{
+    padding: 12px;
+
+}
+
+#form{
+    padding-top: 10%;
+}
+
+#prompt{
+    color:  #39b7dd;
+}
+
+#recordbutton{
+    padding-top: 10%;
+}
+
+#recordbutton2{
+    padding-top: 10%;
+}
+
+#myModal{
+    background-color: #4a4d4d;
+    border: 3px solid #fff;
+    border-radius: 10px;
+    height: 60vh;
+    width: 80vw;
+    margin: 15% 15% 10% 10%;
+}
+.modal-content {
+    background-color: #4a4d4d;
+    padding: 20px;
+    height: 100%;
+    width: 100%; /* Could be more or less, depending on screen size */
+  }
+#recordbutton button{
+    background-color: #ff4a2e;
+    border-radius: 100%;
+    height: 200px;
+    width: 200px;
+}
+
+#recordbutton img{
+    height: 100%;
+    width: 100%;
+    margin-left: 0;
+    margin-right: .0;
+}
+
+#recordbutton2 button{
+    background-color: white;
+    border-radius: 100%;
+    height: 200px;
+    width: 200px;
+}
+
+#recordbutton2 img{
+    height: 80%;
+    width: 80%;
+    margin-left: 0;
+    margin-right: .0;
+}
+
+/* #recordButton img{
+    height: 110%;
+    width: 110%;
+    background-color: red;
+    overflow: hidden;
+} */
+
+#recordyourresponse{
+    padding-top: 15px;
+    font-size: 140%;
+}
+
+#myCheck {
+    margin-left: 5px;
+}
+
+.submitbtn{
+    background: #39b7dd;
+    text-align: center;
+    padding: 15px;
+    border-radius: 5px;
+    color: #fff;
+    
+}
+
+textarea{
+    margin: 10px 0;
+    background: transparent;
+    border: 0px;
+    border: 2px solid #c5ecfd;
+    padding: 10px;
+    color: #c5ecfd;
+    width: 100%;
+  }
+
+#commentslabel{
+    float: left;
+    font-size: 130%;
+}
+
+
+#title{
+    margin: 10px 0;
+    background: transparent;
+    border: 0px;
+    border: 2px solid #c5ecfd;
+    padding: 10px;
+    color: #c5ecfd;
+    width: 100%;
+}
+
+#titlelabel{
+    float: left;
+    font-size: 130%;
+}
+.contLabel{
+    float: left;
+    font-size: 130%;
+}
+.addContent{
+    margin: 10px 0;
+    background: transparent;
+    border: 0px;
+    border: 2px solid #c5ecfd;
+    padding: 10px;
+    color: #c5ecfd;
+    width: 100%;
+}
+
+#socialbuttons button{
+    background-color: #39b7dd;
+    color: white;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
+
+#saveButton{
+    background-color: #39b7dd;
+    color: white;
+}
+
+#thanks{
+    color: #ff9f00;
+    padding-bottom: 10%;
+}
+
+#participatemore{
+    padding-bottom: 3%;
+}
+
+#others{
+    padding-top: 10%;
+    padding-bottom: 3%;
+}
+
+#connected{
+    padding-bottom: 3%;
+    padding-top: 10%;
+}
+
+#divformargin{
+    margin: 3%;
+}
+
+#redruth{
+    padding-bottom: 5%;
+}
+
+#addinfo{
+    text-align: center;
+}
+
+#aboutpara{
+    margin: 3%;
+    text-align: center;
+}
+#aboutpara a{
+    color: white;
+}
+/* body{
+    background-color: aqua;
+} */
+
+
+/* ?*@media only screen and (max-width: 600px) {
+  body {
+    background-color: lightblue;
+  }
+} */
+
+
+

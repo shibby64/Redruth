@@ -6,7 +6,9 @@ const recordButton = document.getElementById('recordButton');
 const recordButtonImage = recordButton.firstElementChild;
 const recordedAudioContainer = document.getElementById('recordedAudioContainer');
 const saveAudioButton = document.getElementById('saveButton');
+saveAudioButton.setAttribute('onclick', "window.location.assign('/saved.html')");
 const discardAudioButton = document.getElementById('discardButton');
+discardAudioButton.setAttribute('onclick', 'recordReset()')
 const recordingsContainer = document.getElementById('recordings');
 
 
@@ -163,7 +165,7 @@ function createRecordingElement(file, i) {
   };
   recordingElement.appendChild(audio);
   const playButton = document.createElement('button');
-  playButton.setAttribute('id', 'aButton')
+  playButton.setAttribute('id', 'aButton');
   playButton.classList.add('play-button', 'btn', 'border', 'shadow-sm', 'text-center');
   const playImage = document.createElement('img');
   playImage.src = '/images/play.png';
@@ -237,10 +239,7 @@ function saveRecording() {
     .then((response) => response.json())
     .then(() => {
       alert('Your recording is saved');
-      resetRecording();
-      metaGrab();
-      fetchRecordings();
-      setTimeout(() => metaData(), 200);
+      window.location.assign('/saved.html');
     })
     .catch((err) => {
       console.error(err);
