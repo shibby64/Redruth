@@ -18,7 +18,17 @@
 
 
     <div class="record-button-container text-center mt-5">
-      <h6 id="redruth">The Redruth Project</h6>
+      <button id = "redruth" >The Redruth Project</button>
+        <div id="myModal" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+          <div>
+            <h4>Lorum Ipsum!</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+          </div>
+          </div>
+        </div>
         <h3 id="prompt">What memories come to mind when you think of the Passmore Edwards Free Library?</h3>
           <div id="form">
             <form method="post" action="/insert" name="record-data" id="record-data" autocomplete="on">
@@ -36,19 +46,31 @@
           <div class="actions mt-3">
                 <button type="submit" name="submit" class="btn btn-success rounded-pill" id="saveButton" onclick="window.location.href='saved.html';"
                 >Save</button>
-                <button class="btn btn-danger rounded-pill" id="discardButton" >Discard</button>
+                <button class="btn btn-transparent rounded-pill" id="discardButton" >Discard</button>
           </div></div>
           <div id = "password"></div>
           
             <div>
-              <label for="title" class = "recForm" id="titlelabel" style="display:none" >Add a title for your response</label><br>
-              <input type="text" name="title" id="title" class = "recForm" style="display:none" placeholder="Title - this field is required" required></input>
+              <label for="title" id="titlelabel"  >Add a title for your response</label><br>
+              <input type="text" name="title" id="title"  placeholder="Title - this field is required" required></input>
             </div>
             <div>
-              <label for="comments" id="commentslabel" class = "recForm" style="display:none">Additional comments</label> <br>
-              <textarea id="comments" name="comments" rows="2" cols="50" class = "recForm" placeholder="Your comments here - this field is required" style="display:none" required></textarea>
+              <label for="comments" id="commentslabel" >Additional comments</label> <br>
+              <textarea id="comments" name="comments" rows="2" cols="50" placeholder="Your comments here - this field is required"  required></textarea>
             </div>
-            <h6 id="addinfo" class = "checkForm" style="display:none">Additional Information </h6><input type = "checkbox" class = "checkForm" id="myCheck" onclick="checkFunction()" style="display:none"></input>
+            <div id = "keys">
+              <label for="key" id="keyDisplay"></label><br /><br />
+              <h6 id = "clue"></h6><br /><br />
+              <select name="key" id="key" required>
+                <option id = "opt1">1</option>
+                <option id = "opt2">2</option>
+                <option id = "opt3">3</option>
+                <option id = "opt4">4</option>
+              </select><br /><br />
+            </div>
+            <div>
+            <h6 id="addinfo">Add Personal Information </h6><input type = "checkbox" id="myCheck" onclick="checkFunction()" ></input>
+          </div>
             <div>
               <label for="fullName" class="checked contLabel" style="display:none">Full Name</label>
               <input type="text" id="Name" name="fullName" placeholder="Name - Optional" class="checked addContent"
@@ -68,22 +90,8 @@
             </div>
 
           <!-- <div class="actions mt-3"><button class="submitbtn btn rounded-pill" >Submit</button></div> -->
-          <div id="aboutpara"><p>The Redruth Reading Room Project is an oral history project meant to refill the library with stories. <button id = "readMore" >Read More.</button></p>
-            <div id="myModal" class="modal">
-              <div class="modal-content">
-                <span class="close">&times;</span>
-              <div>
-                <h4>Never Ever!</h4>
-                <p>Will we use your data for anything beyond the purpose of enhancing
-                  the community experience for everyone. Your information will not be 
-                  shared bartered or sold. Administrators may view your data to reach 
-                  out for additional content, and querries for participation in future
-                  events. Feel free to leave optional fields blank if you prefer anonymity
-                  but thank you for providing your experiences for others to enjoy.
-                </p>
-              </div>
-              </div>
-            </div>
+          <div id="aboutpara" class="checked contLabel" style="display:none"><p>The Redruth Reading Room Project is an oral history project meant to refill the center with stories. Any data you provide will only be used to add additional context to your audio recording, and contact information will only be used by project adminstrators for requests to participate in future projects.</p>
+            
           </div>
         </div>
       </form>

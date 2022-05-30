@@ -6,6 +6,9 @@ body{
 
 #redruth{
     color: #ff9f00;
+    border:0px solid  #3c3d3d; 
+    background-color: transparent;
+    font-weight: bold;
 }
 
 form div{
@@ -85,6 +88,7 @@ form div{
 
 #myCheck {
     margin-left: 5px;
+    display: inline-block;
 }
 
 .submitbtn{
@@ -110,8 +114,18 @@ textarea{
     float: left;
     font-size: 130%;
 }
-
-
+#keyDisplay {
+    float: left;
+    font-size: 130%;
+}
+#key {
+    float: left;
+    font-size: 130%;
+}
+#clue {
+    float: left;
+    font-size: 130%;
+}
 #title{
     margin: 10px 0;
     background: transparent;
@@ -151,8 +165,14 @@ textarea{
 #saveButton{
     background-color: #39b7dd;
     color: white;
+    font-size: 1.3rem;
+    width: 65%;
 }
-
+#discardButton{
+    color: white;
+    text-decoration: underline;
+    font-size: .9rem;
+}
 #thanks{
     color: #ff9f00;
     padding-bottom: 10%;
@@ -182,9 +202,12 @@ textarea{
 
 #addinfo{
     text-align: center;
+    display: inline-block;
+    padding-bottom: 10vh;
 }
 
 #aboutpara{
+    color: #ff9f00;
     margin: 3%;
     text-align: center;
 }
