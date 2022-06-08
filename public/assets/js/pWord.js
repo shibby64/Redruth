@@ -21,8 +21,10 @@ function pWord(){
     result += capCharresult.charAt(3) + lowCharresult.charAt(3) + numresult.charAt(3) + specCharresult.charAt(3);
     var correct = Math.ceil(Math.random() * 4);
     var choice = "";
+    let answer = "";
     if(correct === 1){
         choice = "numbers"
+        answer = numresult;
         document.getElementById('opt2').innerHTML = numresult;
         document.getElementById('opt2').setAttribute('value', numresult);
         let fake1 = fakePW('0123456789', 10);
@@ -36,10 +38,10 @@ function pWord(){
         document.getElementById('opt4').setAttribute('value', fake3)
     } else if (correct === 2){
         choice = "capital letters"
+        answer = capCharresult;
         let fake1 = fakePW('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 26);
         document.getElementById('opt1').innerHTML = fake1;
         document.getElementById('opt1').setAttribute('value', fake1);
-        
         document.getElementById('opt2').innerHTML = capCharresult;
         document.getElementById('opt2').setAttribute('value', capCharresult)
         let fake2 = fakePW('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 26);
@@ -50,6 +52,7 @@ function pWord(){
         document.getElementById('opt4').setAttribute('value', fake3)
     } else if (correct === 3){
         choice = "lowercase letters"
+        answer = lowCharresult;
         let fake1 = fakePW('abcdefghijklmnopqrstuvwxyz', 26);
         document.getElementById('opt1').innerHTML = fake1;
         document.getElementById('opt1').setAttribute('value', fake1);
@@ -63,6 +66,7 @@ function pWord(){
         document.getElementById('opt4').setAttribute('value', fake3)
     }else if (correct === 4){
         choice = "special characters"
+        answer = specCharresult;
         let fake1 = fakePW('~!@#$%^&*(){}][?><', 18);
         document.getElementById('opt1').innerHTML = fake1;
         document.getElementById('opt1').setAttribute('value', fake1);
@@ -77,15 +81,9 @@ function pWord(){
     }
 
 
-    document.getElementById('keyDisplay').innerHTML = result;
-    document.getElementById('clue').innerHTML = "Please choose the option with the correct " + choice + " in the line above reading from left to right.";
+    //document.getElementById('keyDisplay').innerHTML = result;
+    document.getElementById('clue').innerHTML = "Prove your humanity and match the correct " + choice +" " + answer;
 
-    // const password = document.createElement('p');
-    // password.setAttribute('id', 'pWordSelect');
-    // const pWordNode = document.createTextNode("" + result);
-    // password.appendChild(pWordNode);
-    // const pWordElement = document.getElementById('password');
-    // pWordElement.appendChild(password);
 }
 pWord();
 

@@ -141,7 +141,7 @@ function playRecording(e) {
       button.firstElementChild.src = 'images/pause.png';
     } else {
       audio.pause();
-      button.firstElementChild.src = 'images/play.png';
+      button.firstElementChild.src = 'images/play2.png';
     }
   }
 }
@@ -160,15 +160,15 @@ function createRecordingElement(file, i) {
   //audio.classList.add('col-lg-2');
   audio.src = file;
   audio.onended = (e) => {
-    e.target.nextElementSibling.firstElementChild.src = 'images/play.png';
+    e.target.nextElementSibling.firstElementChild.src = 'images/play2.png';
 
   };
   recordingElement.appendChild(audio);
   const playButton = document.createElement('button');
   playButton.setAttribute('id', 'aButton');
-  playButton.classList.add('play-button', 'btn', 'border', 'shadow-sm', 'text-center');
+  playButton.classList.add('play-button', 'btn', 'shadow-sm', 'text-center');
   const playImage = document.createElement('img');
-  playImage.src = '/images/play.png';
+  playImage.src = '/images/play2.png';
   playImage.classList.add('img-fluid');
   playButton.appendChild(playImage);
 
@@ -189,7 +189,7 @@ function metaData() {
         projectElement.appendChild(project);
         const prompt = document.createElement('p');
         prompt.classList.add('metaDataStyle');
-        prompt.style.backgroundColor = "cyan";
+        //prompt.style.backgroundColor = "cyan";
         const promptNode = document.createTextNode("Prompt: " + recordingData.Prompt);
         prompt.appendChild(promptNode);
         const promptElement = document.getElementById('cont' + j);

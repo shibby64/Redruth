@@ -119,12 +119,12 @@ textarea{
     font-size: 130%;
 }
 #key {
-    float: left;
-    font-size: 130%;
+    float: center;
+    font-size: 110%;
 }
 #clue {
-    float: left;
-    font-size: 130%;
+    float: center;
+    font-size: 100%;
 }
 #title{
     margin: 10px 0;
@@ -203,7 +203,6 @@ textarea{
 #addinfo{
     text-align: center;
     display: inline-block;
-    padding-bottom: 10vh;
 }
 
 #aboutpara{

@@ -23,8 +23,8 @@
           <div class="modal-content">
             <span class="close">&times;</span>
           <div>
-            <h4>Lorum Ipsum!</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <h4>Redruth Recording Studio</h4>
+            <p>This recording will be added to a repository of stories documenting the history of the town of Redruth and it's residents. We want any story big or small. These stories will be exhibited as part of a library in Redruth Reading Room, a small space in the old Library building which we will install and respond to the stories of the town. Please contribute a memory or story here.
             </p>
           </div>
           </div>
@@ -41,13 +41,7 @@
           <h5 id="recordyourresponse">Record your response!</h5>
           <h6 id="countDownTimer" class = "recForm" style="display:none">15:00</h6>
             </div>
-            <div class="recorded-audio-container mt-5 d-none flex-column justify-content-center align-items-center"
-              id="recordedAudioContainer">
-          <div class="actions mt-3">
-                <button type="submit" name="submit" class="btn btn-success rounded-pill" id="saveButton" onclick="window.location.href='saved.html';"
-                >Save</button>
-                <button class="btn btn-transparent rounded-pill" id="discardButton" >Discard</button>
-          </div></div>
+
           <div id = "password"></div>
           
             <div>
@@ -58,24 +52,14 @@
               <label for="comments" id="commentslabel" >Additional comments</label> <br>
               <textarea id="comments" name="comments" rows="2" cols="50" placeholder="Your comments here - this field is required"  required></textarea>
             </div>
-            <div id = "keys">
-              <label for="key" id="keyDisplay"></label><br /><br />
-              <h6 id = "clue"></h6><br /><br />
-              <select name="key" id="key" required>
-                <option id = "opt1">1</option>
-                <option id = "opt2">2</option>
-                <option id = "opt3">3</option>
-                <option id = "opt4">4</option>
-              </select><br /><br />
-            </div>
+            <h6 id="addinfo">Add Additional Information </h6><input type = "checkbox" id="myCheck" onclick="checkFunction()" ></input>
             <div>
-            <h6 id="addinfo">Add Personal Information </h6><input type = "checkbox" id="myCheck" onclick="checkFunction()" ></input>
           </div>
             <div>
               <label for="fullName" class="checked contLabel" style="display:none">Full Name</label>
               <input type="text" id="Name" name="fullName" placeholder="Name - Optional" class="checked addContent"
                 style="display:none"></input>
-              <label for="postCode" class="checked contLabel" style="display:none">Postal Code</label>
+              <label for="postCode" class="checked contLabel" style="display:none">Post Code</label>
               <input type="text" id="postCode" name="postCode" placeholder="123456789 - Optional" class="checked addContent"
                 style="display:none"></input>
             </div>
@@ -88,10 +72,25 @@
               <input type="email" id="email" name="email" placeholder="sue@redruth.com - Optional" class="checked addContent"
                 style="display:none"></input>
             </div>
-
+            <div id = "keys">
+              <label for="key" id="keyDisplay"></label><br /><br />
+              <h6 id = "clue"></h6><br /><br />
+              <select name="key" id="key" required>
+                <option id = "opt1">1</option>
+                <option id = "opt2">2</option>
+                <option id = "opt3">3</option>
+                <option id = "opt4">4</option>
+              </select><br /><br />
+            </div>
+            <div class="recorded-audio-container mt-5 d-none flex-column justify-content-center align-items-center"
+              id="recordedAudioContainer">
+          <div class="actions mt-3">
+                <button type="submit" name="submit" class="btn btn-success rounded-pill" id="saveButton" onclick="window.location.href='saved.html';"
+                >Save</button>
+                <button class="btn btn-transparent rounded-pill" id="discardButton" >Discard</button>
+          </div></div>
           <!-- <div class="actions mt-3"><button class="submitbtn btn rounded-pill" >Submit</button></div> -->
           <div id="aboutpara" class="checked contLabel" style="display:none"><p>The Redruth Reading Room Project is an oral history project meant to refill the center with stories. Any data you provide will only be used to add additional context to your audio recording, and contact information will only be used by project adminstrators for requests to participate in future projects.</p>
-            
           </div>
         </div>
       </form>
