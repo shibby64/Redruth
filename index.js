@@ -6,11 +6,11 @@ const bodyParser = require("body-parser")
 const multer = require('multer');
 const { ObjectId } = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://127.0.0.1:27017';
+const url = 'mongodb+srv://dskrocks:a3blog@cluster0.0dnde.mongodb.net/?retryWrites=true&w=majority';
 let aFile = 0;
 // Connect to the db
 
-var collection = 'test';
+var collection = 'Test';
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -88,10 +88,10 @@ MongoClient.connect(url, {
     return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;//swap day month
   }
   // Specify database you want to access
-  const db = client.db('local');
+  const db = client.db('Redruth');
   const record = db.collection(collection);//temp change to test new collection created with admin page
   record.find().toArray(function (err, filed) {
-    //console.log(filed); // output all records
+    console.log(filed); // output all records
     app.post('/metaArr', function (req, res) {
       return res.json({ success: true, filed });
     });
@@ -146,7 +146,7 @@ function createNewTable(project, prompt) {
   /* working, however will crash when you attempt to create a collection that already exists */
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    const dbase = db.db("local");
+    const dbase = db.db("Redruth");
     dbase.createCollection(project, function (err, res) {
       if (err) throw err;
       console.log("created collection");
@@ -166,7 +166,7 @@ app.get('/updatePublic', (req, res) => {
 function updateTable(id) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    const dbase = db.db('local');
+    const dbase = db.db('Redruth');
     dbase.collection(collection)
       .updateOne(
         { '_id' : ObjectId(id) },
@@ -190,7 +190,7 @@ app.get('/deleteRecord', (req, res) => {
 function deleteRecord(id) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    const dbase = db.db('local');//eliminates 'db.collection is not a function' TypeError
+    const dbase = db.db('Redruth');//eliminates 'db.collection is not a function' TypeError
     dbase.collection(collection).deleteOne({'_id' : ObjectId(id)}, 
     function (err, res) {
       if (err) throw err;
