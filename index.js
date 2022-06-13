@@ -120,6 +120,7 @@ MongoClient.connect(url, {
     }, (err, result) => { });
     console.log(`MongoDB Connected: ${url}`);
   }
+  //location.reload();
 });
 
 /* listen page route */

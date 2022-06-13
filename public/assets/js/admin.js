@@ -170,7 +170,7 @@ function createRecordingElement(file, i) {
   const audio = document.createElement('audio');
   audio.src = file;
   audio.onended = (e) => {
-    e.target.nextElementSibling.firstElementChild.src = 'images/play.png';
+    e.target.nextElementSibling.firstElementChild.src = '../images/play2.png';
 
   };
   recordingElement.appendChild(audio);
@@ -178,7 +178,7 @@ function createRecordingElement(file, i) {
   playButton.setAttribute('id', 'aButton')
   playButton.classList.add('play-button', 'btn', 'border', 'shadow-sm', 'text-center');
   const playImage = document.createElement('img');
-  playImage.src = '/images/play.png';
+  playImage.src = '../images/play2.png';
   playImage.classList.add('img-fluid');
   playButton.appendChild(playImage);
 
@@ -197,10 +197,10 @@ function playRecording(e) {
   if (audio && audio.tagName === 'AUDIO') {
     if (audio.paused) {
       audio.play();
-      button.firstElementChild.src = 'images/pause.png';
+      button.firstElementChild.src = '../images/pause.png';
     } else {
       audio.pause();
-      button.firstElementChild.src = 'images/play.png';
+      button.firstElementChild.src = '../images/play2.png';
     }
   }
 }
