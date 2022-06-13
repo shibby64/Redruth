@@ -50,7 +50,7 @@ app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
 
-function dbQuerry(){
+
   MongoClient.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -123,7 +123,7 @@ function dbQuerry(){
     }
     //location.reload();
 });
-}
+
 dbQuerry();
 /* listen page route */
 app.get('/listen.html', (req, res) => {
