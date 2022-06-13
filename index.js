@@ -6,7 +6,7 @@ const bodyParser = require("body-parser")
 const multer = require('multer');
 const { ObjectId } = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb+srv://dskrocks:a3blog@cluster0.0dnde.mongodb.net';
+const url = 'mongodb+srv://dskrocks:a3blog@cluster0.0dnde.mongodb.net/?retryWrites=true&w=majority';
 let aFile = 0;
 // Connect to the db
 
