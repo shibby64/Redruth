@@ -6,7 +6,7 @@ const bodyParser = require("body-parser")
 const multer = require('multer');
 const { ObjectId } = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb+srv://dskrocks:a3blog@cluster0.0dnde.mongodb.net/?retryWrites=true&w=majority';
+const url = 'mongodb+srv://dskrocks:a3blog@cluster0.0dnde.mongodb.net';
 let aFile = 0;
 // Connect to the db
 
@@ -50,79 +50,81 @@ app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
 
-MongoClient.connect(url, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}, (err, client) => {
-  if (err) {
-    return console.log(err);
-  }
-  app.post("/insert", function (req, res) {
-    var title = req.body.title;
-    var comments = req.body.comments;
-    var prompt = req.body.prompt;
-    var project = req.body.project;
-    var postCode = req.body.postCode;
-    var fullName = req.body.fullName;
-    var email = req.body.email;
-    var phone = req.body.phone;
-    const timeStamp = TimeStamp();
-    var audio = "uploads\\" + aFile + ".mp3";
-    const public = false;
-    console.log(aFile);
-    if(aFile != 0){
-      myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
+function dbQuerry(){
+  MongoClient.connect(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }, (err, client) => {
+    if (err) {
+      return console.log(err);
     }
-  });
-  function TimeStamp() {
-    const currentDate = new Date();
-    var year = currentDate.getUTCFullYear();
-    var month = currentDate.getUTCMonth();
-    var day = currentDate.getUTCDate();
-    var hour = currentDate.getUTCHours() + 1;
-    var minute = currentDate.getUTCMinutes();
-    if (minute < 10) {
-      minute = "0" + minute;
+    app.post("/insert", function (req, res) {
+      var title = req.body.title;
+      var comments = req.body.comments;
+      var prompt = req.body.prompt;
+      var project = req.body.project;
+      var postCode = req.body.postCode;
+      var fullName = req.body.fullName;
+      var email = req.body.email;
+      var phone = req.body.phone;
+      const timeStamp = TimeStamp();
+      var audio = "uploads\\" + aFile + ".mp3";
+      const public = false;
+      console.log(aFile);
+      if(aFile != 0){
+        myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
+      }
+    });
+    function TimeStamp() {
+      const currentDate = new Date();
+      var year = currentDate.getUTCFullYear();
+      var month = currentDate.getUTCMonth();
+      var day = currentDate.getUTCDate();
+      var hour = currentDate.getUTCHours() + 1;
+      var minute = currentDate.getUTCMinutes();
+      if (minute < 10) {
+        minute = "0" + minute;
+      }
+      var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+      return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;//swap day month
     }
-    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;//swap day month
-  }
-  // Specify database you want to access
-  const db = client.db('Redruth');
-  const record = db.collection(collection);//temp change to test new collection created with admin page
-  record.find().toArray(function (err, filed) {
-    console.log(filed); // output all records
-    app.post('/metaArr', function (req, res) {
-      return res.json({ success: true, filed });
+    // Specify database you want to access
+    const db = client.db('Redruth');
+    const record = db.collection(collection);//temp change to test new collection created with admin page
+    record.find().toArray(function (err, filed) {
+      console.log(filed); // output all records
+      app.post('/metaArr', function (req, res) {
+        return res.json({ success: true, filed });
+      });
+      app.post('/saved', function (req, res) {
+        return res.json({ success: true, filed });
+      });
     });
-    app.post('/saved', function (req, res) {
-      return res.json({ success: true, filed });
-    });
-  });
 
-  function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
-    record.insertOne({
-      adminData: {
-        Project: project,
-        Prompt: prompt,
-        TimeStamp: timeStamp,
-      },
-      Audio: { url: audio },
-      metaData: {
-        Title: title,
-        Comments: comments,
-        PostalCode: postCode,
-        Name: fullName,
-        Email: email,
-        Phone: phone
-      },
-      Public : public
-    }, (err, result) => { });
-    console.log(`MongoDB Connected: ${url}`);
-  }
-  //location.reload();
+    function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
+      record.insertOne({
+        adminData: {
+          Project: project,
+          Prompt: prompt,
+          TimeStamp: timeStamp,
+        },
+        Audio: { url: audio },
+        metaData: {
+          Title: title,
+          Comments: comments,
+          PostalCode: postCode,
+          Name: fullName,
+          Email: email,
+          Phone: phone
+        },
+        Public : public
+      }, (err, result) => { });
+      console.log(`MongoDB Connected: ${url}`);
+    }
+    //location.reload();
 });
-
+}
+dbQuerry();
 /* listen page route */
 app.get('/listen.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/listen.html'));
@@ -177,6 +179,7 @@ function updateTable(id) {
           console.log('updated public flag for record ' + id);
         });
   });
+  dbQuerry();
 }
 
 /* get record id from admin page to delete record */
