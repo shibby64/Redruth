@@ -5,14 +5,23 @@ const express = require('express');
 const bodyParser = require("body-parser")
 const multer = require('multer');
 const { ObjectId } = require('mongodb');
+require('dotenv').config();
+
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb+srv://dskrocks:a3blog@cluster0.0dnde.mongodb.net/?retryWrites=true&w=majority';
-let aFile = 0;
-// Connect to the db
 
+const aws = require('aws-sdk');
+aws.config.region = 'eu-west-2';
+const S3_BUCKET = process.env.S3_BUCKET;
+const uploadAudio = require('./public/assets/js/aws');
+const { memoryStorage } = require('multer');
+
+let aFile = 0;
+
+// What collection the app in looking at  
 var collection = 'Test';
 
-const storage = multer.diskStorage({
+/* const storage = multer.diskStorage({
   destination(req, file, cb) {
     cb(null, 'uploads/');
   },
@@ -21,21 +30,39 @@ const storage = multer.diskStorage({
     aFile = Date.now();
     cb(null, `${aFile}.${fileNameArr[fileNameArr.length - 1]}`);
   },
-});
+}); */
+
+const storage = memoryStorage();
+
 const upload = multer({ storage });
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 const port = process.env.PORT || 3000;
 
 app.use(express.static('public/assets'));
-app.use(express.static('uploads'));
+//app.use(express.static('uploads'));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-app.post('/record', upload.single('audio'), (req, res) => res.json({ success: true }));
+const fileName = multer.diskStorage({
+  filename(req, file, cb) {
+    const fileNameArr = file.originalname.split('.');
+    aFile = Date.now();
+    cb(null, `${aFile}.${fileNameArr[fileNameArr.length - 1]}`);
+  }
+});
 
+app.post('/record', upload.single('audiofile'), async (req, res, fileName) => {
+  const bucketname = 'redruthrecords';
+  const file = req.file.buffer;
+  const link = await uploadAudio(fileName, bucketname, file);
+  res.send(link);
+});
+
+//update to get audio files from s3 bucket
 app.get('/recordings', (req, res) => {
   let files = fs.readdirSync(path.join(__dirname, 'uploads'));
   files = files.filter((file) => {
@@ -70,7 +97,7 @@ app.listen(port, () => {
       const timeStamp = TimeStamp();
       var audio = "uploads\\" + aFile + ".mp3";
       const public = false;
-      console.log(aFile);
+      //console.log(aFile);
       if(aFile != 0){
         myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
       }

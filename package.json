@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/shahednasser/mediastream-tutorial#readme",
   "dependencies": {
+    "aws-sdk": "^2.1153.0",
     "body-parser": "^1.20.0",
     "dotenv": "^16.0.1",
     "express": "^4.17.3",
