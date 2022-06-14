@@ -29,11 +29,10 @@ function metaGrab() {
 
 
 /* grab records in the database and filter by ones that are not public */
-function getCollections() {
+async function getCollections() {
   fetch('/saved', { method: 'POST' })
     .then((object) => object.json())
     .then((object) => {
-      //console.log(object.filed)
       if (object.success && object.filed) {
         for (i = 0; i < object.filed.length; i++) {
           let isPublic = object.filed[i].Public;
@@ -56,9 +55,7 @@ function getCollections() {
             ad.innerHTML =
               'Collection: ' + object.filed[i].adminData.Project + ',  ' +
               'prompt: ' + object.filed[i].adminData.Prompt + ',  ' +
-              'timeStamp: ' + object.filed[i].adminData.TimeStamp + ',  '
-
-              ;
+              'timeStamp: ' + object.filed[i].adminData.TimeStamp + ',  ';
 
             /* audio */
             var audio = document.createElement('div');
@@ -81,7 +78,7 @@ function getCollections() {
 
             /* create update form */
             var updateForm = document.createElement('form');
-            //updateForm.action = '/updatePublic';
+            updateForm.action = '/updatePublic';
             updateForm.method = 'get';
             updateForm.name = 'makePublic';
 
@@ -91,7 +88,6 @@ function getCollections() {
             updateButton.value = id;
             updateButton.innerHTML = 'Add to public site';
             updateButton.name = 'updatePublic';
-            updateButton.addEventListener("click", removeDataContainer(i), false);
 
             /* create delete form */
             var deleteForm = document.createElement('form');
@@ -123,6 +119,8 @@ function getCollections() {
 
             dataContainer.appendChild(recordContainer);
 
+            updateForm.onsubmit = e => updatePageView();
+            deleteForm.onsubmit = e => updatePageView();
           }
         }
       }
@@ -132,12 +130,11 @@ function getCollections() {
 
 setTimeout(() => getCollections(), 100);
 
-/* delete html data container on update or delete */
-function removeDataContainer(i) {// problem with calling this function- it is getting called by default on page load, tried using the preventDefault() method but no luck. 
-  console.log("here!");
-  let div = "cont" + i;
-  element = document.getElementById(div);
-  //element.remove();
+/* update the pull from the db after a admin updates or deletes from the db */
+function updatePageView() { 
+  //e.preventDefault();
+  console.log(id);
+  location.reload();
 }
 
 function fetchRecordings(audio, id) {
@@ -173,7 +170,7 @@ function createRecordingElement(file, i) {
   const audio = document.createElement('audio');
   audio.src = file;
   audio.onended = (e) => {
-    e.target.nextElementSibling.firstElementChild.src = 'images/play.png';
+    e.target.nextElementSibling.firstElementChild.src = '../images/play2.png';
 
   };
   recordingElement.appendChild(audio);
@@ -181,7 +178,7 @@ function createRecordingElement(file, i) {
   playButton.setAttribute('id', 'aButton')
   playButton.classList.add('play-button', 'btn', 'border', 'shadow-sm', 'text-center');
   const playImage = document.createElement('img');
-  playImage.src = '/images/play.png';
+  playImage.src = '../images/play2.png';
   playImage.classList.add('img-fluid');
   playButton.appendChild(playImage);
 
@@ -200,10 +197,10 @@ function playRecording(e) {
   if (audio && audio.tagName === 'AUDIO') {
     if (audio.paused) {
       audio.play();
-      button.firstElementChild.src = 'images/pause.png';
+      button.firstElementChild.src = '../images/pause.png';
     } else {
       audio.pause();
-      button.firstElementChild.src = 'images/play.png';
+      button.firstElementChild.src = '../images/play2.png';
     }
   }
 }

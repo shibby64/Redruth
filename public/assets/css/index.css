@@ -12,7 +12,16 @@
 .play-button {
   height: 8em;
   width: 8em;
-  background-color: #5084d2;
+  background-color: transparent;
+  border-radius: 100%;
+  margin-left: 30%;
+}
+.metaDataStyle {
+  text-align: center;
+}
+.stories {
+  color: #ff9d00d7;
+  font-weight: bold;
 }
 .modal {
   display: none; /* Hidden by default */

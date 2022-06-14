@@ -6,11 +6,11 @@ const bodyParser = require("body-parser")
 const multer = require('multer');
 const { ObjectId } = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://127.0.0.1:27017';
+const url = 'mongodb+srv://dskrocks:a3blog@cluster0.0dnde.mongodb.net/?retryWrites=true&w=majority';
 let aFile = 0;
 // Connect to the db
 
-var collection = 'test';
+var collection = 'Test';
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -50,77 +50,78 @@ app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
 
-MongoClient.connect(url, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}, (err, client) => {
-  if (err) {
-    return console.log(err);
-  }
-  app.post("/insert", function (req, res) {
-    var title = req.body.title;
-    var comments = req.body.comments;
-    var prompt = req.body.prompt;
-    var project = req.body.project;
-    var postCode = req.body.postCode;
-    var fullName = req.body.fullName;
-    var email = req.body.email;
-    var phone = req.body.phone;
-    const timeStamp = TimeStamp();
-    var audio = "uploads\\" + aFile + ".mp3";
-    const public = false;
-    console.log(aFile);
-    if(aFile != 0){
-      myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
+
+  MongoClient.connect(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }, (err, client) => {
+    if (err) {
+      return console.log(err);
     }
-  });
-  function TimeStamp() {
-    const currentDate = new Date();
-    var year = currentDate.getUTCFullYear();
-    var month = currentDate.getUTCMonth();
-    var day = currentDate.getUTCDate();
-    var hour = currentDate.getUTCHours() + 1;
-    var minute = currentDate.getUTCMinutes();
-    if (minute < 10) {
-      minute = "0" + minute;
-    }
-    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;//swap day month
-  }
-  // Specify database you want to access
-  const db = client.db('local');
-  const record = db.collection(collection);//temp change to test new collection created with admin page
-  record.find().toArray(function (err, filed) {
-    //console.log(filed); // output all records
-    app.post('/metaArr', function (req, res) {
-      return res.json({ success: true, filed });
+    app.post("/insert", function (req, res) {
+      var title = req.body.title;
+      var comments = req.body.comments;
+      var prompt = req.body.prompt;
+      var project = req.body.project;
+      var postCode = req.body.postCode;
+      var fullName = req.body.fullName;
+      var email = req.body.email;
+      var phone = req.body.phone;
+      const timeStamp = TimeStamp();
+      var audio = "uploads\\" + aFile + ".mp3";
+      const public = false;
+      console.log(aFile);
+      if(aFile != 0){
+        myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
+      }
     });
-    app.post('/saved', function (req, res) {
-      return res.json({ success: true, filed });
+    function TimeStamp() {
+      const currentDate = new Date();
+      var year = currentDate.getUTCFullYear();
+      var month = currentDate.getUTCMonth();
+      var day = currentDate.getUTCDate();
+      var hour = currentDate.getUTCHours() + 1;
+      var minute = currentDate.getUTCMinutes();
+      if (minute < 10) {
+        minute = "0" + minute;
+      }
+      var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+      return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;//swap day month
+    }
+    // Specify database you want to access
+    const db = client.db('Redruth');
+    const record = db.collection(collection);//temp change to test new collection created with admin page
+    record.find().toArray(function (err, filed) {
+      //console.log(filed); // output all records
+      app.post('/metaArr', function (req, res) {
+        return res.json({ success: true, filed });
+      });
+      app.post('/saved', function (req, res) {
+        return res.json({ success: true, filed });
+      });
     });
 
-
-  });
-  function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
-    record.insertOne({
-      adminData: {
-        Project: project,
-        Prompt: prompt,
-        TimeStamp: timeStamp,
-      },
-      Audio: { url: audio },
-      metaData: {
-        Title: title,
-        Comments: comments,
-        PostalCode: postCode,
-        Name: fullName,
-        Email: email,
-        Phone: phone
-      },
-      Public : public
-    }, (err, result) => { });
-    console.log(`MongoDB Connected: ${url}`);
-  }
+    function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
+      record.insertOne({
+        adminData: {
+          Project: project,
+          Prompt: prompt,
+          TimeStamp: timeStamp,
+        },
+        Audio: { url: audio },
+        metaData: {
+          Title: title,
+          Comments: comments,
+          PostalCode: postCode,
+          Name: fullName,
+          Email: email,
+          Phone: phone
+        },
+        Public : public
+      }, (err, result) => { });
+      console.log(`MongoDB Connected: ${url}`);
+    }
+    //location.reload();
 });
 
 /* listen page route */
@@ -147,7 +148,7 @@ function createNewTable(project, prompt) {
   /* working, however will crash when you attempt to create a collection that already exists */
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    const dbase = db.db("local");
+    const dbase = db.db("Redruth");
     dbase.createCollection(project, function (err, res) {
       if (err) throw err;
       console.log("created collection");
@@ -167,7 +168,7 @@ app.get('/updatePublic', (req, res) => {
 function updateTable(id) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    const dbase = db.db('local');
+    const dbase = db.db('Redruth');
     dbase.collection(collection)
       .updateOne(
         { '_id' : ObjectId(id) },
@@ -191,7 +192,7 @@ app.get('/deleteRecord', (req, res) => {
 function deleteRecord(id) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    const dbase = db.db('local');//eliminates 'db.collection is not a function' TypeError
+    const dbase = db.db('Redruth');//eliminates 'db.collection is not a function' TypeError
     dbase.collection(collection).deleteOne({'_id' : ObjectId(id)}, 
     function (err, res) {
       if (err) throw err;
