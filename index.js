@@ -92,7 +92,7 @@ app.listen(port, () => {
     const db = client.db('Redruth');
     const record = db.collection(collection);//temp change to test new collection created with admin page
     record.find().toArray(function (err, filed) {
-      console.log(filed); // output all records
+      //console.log(filed); // output all records
       app.post('/metaArr', function (req, res) {
         return res.json({ success: true, filed });
       });
@@ -124,7 +124,6 @@ app.listen(port, () => {
     //location.reload();
 });
 
-dbQuerry();
 /* listen page route */
 app.get('/listen.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/listen.html'));
@@ -179,7 +178,6 @@ function updateTable(id) {
           console.log('updated public flag for record ' + id);
         });
   });
-  dbQuerry();
 }
 
 /* get record id from admin page to delete record */
