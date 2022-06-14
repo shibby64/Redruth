@@ -47,17 +47,15 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-const fileName = multer.diskStorage({
-  filename(req, file, cb) {
-    const fileNameArr = file.originalname.split('.');
-    aFile = Date.now();
-    cb(null, `${aFile}.${fileNameArr[fileNameArr.length - 1]}`);
-  }
-});
+function filename(file) {
+  aFile = Date.now();
+  return (aFile + '.mp3');
+};
 
-app.post('/record', upload.single('audiofile'), async (req, res, fileName) => {
-  const bucketname = 'redruthrecords';
+app.post('/record', upload.single('audio'), async (req, res) => {
+  const bucketname = S3_BUCKET ;
   const file = req.file.buffer;
+  const fileName = filename(file);
   const link = await uploadAudio(fileName, bucketname, file);
   res.send(link);
 });

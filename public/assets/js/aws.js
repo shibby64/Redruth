@@ -11,7 +11,7 @@ const uploadAudio = (filename, bucketname, file) => {
             Key: filename,
             Bucket: bucketname,
             Body: file,
-            ContentType: 'audio/mp3', //mp3 used to be mpeg
+            ContentType: 'audio/mpeg', //mp3 used to be mpeg
             ACL: 'public-read'
         }
 
