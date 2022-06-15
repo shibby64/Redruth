@@ -15,6 +15,7 @@ aws.config.region = 'eu-west-2';
 const S3_BUCKET = process.env.S3_BUCKET;
 const uploadAudio = require('./public/assets/js/aws');
 const { memoryStorage } = require('multer');
+const { data } = require('jquery');
 
 let aFile = 0;
 
@@ -47,13 +48,14 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
+/* create a filename for record using current date  */
 function filename(file) {
   aFile = Date.now();
   return (aFile + '.mp3');
 };
 
 app.post('/record', upload.single('audio'), async (req, res) => {
-  const bucketname = S3_BUCKET ;
+  const bucketname = S3_BUCKET;
   const file = req.file.buffer;
   const fileName = filename(file);
   const link = await uploadAudio(fileName, bucketname, file);
@@ -62,13 +64,25 @@ app.post('/record', upload.single('audio'), async (req, res) => {
 
 //update to get audio files from s3 bucket
 app.get('/recordings', (req, res) => {
-  let files = fs.readdirSync(path.join(__dirname, 'uploads'));
+  /* let files = fs.readdirSync(path.join(__dirname, 'uploads'));
   files = files.filter((file) => {
     // check that the files are audio files
     const fileNameArr = file.split('.');
     return fileNameArr[fileNameArr.length - 1] === 'mp3';
   }).map((file) => `/${file}`);
-  return res.json({ success: true, files });
+  return res.json({ success: true, files }); */
+  var s3 = new aws.S3();
+  var params = {
+    Bucket: S3_BUCKET,
+    Delimiter: '/',
+    //Prefix: 's/5469b2f5b4292d22522e84e0/ms.files/'
+  }
+
+  s3.listObjects(params, function (err, data) {
+    if (err) throw err;
+    console.log(data);
+    console.log(JSON.stringify(data));
+  });
 });
 
 app.listen(port, () => {
@@ -76,77 +90,78 @@ app.listen(port, () => {
 });
 
 
-  MongoClient.connect(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  }, (err, client) => {
-    if (err) {
-      return console.log(err);
+MongoClient.connect(url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}, (err, client) => {
+  if (err) {
+    return console.log(err);
+  }
+  app.post("/insert", function (req, res) {
+    var title = req.body.title;
+    var comments = req.body.comments;
+    var prompt = req.body.prompt;
+    var project = req.body.project;
+    var postCode = req.body.postCode;
+    var fullName = req.body.fullName;
+    var email = req.body.email;
+    var phone = req.body.phone;
+    const timeStamp = TimeStamp();
+    //var audio = "uploads\\" + aFile + ".mp3";
+    var audio = `https://${S3_BUCKET}.s3.eu-west-2.amazonaws.com/` + aFile + ".mp3";
+    const public = false;
+    console.log(audio);
+    if (aFile != 0) {
+      myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
     }
-    app.post("/insert", function (req, res) {
-      var title = req.body.title;
-      var comments = req.body.comments;
-      var prompt = req.body.prompt;
-      var project = req.body.project;
-      var postCode = req.body.postCode;
-      var fullName = req.body.fullName;
-      var email = req.body.email;
-      var phone = req.body.phone;
-      const timeStamp = TimeStamp();
-      var audio = "uploads\\" + aFile + ".mp3";
-      const public = false;
-      //console.log(aFile);
-      if(aFile != 0){
-        myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
-      }
-    });
-    function TimeStamp() {
-      const currentDate = new Date();
-      var year = currentDate.getUTCFullYear();
-      var month = currentDate.getUTCMonth();
-      var day = currentDate.getUTCDate();
-      var hour = currentDate.getUTCHours() + 1;
-      var minute = currentDate.getUTCMinutes();
-      if (minute < 10) {
-        minute = "0" + minute;
-      }
-      var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-      return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;//swap day month
+  });
+  function TimeStamp() {
+    const currentDate = new Date();
+    var year = currentDate.getUTCFullYear();
+    var month = currentDate.getUTCMonth();
+    var day = currentDate.getUTCDate();
+    var hour = currentDate.getUTCHours() + 1;
+    var minute = currentDate.getUTCMinutes();
+    if (minute < 10) {
+      minute = "0" + minute;
     }
-    // Specify database you want to access
-    const db = client.db('Redruth');
-    const record = db.collection(collection);//temp change to test new collection created with admin page
-    record.find().toArray(function (err, filed) {
-      //console.log(filed); // output all records
-      app.post('/metaArr', function (req, res) {
-        return res.json({ success: true, filed });
-      });
-      app.post('/saved', function (req, res) {
-        return res.json({ success: true, filed });
-      });
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;//swap day month
+  }
+  // Specify database you want to access
+  const db = client.db('Redruth');
+  const record = db.collection(collection);//temp change to test new collection created with admin page
+  record.find().toArray(function (err, filed) {
+    //console.log(filed); // output all records
+    app.post('/metaArr', function (req, res) {
+      return res.json({ success: true, filed });
     });
+    app.post('/saved', function (req, res) {
+      return res.json({ success: true, filed });
+    });
+  });
 
-    function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
-      record.insertOne({
-        adminData: {
-          Project: project,
-          Prompt: prompt,
-          TimeStamp: timeStamp,
-        },
-        Audio: { url: audio },
-        metaData: {
-          Title: title,
-          Comments: comments,
-          PostalCode: postCode,
-          Name: fullName,
-          Email: email,
-          Phone: phone
-        },
-        Public : public
-      }, (err, result) => { });
-      console.log(`MongoDB Connected: ${url}`);
-    }
-    //location.reload();
+  function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
+    record.insertOne({
+      adminData: {
+        Project: project,
+        Prompt: prompt,
+        TimeStamp: timeStamp,
+      },
+      Audio: { url: audio },
+      metaData: {
+        Title: title,
+        Comments: comments,
+        PostalCode: postCode,
+        Name: fullName,
+        Email: email,
+        Phone: phone
+      },
+      Public: public
+    }, (err, result) => { });
+    console.log(`MongoDB Connected: ${url}`);
+  }
+  //location.reload();
 });
 
 /* listen page route */
@@ -196,7 +211,7 @@ function updateTable(id) {
     const dbase = db.db('Redruth');
     dbase.collection(collection)
       .updateOne(
-        { '_id' : ObjectId(id) },
+        { '_id': ObjectId(id) },
         { $set: { Public: true } },
         function (err, res) {
           if (err) throw err;
@@ -218,11 +233,11 @@ function deleteRecord(id) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
     const dbase = db.db('Redruth');//eliminates 'db.collection is not a function' TypeError
-    dbase.collection(collection).deleteOne({'_id' : ObjectId(id)}, 
-    function (err, res) {
-      if (err) throw err;
-      console.log('deleted record ' + id);
-    }
+    dbase.collection(collection).deleteOne({ '_id': ObjectId(id) },
+      function (err, res) {
+        if (err) throw err;
+        console.log('deleted record ' + id);
+      }
     );
   });
 }
