@@ -8,7 +8,7 @@ const { ObjectId } = require('mongodb');
 require('dotenv').config();
 
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb+srv://dskrocks:a3blog@cluster0.0dnde.mongodb.net/?retryWrites=true&w=majority';
+const url = 'mongodb+srv://dskrocks:a3blog@cluster0.0dnde.mongodb.net/?retryWrites=true&w=majority';//update this to remove usr/pw using .env
 
 const aws = require('aws-sdk');
 aws.config.region = 'eu-west-2';
@@ -16,6 +16,7 @@ const S3_BUCKET = process.env.S3_BUCKET;
 const uploadAudio = require('./public/assets/js/aws');
 const { memoryStorage } = require('multer');
 const { data } = require('jquery');
+const axios = require('axios');
 
 let aFile = 0;
 
@@ -34,7 +35,6 @@ var collection = 'Test';
 }); */
 
 const storage = memoryStorage();
-
 const upload = multer({ storage });
 
 const app = express();
@@ -62,8 +62,9 @@ app.post('/record', upload.single('audio'), async (req, res) => {
   res.send(link);
 });
 
-//update to get audio files from s3 bucket
+//update to get audio files from s3 bucket or try to get url from mongoDB
 app.get('/recordings', (req, res) => {
+  /* old original code using the local uploads folder */
   /* let files = fs.readdirSync(path.join(__dirname, 'uploads'));
   files = files.filter((file) => {
     // check that the files are audio files
@@ -71,24 +72,32 @@ app.get('/recordings', (req, res) => {
     return fileNameArr[fileNameArr.length - 1] === 'mp3';
   }).map((file) => `/${file}`);
   return res.json({ success: true, files }); */
+  axios({
+    url: 'https://redruthrecords.s3.eu-west-2.amazonaws.com/1655254303512.mp3',
+    method: 'GET',
+    responseType: 'blob', // important
+  }).then((response) => {
+    console.log(response.data);//hopefully the mp3 audio blob
+    
+  });
+
+  //temp solution to look at s3 bucket
   var s3 = new aws.S3();
   var params = {
     Bucket: S3_BUCKET,
     Delimiter: '/',
     //Prefix: 's/5469b2f5b4292d22522e84e0/ms.files/'
   }
-
   s3.listObjects(params, function (err, data) {
     if (err) throw err;
-    console.log(data);
-    console.log(JSON.stringify(data));
+    //console.log(data);
+    //console.log(JSON.stringify(data));
   });
 });
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
-
 
 MongoClient.connect(url, {
   useNewUrlParser: true,
