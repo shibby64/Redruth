@@ -2,7 +2,6 @@
 
 
 function pWord(){
-    var result = ""
     var capChar = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var lowChar = 'abcdefghijklmnopqrstuvwxyz'
     var num = '0123456789'
@@ -16,24 +15,22 @@ function pWord(){
         lowCharresult += lowChar.charAt(Math.floor(Math.random() * 26));
         numresult += num.charAt(Math.floor(Math.random() * 10));
         specCharresult += specChar.charAt(Math.floor(Math.random() * 18));
-        result += capCharresult.charAt(i) + lowCharresult.charAt(i) + numresult.charAt(i) + specCharresult.charAt(i);
     }
-    result += capCharresult.charAt(3) + lowCharresult.charAt(3) + numresult.charAt(3) + specCharresult.charAt(3);
     var correct = Math.ceil(Math.random() * 4);
     var choice = "";
     let answer = "";
     if(correct === 1){
         choice = "numbers"
         answer = numresult;
-        document.getElementById('opt2').innerHTML = numresult;
-        document.getElementById('opt2').setAttribute('value', numresult);
+        document.getElementById('opt1').innerHTML = numresult;
+        document.getElementById('opt1').setAttribute('value', numresult);
         let fake1 = fakePW('0123456789', 10);
-        document.getElementById('opt1').innerHTML = fake1;
-        document.getElementById('opt1').setAttribute('value', fake1)
+        document.getElementById('opt2').innerHTML = fake1;
+        document.getElementById('opt2').setAttribute('value', fake1)
         let fake2 = fakePW('0123456789', 10);
         document.getElementById('opt3').innerHTML = fake2;
         document.getElementById('opt3').setAttribute('value', fake2)
-        let fake3 = ffakePW('0123456789', 10);
+        let fake3 = fakePW('0123456789', 10);
         document.getElementById('opt4').innerHTML = fake3;
         document.getElementById('opt4').setAttribute('value', fake3)
     } else if (correct === 2){
@@ -83,7 +80,7 @@ function pWord(){
 
     //document.getElementById('keyDisplay').innerHTML = result;
     document.getElementById('clue').innerHTML = "Prove your humanity and match the correct " + choice +" " + answer;
-
+    document.getElementById('passkey').setAttribute('value', answer)
 }
 pWord();
 

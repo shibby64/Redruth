@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
 });
 
 /* create a filename for record using current date  */
-function filename(file) {
+function filename() {
   aFile = Date.now();
   return (aFile + '.mp3');
 };
@@ -57,7 +57,7 @@ function filename(file) {
 app.post('/record', upload.single('audio'), async (req, res) => {
   const bucketname = S3_BUCKET;
   const file = req.file.buffer;
-  const fileName = filename(file);
+  const fileName = filename();
   const link = await uploadAudio(fileName, bucketname, file);
   res.json({ success: true });
 });
@@ -116,13 +116,13 @@ MongoClient.connect(url, {
     var email = req.body.email;
     var phone = req.body.phone;
     const timeStamp = TimeStamp();
-    //var audio = "uploads\\" + aFile + ".mp3";
     var audio = `https://${S3_BUCKET}.s3.eu-west-2.amazonaws.com/` + aFile + ".mp3";
     const public = false;
     console.log(audio);
-    if (aFile != 0) {
+    if (aFile != 0 && req.body.key === req.body.passkey) {
       myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
     }
+    aFile =0;
   });
   function TimeStamp() {
     const currentDate = new Date();
