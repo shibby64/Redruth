@@ -244,7 +244,7 @@ function saveRecording() {
     })
     .catch((err) => {
       console.error(err);
-      alert('Your recording is saved');//temp fix for mobile device
+      alert('Your recording might be saved');//temp fix for mobile device
       window.location.assign('/saved.html');//replace with commented out code below
       //alert('An error occurred, please try again later');
       //resetRecording();
