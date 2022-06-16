@@ -134,6 +134,9 @@ MongoClient.connect(url, {
     if (minute < 10) {
       minute = "0" + minute;
     }
+    if (hour === 24) {
+      hour = "0";
+    }
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;//swap day month
   }
