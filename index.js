@@ -119,7 +119,7 @@ MongoClient.connect(url, {
     var audio = `https://${S3_BUCKET}.s3.eu-west-2.amazonaws.com/` + aFile + ".mp3";
     const public = false;
     console.log(audio);
-    if (aFile != 0 && req.body.key === req.body.passkey) {
+    if (aFile != 0)/* && req.body.key === req.body.passkey */ {
       myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
     }
     aFile =0;
