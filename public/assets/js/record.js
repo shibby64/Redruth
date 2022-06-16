@@ -57,10 +57,10 @@ function mediaRecorderStop() {
 
 function record() {
   /* this seems to not be working, maybe we can find a way to update this */
-  // if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-  //   alert('Your browser does not support recording!');
-  //   return;
-  // }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    alert('Your browser does not support recording!');
+    return;
+  }
 
   // browser supports getUserMedia
   // change image in button
@@ -244,7 +244,6 @@ function saveRecording() {
     })
     .catch((err) => {
       console.error(err);
-      (response) => response.json();
       alert('Your recording might be saved');//temp fix for mobile device
       window.location.assign('/saved.html');//replace with commented out code below
       //alert('An error occurred, please try again later');
