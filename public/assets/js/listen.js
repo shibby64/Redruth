@@ -1,4 +1,4 @@
-const recordButton = document.getElementById('story');
+
 let metaArr = [];
 
 
@@ -8,7 +8,9 @@ function metaGrab() {
       .then((object) => {
         if (object.success && object.filed) {
           for (i = 0; i < object.filed.length; i++) {
-            metaArr[i] = object.filed[i];
+            if (object.filed[i].Public){
+                metaArr[i] = object.filed[i];
+            }
           }
         }
       })
@@ -38,7 +40,6 @@ function metaData() {
         ts.appendChild(tsnode);
         document.getElementById("story").append(ts);
         /*-----------------------------------------------------------*/
-
         const audioTag = document.createElement('div');
         audioTag.classList.add("playStory");
         audioTag.innerHTML = '<audio id="audio-player" controls="controls" src= ' + metaArr[i].Audio.url + ' type="audio/mpeg">';
