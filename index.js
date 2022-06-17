@@ -109,52 +109,16 @@ MongoClient.connect(url, {
   }
   // Specify database you want to access
   const db = client.db('Redruth');
-  const record = db.collection(collection);//temp change to test new collection created with admin page
-  record.find().toArray(function (err, filed) {
-    dbArray = filed;
-  for (i=0; i < dbArray.length; i++){
-    console.log(i);
-    //app.get('/recordings', (req, res) => {
-    //   /* old original code using the local uploads folder */
-    //   /* let files = fs.readdirSync(path.join(__dirname, 'uploads'));
-    //   files = files.filter((file) => {
-    //     // check that the files are audio files
-    //     const fileNameArr = file.split('.');
-    //     return fileNameArr[fileNameArr.length - 1] === 'mp3';
-    //   }).map((file) => `/${file}`);
-    //   return res.json({ success: true, files }); */metaArr[i].adminData
-    let signature = dbArray[i].Audio.url;
-    console.log(signature)
-      axios({
-        url: signature,
-        method: 'GET',
-        responseType: 'blob', // important
-      }).then((response) => {
-        console.log(response.data);//hopefully the mp3 audio blob
-        
+    const record = db.collection(collection);//temp change to test new collection created with admin page
+    record.find().toArray(function (err, filed) {
+      //console.log(filed); // output all records
+      app.post('/metaArr', function (req, res) {
+        return res.json({ success: true, filed });
       });
-      //temp solution to look at s3 bucket
-      var s3 = new aws.S3();
-      var params = {
-        Bucket: S3_BUCKET,
-        Delimiter: '/',
-        //Prefix: 's/5469b2f5b4292d22522e84e0/ms.files/'
-      }
-      s3.listObjects(params, function (err, data) {
-        if (err) throw err;
-        //console.log(data);
-        //console.log(JSON.stringify(data));
+      app.post('/saved', function (req, res) {
+        return res.json({ success: true, filed });
       });
-//    });
-  }
-    //console.log(filed); // output all records
-    app.post('/metaArr', function (req, res) {
-      return res.json({ success: true, filed });
     });
-    app.post('/saved', function (req, res) {
-      return res.json({ success: true, filed });
-    });
-  });
   
   function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
     record.insertOne({
