@@ -16,7 +16,7 @@ const S3_BUCKET = process.env.S3_BUCKET;
 const uploadAudio = require('./public/assets/js/aws');
 const { memoryStorage } = require('multer');
 const axios = require('axios');
-
+let dbArray = [];
 let aFile = 0;
 
 // What collection the app in looking at  
@@ -61,38 +61,6 @@ app.post('/record', upload.single('audio'), async (req, res) => {
   return res.json({ success: true});
 });
 
-//update to get audio files from s3 bucket or try to get url from mongoDB
-// app.get('/recordings', (req, res) => {
-//   /* old original code using the local uploads folder */
-//   /* let files = fs.readdirSync(path.join(__dirname, 'uploads'));
-//   files = files.filter((file) => {
-//     // check that the files are audio files
-//     const fileNameArr = file.split('.');
-//     return fileNameArr[fileNameArr.length - 1] === 'mp3';
-//   }).map((file) => `/${file}`);
-//   return res.json({ success: true, files }); */
-//   axios({
-//     url: 'https://redruthrecords.s3.eu-west-2.amazonaws.com/1655254303512.mp3',
-//     method: 'GET',
-//     responseType: 'blob', // important
-//   }).then((response) => {
-//     console.log(response.data);//hopefully the mp3 audio blob
-    
-//   });
-
-//   //temp solution to look at s3 bucket
-//   var s3 = new aws.S3();
-//   var params = {
-//     Bucket: S3_BUCKET,
-//     Delimiter: '/',
-//     //Prefix: 's/5469b2f5b4292d22522e84e0/ms.files/'
-//   }
-//   s3.listObjects(params, function (err, data) {
-//     if (err) throw err;
-//     //console.log(data);
-//     //console.log(JSON.stringify(data));
-//   });
-// });
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
@@ -118,7 +86,7 @@ MongoClient.connect(url, {
     var audio = `https://${S3_BUCKET}.s3.eu-west-2.amazonaws.com/` + aFile + ".mp3";
     const public = false;
     console.log(audio);
-    if (aFile != 0)/* && req.body.key === req.body.passkey */ {
+    if (aFile != 0 && req.body.key === req.body.passkey)/* && req.body.key === req.body.passkey */ {
       myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
     }
     aFile =0;
@@ -143,6 +111,42 @@ MongoClient.connect(url, {
   const db = client.db('Redruth');
   const record = db.collection(collection);//temp change to test new collection created with admin page
   record.find().toArray(function (err, filed) {
+    dbArray = filed;
+  for (i=0; i < dbArray.length; i++){
+    console.log(i);
+    //app.get('/recordings', (req, res) => {
+    //   /* old original code using the local uploads folder */
+    //   /* let files = fs.readdirSync(path.join(__dirname, 'uploads'));
+    //   files = files.filter((file) => {
+    //     // check that the files are audio files
+    //     const fileNameArr = file.split('.');
+    //     return fileNameArr[fileNameArr.length - 1] === 'mp3';
+    //   }).map((file) => `/${file}`);
+    //   return res.json({ success: true, files }); */metaArr[i].adminData
+    let signature = dbArray[i].Audio.url;
+    console.log(signature)
+      axios({
+        url: signature,
+        method: 'GET',
+        responseType: 'blob', // important
+      }).then((response) => {
+        console.log(response.data);//hopefully the mp3 audio blob
+        
+      });
+      //temp solution to look at s3 bucket
+      var s3 = new aws.S3();
+      var params = {
+        Bucket: S3_BUCKET,
+        Delimiter: '/',
+        //Prefix: 's/5469b2f5b4292d22522e84e0/ms.files/'
+      }
+      s3.listObjects(params, function (err, data) {
+        if (err) throw err;
+        //console.log(data);
+        //console.log(JSON.stringify(data));
+      });
+//    });
+  }
     //console.log(filed); // output all records
     app.post('/metaArr', function (req, res) {
       return res.json({ success: true, filed });
@@ -151,7 +155,7 @@ MongoClient.connect(url, {
       return res.json({ success: true, filed });
     });
   });
-
+  
   function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
     record.insertOne({
       adminData: {
@@ -206,6 +210,7 @@ function createNewTable(project, prompt) {
     });
   });
 }
+//update to get audio files from s3 bucket or try to get url from mongoDB
 
 /* gets record id to update public boolean from admin page */
 app.get('/updatePublic', (req, res) => {

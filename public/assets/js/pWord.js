@@ -76,8 +76,6 @@ function pWord(){
         document.getElementById('opt3').innerHTML = fake3;
         document.getElementById('opt3').setAttribute('value', fake3)
     }
-
-
     //document.getElementById('keyDisplay').innerHTML = result;
     document.getElementById('clue').innerHTML = "Prove your humanity and match the correct " + choice +" " + answer;
     document.getElementById('passkey').setAttribute('value', answer)
