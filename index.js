@@ -158,8 +158,9 @@ app.get('/saved.html', (req, res) => {
 app.get('/admin', (req, res) => {
   var project = req.query.project;
   var prompt = req.query.prompt;
-  createNewTable(project, prompt);
-  console.log("project" + project, "prompt" + prompt);//testing
+  //createNewTable(project, prompt); //TEMP NOT WORKING FOR BETA WEEKEND
+  //console.log("project" + project, "prompt" + prompt);//testing
+  console.log("disabled for beta weekend");
 });
 
 /* create new collection */

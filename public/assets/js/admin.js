@@ -135,7 +135,7 @@ setTimeout(() => getCollections(), 100);
 /* update the pull from the db after a admin updates or deletes from the db */
 function updatePageView() { 
   //e.preventDefault();
-  console.log(id);
+  //console.log(id);
   location.reload();
 }
 
