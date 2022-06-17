@@ -12,20 +12,21 @@ let audioBlob = null; // the blob that will hold the recorded audio
 let metaArr = [];
 let placeholder = [];
 
-metaGrab();
-//console.log(metaArr);
 function metaGrab() {
   fetch('/metaArr', { method: 'POST' })
     .then((object) => object.json())
     .then((object) => {
       if (object.success && object.filed) {
         for (i = 0; i < object.filed.length; i++) {
-          metaArr[i] = object.filed[i];
+          if (!object.filed[i].Public){
+              metaArr[i] = object.filed[i];
+          }
         }
       }
     })
     .catch((err) => console.error(err));
 }
+
 
 
 /* grab records in the database and filter by ones that are not public */
@@ -58,10 +59,10 @@ async function getCollections() {
               'timeStamp: ' + object.filed[i].adminData.TimeStamp + ',  ';
 
             /* audio */
-            var audio = document.createElement('div');
+            const audioTag = document.createElement('div');
+            audioTag.classList.add("playStory");
 
-            /* get audio for playback */
-            fetchRecordings(audio, id);
+
 
             /* meta data */
             var meta = document.createElement('div');
@@ -71,9 +72,11 @@ async function getCollections() {
               'PostalCode: ' + object.filed[i].metaData.PostalCode + ', ' +
               'Name: ' + object.filed[i].metaData.Name + ', ' +
               'Email: ' + object.filed[i].metaData.Email + ', ' +
-              'Phone: ' + object.filed[i].metaData.Phone + ', '
+              'Phone: ' + object.filed[i].metaData.Phone + ', ' +
+              'URL: ' + object.filed[i].Audio.url
               ;
 
+              audioTag.innerHTML = '<audio id="audio-player" controls="controls" src= ' + object.filed[i].Audio.url + ' type="audio/mpeg">';
             const space = document.createElement('br');
 
             /* create update form */
@@ -108,7 +111,7 @@ async function getCollections() {
             /* put together html elements to create data container */
             recordContainer.appendChild(showId);
             recordContainer.appendChild(ad);
-            recordContainer.appendChild(audio);
+            recordContainer.appendChild(audioTag);
             recordContainer.appendChild(meta);
             recordContainer.appendChild(updateForm);
             updateForm.appendChild(updateButton);
@@ -116,7 +119,6 @@ async function getCollections() {
             deleteForm.appendChild(deleteButton);
             recordContainer.appendChild(hr);
             recordContainer.appendChild(space);
-
             dataContainer.appendChild(recordContainer);
 
             updateForm.onsubmit = e => updatePageView();
@@ -133,86 +135,7 @@ setTimeout(() => getCollections(), 100);
 /* update the pull from the db after a admin updates or deletes from the db */
 function updatePageView() { 
   //e.preventDefault();
-  console.log(id);
+  //console.log(id);
   location.reload();
 }
 
-function fetchRecordings(audio, id) {
-
-  fetch('/recordings')
-
-    .then((response) => response.json())
-    .then((response) => {
-      //.log("fetch recordings");
-      if (response.success && response.files) {
-        //audio.innerHTML = ''; // remove all children
-        //audio.classList.add('col-lg-2');
-        response.files.forEach((file) => {
-          for (i = 0; i < metaArr.length; i++) {
-            if (file.substring(1, 14) === metaArr[i].Audio.url.substring(8, 21) && !metaArr[i].Public) {
-              if (metaArr[i]._id == id) {
-                const recordingElement = createRecordingElement(file, i);
-                placeholder[i] = file.substring(1, 14);
-                recordingElement.classList.add('col-lg-2');
-                audio.appendChild(recordingElement);
-              }
-            }
-          }
-        });
-      }
-    })
-    .catch((err) => console.error(err));
-}
-
-function createRecordingElement(file, i) {
-  const recordingElement = document.createElement('div');
-  recordingElement.setAttribute('id', 'cont' + i)
-  const audio = document.createElement('audio');
-  audio.src = file;
-  audio.onended = (e) => {
-    e.target.nextElementSibling.firstElementChild.src = '../images/play2.png';
-
-  };
-  recordingElement.appendChild(audio);
-  const playButton = document.createElement('button');
-  playButton.setAttribute('id', 'aButton')
-  playButton.classList.add('play-button', 'btn', 'border', 'shadow-sm', 'text-center');
-  const playImage = document.createElement('img');
-  playImage.src = '../images/play2.png';
-  playImage.classList.add('img-fluid');
-  playButton.appendChild(playImage);
-
-  playButton.addEventListener('click', playRecording);
-  recordingElement.appendChild(playButton);
-  return recordingElement;
-}
-
-function playRecording(e) {
-  let button = e.target;
-  if (button.tagName === 'IMG') {
-    // get parent button
-    button = button.parentElement;
-  }
-  const audio = button.previousElementSibling;
-  if (audio && audio.tagName === 'AUDIO') {
-    if (audio.paused) {
-      audio.play();
-      button.firstElementChild.src = '../images/pause.png';
-    } else {
-      audio.pause();
-      button.firstElementChild.src = '../images/play2.png';
-    }
-  }
-}
-
-function resetRecording() {
-  if (recordedAudioContainer.firstElementChild.tagName === 'AUDIO') {
-    recordedAudioContainer.firstElementChild.remove();
-    // hide recordedAudioContainer
-    recordedAudioContainer.classList.add('d-none');
-    recordedAudioContainer.classList.remove('d-flex');
-  }
-  audioBlob = null;
-}
-
-fetchRecordings();

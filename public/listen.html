@@ -13,96 +13,14 @@
 <body class="pt-5">
   <div class="container">
     <h1 class="text-center stories">Listen to Stories</h1>
-
-    <!-- <button id="myBtn">Open Recorder</button> -->
-    <div id="myModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <div class="record-button-container text-center mt-5">
-          <h6>All information is optional and only used to add context to your recording</h6>
-          <form method="post" action="/insert" name="record-data" id="record-data" autocomplete="on">
-            <div>
-              <label for="project">Project</label>
-              <select id="project" name="project">
-                <option value="rebirth">Rebirth</option>
-                <option value="none">None</option>
-              </select>
-            </div>
-            <div>
-              <label for="prompt">Prompt</label>
-              <select id="prompt" name="prompt">
-                <option value="question1">Question1</option>
-                <option value="question2">Question2</option>
-                <option value="question3">Question3</option>
-              </select>
-            </div>
-            <div>
-              <label for="title">Add a title for your recording</label>
-              <input type="text" name="title" id="title" placeholder="Title" required></input>
-            </div>
-            <div>
-              <label for="comments">Additional comments</label>
-              <textarea id="comments" name="comments" rows="2" cols="50" placeholder="Comments" required></textarea>
-            </div>
-            <input type="checkbox" id="myCheck" onclick="checkFunction()"> If you would like to add more content or
-            contact information</input>
-            <div>
-              <label for="fullName" class="checked" style="display:none">Full Name</label>
-              <input type="text" id="Name" name="fullName" placeholder="Name" class="checked"
-                style="display:none"></input>
-              <label for="postCode" class="checked" style="display:none">Postal Code</label>
-              <input type="text" id="postCode" name="postCode" placeholder="123456789" class="checked"
-                style="display:none"></input>
-            </div>
-            <div>
-              <label for="phone" class="checked" style="display:none">Phone#</label>
-              <input type="number" id="Phone" name="phone" rows="1" cols="15" placeholder="12345123456" class="checked"
-                style="display:none">
-              </input>
-              <label for="email" class="checked" style="display:none">Email</label>
-              <input type="email" id="email" name="email" placeholder="sue@redruth.com" class="checked"
-                style="display:none"></input>
-            </div>
-            <div class="recorded-audio-container mt-5 d-none flex-column justify-content-center align-items-center"
-              id="recordedAudioContainer">
-              <div class="actions mt-3">
-                <button type="submit" name="submit" class="btn btn-success rounded-pill" id="saveButton">Save</button>
-                <button class="btn btn-danger rounded-pill" id="discardButton">Discard</button>
-              </div>
-            </div>
-          </form>
-          <button class="bg-transparent border btn record-button rounded-circle shadow-sm text-center"
-            id="recordButton">
-            <img src="/images/microphone.png" alt="Record" class="img-fluid" />
-          </button>
-          <h3 id="countDownTimer">15:00</h3>
-        </div>
-      </div>
-    </div>
-
-    <div id="recordings"></div>
-    <!-- <div class="slider">
-      <div id="recordings"></div>
-      <span class="slider-control-prev" role="button">
-        <img aria-hidden="true" src="images/prev.png" alt="Previous Slide Button">
-      </span>
-      <span class="slider-control-next" role="button">
-        <img aria-hidden="true" src="images/next.png" alt="Next Slide Button">
-      </span>
-    </div> -->
-
+    <hr>
+    <div class = "stories" id ="story"></div>
   </div>
 
-  <hr>
-  <h2 class="d-flex justify-content-center flex-nowrap">Temp Admin page</h2>
-  <a href="admin.html" class="d-flex justify-content-center flex-nowrap">Admin Page</a>
+    
 
 
-  <script src="/js/checkbox.js"></script>
-  <script src="/js/modal.js"></script>
-  <script src="/js/record.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="/js/slider.js"></script>
+  <script src="/js/listen.js"></script>
 </body>
 
 </html>

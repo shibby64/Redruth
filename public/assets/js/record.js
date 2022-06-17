@@ -9,28 +9,14 @@ const saveAudioButton = document.getElementById('saveButton');
 saveAudioButton.setAttribute('onclick', "window.location.assign('/saved.html')");
 const discardAudioButton = document.getElementById('discardButton');
 discardAudioButton.setAttribute('onclick', 'recordReset()')
-const recordingsContainer = document.getElementById('recordings');
+
 
 
 let chunks = []; // will be used later to record audio
 let mediaRecorder = null; // will be used later to record audio
 let audioBlob = null; // the blob that will hold the recorded audio
-let metaArr = [];
-let placeholder = [];
-metaGrab();
-console.log(metaArr);
-function metaGrab() {
-  fetch('/metaArr', { method: 'POST' })
-    .then((object) => object.json())
-    .then((object) => {
-      if (object.success && object.filed) {
-        for (i = 0; i < object.filed.length; i++) {
-          metaArr[i] = object.filed[i];
-        }
-      }
-    })
-    .catch((err) => console.error(err));
-}
+
+
 function mediaRecorderDataAvailable(e) {
   chunks.push(e.data);
 }
@@ -57,7 +43,7 @@ function mediaRecorderStop() {
 function record() {
   /* this seems to not be working, maybe we can find a way to update this */
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    alert('Your browser does not support recording!');
+    alert('Your browser does not support recording! We would still love to hear from you, come by and see us to tell your story');
     return;
   }
 
@@ -176,58 +162,8 @@ function createRecordingElement(file, i) {
   recordingElement.appendChild(playButton);
   return recordingElement;
 }
-function metaData() {
-  for (i = 0; i < metaArr.length; i++) {
-    for (j = 0; j < placeholder.length; j++) {
-      if (metaArr[i].Audio.url.substring(8, 21) === placeholder[j]) {
-        let recordingData = metaArr[i].adminData;
-        const project = document.createElement('p');
-        project.classList.add('metaDataStyle');
-        const projectNode = document.createTextNode("Project: " + recordingData.Project);
-        project.appendChild(projectNode);
-        const projectElement = document.getElementById('cont' + j);
-        projectElement.appendChild(project);
-        const prompt = document.createElement('p');
-        prompt.classList.add('metaDataStyle');
-        //prompt.style.backgroundColor = "cyan";
-        const promptNode = document.createTextNode("Prompt: " + recordingData.Prompt);
-        prompt.appendChild(promptNode);
-        const promptElement = document.getElementById('cont' + j);
-        promptElement.appendChild(prompt);
-        const ts = document.createElement('p');
-        ts.classList.add('metaDataStyle');
-        const tsnode = document.createTextNode("Timestamp: " + recordingData.TimeStamp);
-        ts.appendChild(tsnode);
-        const tselement = document.getElementById('cont' + j);
-        tselement.appendChild(ts);
-      }
-    }
-  }
-};
 
-function fetchRecordings() {
-  fetch('/recordings')
-    .then((response) => response.json())
-    .then((response) => {
-      if (response.success && response.files) {
-        recordingsContainer.innerHTML = ''; // remove all children
-        recordingsContainer.classList.add('col-lg-2');
-        response.files.forEach((file) => {
-          for (i = 0; i < metaArr.length; i++) {
-            if (file.substring(1, 14) === metaArr[i].Audio.url.substring(8, 21) && metaArr[i].Public) {
-              const recordingElement = createRecordingElement(file, i);
-              placeholder[i] = file.substring(1, 14);
-              recordingElement.classList.add('col-lg-2');
-              recordingsContainer.appendChild(recordingElement);
-            }
-          }
-        });
-      }
-    })
 
-    .catch((err) => console.error(err));
-
-}
 
 function saveRecording() {
   const formData = new FormData();
@@ -243,8 +179,10 @@ function saveRecording() {
     })
     .catch((err) => {
       console.error(err);
-      alert('An error occurred, please try again later');
-      resetRecording();
+      alert(err + 'Your recording is saved');//temp fix for mobile device
+      window.location.assign('/saved.html');//replace with commented out code below
+      //alert('An error occurred, please try again later');
+      //resetRecording();
     });
 }
 
@@ -259,7 +197,7 @@ function discardRecording() {
 
 discardAudioButton.addEventListener('click', discardRecording);
 
-fetchRecordings();
-setTimeout(() => metaData(), 200);
+
+
 
 
