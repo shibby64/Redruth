@@ -10,7 +10,7 @@ saveAudioButton.setAttribute('onclick', "window.location.assign('/saved.html')")
 const discardAudioButton = document.getElementById('discardButton');
 discardAudioButton.setAttribute('onclick', 'recordReset()')
 const recordingsContainer = document.getElementById('recordings');
-
+let aFile = 0;
 
 
 let chunks = []; // will be used later to record audio

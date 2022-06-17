@@ -15,7 +15,6 @@ aws.config.region = 'eu-west-2';
 const S3_BUCKET = process.env.S3_BUCKET;
 const uploadAudio = require('./public/assets/js/aws');
 const { memoryStorage } = require('multer');
-const { data } = require('jquery');
 const axios = require('axios');
 
 let aFile = 0;
@@ -58,8 +57,8 @@ app.post('/record', upload.single('audio'), async (req, res) => {
   const bucketname = S3_BUCKET;
   const file = req.file.buffer;
   const fileName = filename();
-  const link = await uploadAudio(fileName, bucketname, file);
-  res.json({ success: true });
+  const link = await uploadAudio(fileName, bucketname, file)
+  return res.json({ success: true});
 });
 
 //update to get audio files from s3 bucket or try to get url from mongoDB
