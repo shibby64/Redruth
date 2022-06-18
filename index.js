@@ -20,7 +20,7 @@ let dbArray = [];
 let aFile = 0;
 
 // What collection the app in looking at  
-var collection = 'Test';
+var collection = 'Redruth Reading Room';
 
 /* const storage = multer.diskStorage({
   destination(req, file, cb) {
