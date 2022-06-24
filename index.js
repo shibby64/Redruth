@@ -65,7 +65,7 @@ app.post('/record', upload.single('audio'), async (req, res) => {
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
-app.post("/insert", function (req, res) {
+
 MongoClient.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -73,7 +73,7 @@ MongoClient.connect(url, {
   if (err) {
     return console.log(err);
   }
-  
+  app.post("/insert", function (req, res) {
     var title = req.body.title;
     var comments = req.body.comments;
     var prompt = req.body.prompt;
