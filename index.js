@@ -58,14 +58,14 @@ app.post('/record', upload.single('audio'), async (req, res) => {
   const file = req.file.buffer;
   const fileName = filename();
   const link = await uploadAudio(fileName, bucketname, file)
-  return res.json({ success: true});
+  return res.json({ success: true, success: true});
 });
 
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
-
+app.post("/insert", function (req, res) {
 MongoClient.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -73,7 +73,7 @@ MongoClient.connect(url, {
   if (err) {
     return console.log(err);
   }
-  app.post("/insert", function (req, res) {
+  
     var title = req.body.title;
     var comments = req.body.comments;
     var prompt = req.body.prompt;
