@@ -175,12 +175,12 @@ function saveRecording() {
     .then((response) => response.json())
     .then(() => {
       alert('Your recording is saved');
-      window.location.assign('/saved.html');
+      //window.location.assign('/saved.html');
     })
     .catch((err) => {
       //console.error(err);
       alert(err + 'Your recording is saved');//temp fix for mobile device
-      window.location.assign('/saved.html');//replace with commented out code below
+      //window.location.assign('/saved.html');//replace with commented out code below
       //alert('An error occurred, please try again later');
       //resetRecording();
     });
