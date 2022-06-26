@@ -172,7 +172,7 @@ function saveRecording() {
     method: 'POST',
     body: formData,
   })
-    .then((response) => response.json())
+    //.then((response) => response.json())
     .then(() => {
       alert('Your recording is saved');
       //window.location.assign('/saved.html');
