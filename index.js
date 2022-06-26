@@ -58,7 +58,7 @@ app.post('/record', upload.single('audio'), async (req, res) => {
   const file = req.file.buffer;
   const fileName = filename();
   const link = await uploadAudio(fileName, bucketname, file)
-  return res.json({ success: true});
+  res.send();
 });
 
 
