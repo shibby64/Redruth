@@ -115,9 +115,9 @@ MongoClient.connect(url, {
       app.post('/metaArr', function (req, res) {
         return res.json({ success: true, filed });
       });
-      /* app.post('/saved', function (req, res) {
+      app.post('/saved', function (req, res) {
         return res.json({ success: true, filed });
-      }); */
+      }); 
     });
   
   function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
@@ -182,7 +182,7 @@ app.get('/updatePublic', (req, res) => {
   var id = req.query.updatePublic;
   updateTable(id);
   res.redirect('back');
-  //res.sendFile(path.join(__dirname, 'public/admin.html'));
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
 /* add public true to record ID */
@@ -206,7 +206,7 @@ app.get('/deleteRecord', (req, res) => {
   var id = req.query.deletePublic;
   deleteRecord(id);
   res.redirect('back');
-  //res.sendFile(path.join(__dirname, 'public/admin.html'));
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
 /* delete record from collection */
