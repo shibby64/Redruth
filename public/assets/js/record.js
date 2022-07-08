@@ -189,7 +189,6 @@ saveAudioButton.addEventListener('click', saveRecording);
 
 function discardRecording() {
   if (confirm('Are you sure you want to discard the recording?')) {
-    // discard audio just recorded
     resetRecording();
   }
 }
