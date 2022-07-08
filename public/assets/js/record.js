@@ -181,6 +181,7 @@ function saveRecording() {
       //console.error(err);
       alert(err +' An error occurred, please try again later');
       resetRecording();
+      window.location.assign('/');
     });
 }
 
