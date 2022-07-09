@@ -20,7 +20,7 @@ let dbArray = [];
 let aFile = 0;
 
 // What collection the app in looking at  
-var collection = 'Redruth Reading Room';
+var collection = 'adminTest';
 
 /* const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -85,11 +85,11 @@ MongoClient.connect(url, {
     const timeStamp = TimeStamp();
     var audio = `https://${S3_BUCKET}.s3.eu-west-2.amazonaws.com/` + aFile + ".mp3";
     const public = false;
-    console.log(audio);
+    console.log("audio file: " + audio);
     if (aFile != 0)/* && req.body.key === req.body.passkey */ {
       myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
     }
-    aFile =0;
+    aFile = 0;
   });
   function TimeStamp() {
     const currentDate = new Date();
@@ -107,19 +107,22 @@ MongoClient.connect(url, {
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;//swap day month
   }
-  // Specify database you want to access
-  const db = client.db('Redruth');
-    const record = db.collection(collection);//temp change to test new collection created with admin page
+
+  //code before was sending back same filed array after every /metaArr or /saved call.
+  const db = client.db('Redruth'); //Specify database you want to access
+  const record = db.collection(collection); //set collection
+
+  app.post('/metaArr', function (req, res) {
     record.find().toArray(function (err, filed) {
-      //console.log(filed); // output all records
-      app.post('/metaArr', function (req, res) {
-        return res.json({ success: true, filed });
-      });
-      app.post('/saved', function (req, res) {
-        return res.json({ success: true, filed });
-      }); 
+      return res.json({ success: true, filed });
     });
-  
+  });
+  app.post('/saved', function (req, res) {
+    record.find().toArray(function (err, filed) {
+      return res.json({ success: true, filed });
+    });
+  });
+
   function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
     record.insertOne({
       adminData: {
@@ -138,9 +141,8 @@ MongoClient.connect(url, {
       },
       Public: public
     }, (err, result) => { });
-    console.log(`MongoDB Connected: ${url}`);
+    //console.log(`MongoDB Connected: ${url}`);
   }
-  //location.reload();
 });
 
 /* listen page route */
