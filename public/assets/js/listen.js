@@ -1,24 +1,38 @@
+/**
+ * Summary.     Handles the display of public files on the /listen.html route
+ *               
+ * Description. MetaGrab gets all required data, then metaData formats 
+ *              and sends it to the page. 
+ *              
+ */
 
 let metaArr = [];
 
-
+/**
+ * Asks /metaArr for required data and 
+ * sends it to metaArr for later use
+ */
 function metaGrab() {
     fetch('/metaArr', { method: 'POST' })
-      .then((object) => object.json())
-      .then((object) => {
-        if (object.success && object.filed) {
-          for (i = 0; i < object.filed.length; i++) {
-            if (object.filed[i].Public){
-                metaArr[i] = object.filed[i];
+        .then((object) => object.json())
+        .then((object) => {
+            if (object.success && object.filed) {
+                for (i = 0; i < object.filed.length; i++) {
+                    if (object.filed[i].Public) {
+                        metaArr[i] = object.filed[i];
+                    }
+                }
             }
-          }
-        }
-      })
-      .catch((err) => console.error(err));
+        })
+        .catch((err) => console.error(err));
 }
 
 metaGrab();
 console.log(metaArr);
+
+/**
+ * Used for setting up html for display on the page
+ */
 function metaData() {
 
     for (let i = 0; i < metaArr.length; i++) {
@@ -47,4 +61,4 @@ function metaData() {
     }
 };
 
-    setTimeout(() => metaData(), 200);
+setTimeout(() => metaData(), 200);
