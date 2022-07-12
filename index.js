@@ -163,7 +163,7 @@ app.get('/saved.html', (req, res) => {
 app.get('/admin', (req, res) => {
   var project = req.query.project;
   var prompt = req.query.prompt;
-  createNewTable(project);
+  //createNewTable(project);
   updatePrompt(prompt);
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
@@ -191,7 +191,7 @@ function updatePrompt(newPrompt) {
         { $set: { Prompt: newPrompt } },
         function (err, res) {
           if (err) throw err;
-          console.log('updated prompt in PromptData: ' + newPrompt);
+          console.log('updated prompt: ' + newPrompt);
         });
   });
 }
@@ -207,7 +207,7 @@ app.get('/prompt', (req, res) => {
         console.log(err);
         res.json(err);
       } else {
-        res.json(prompt.Prompt);
+        return prompt;
       }
     })
   });
