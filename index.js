@@ -20,7 +20,7 @@ let dbArray = [];
 let aFile = 0;
 
 // What collection the app in looking at  
-var collection = 'adminTest';
+var collection = 'tet';
 
 /* const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -149,35 +149,69 @@ MongoClient.connect(url, {
 app.get('/listen.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/listen.html'));
 });
+
 /* admin page route */
 app.get('/admin.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
+
 app.get('/saved.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/saved.html'));
 });
-/* get info from admin form */
+
+/* create new collection and update universal prompt */
 app.get('/admin', (req, res) => {
   var project = req.query.project;
   var prompt = req.query.prompt;
-  //createNewTable(project, prompt); //TEMP NOT WORKING FOR BETA WEEKEND
-  //console.log("project" + project, "prompt" + prompt);//testing
-  console.log("disabled for beta weekend");
+  createNewTable(project);
+  updatePrompt(prompt);
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 /* create new collection */
-function createNewTable(project, prompt) {
+function createNewTable(project) {
   /* working, however will crash when you attempt to create a collection that already exists */
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
     const dbase = db.db("Redruth");
     dbase.createCollection(project, function (err, res) {
       if (err) throw err;
-      console.log("created collection");
     });
   });
 }
-//update to get audio files from s3 bucket or try to get url from mongoDB
+
+/* update prompt data in PromptData collection, prompt data read from index.html */
+function updatePrompt(newPrompt) {
+  MongoClient.connect(url, function (err, db) {
+    if (err) throw err;
+    const dbase = db.db('Redruth');
+    dbase.collection('PromptData')
+      .updateOne(
+        { '_id': ObjectId('62cccad3158754c692f78794') },
+        { $set: { Prompt: newPrompt } },
+        function (err, res) {
+          if (err) throw err;
+          console.log('updated prompt in PromptData: ' + newPrompt);
+        });
+  });
+}
+
+/* get prompt from db */
+app.get('/prompt', (req, res) => {
+  MongoClient.connect(url, function (err, db) {
+    if (err) throw err;
+    const dbase = db.db('Redruth');
+    dbase.collection('PromptData').findOne({ '_id': ObjectId('62cccad3158754c692f78794') }, function(err, prompt) {
+      console.log("prompt in /prompt get: " + prompt.Prompt);
+      if (err) {
+        console.log(err);
+        res.json(err);
+      } else {
+        res.json(prompt.Prompt);
+      }
+    })
+  });
+});
 
 /* gets record id to update public boolean from admin page */
 app.get('/updatePublic', (req, res) => {

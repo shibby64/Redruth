@@ -12,6 +12,8 @@ let audioBlob = null; // the blob that will hold the recorded audio
 let metaArr = [];
 let placeholder = [];
 
+getCollections();
+
 async function metaGrab() {
   fetch('/metaArr', { method: 'POST' })
     .then((object) => object.json())
@@ -130,11 +132,9 @@ async function getCollections() {
     .catch((err) => console.error(err));
 };
 
-setTimeout(() => getCollections(), 100);
-
 /* update the pull from the db after a admin updates or deletes from the db */
 function updatePageView() { 
-  setTimeout(updatePageView, 2000);
-  location.reload();
+  window.location.reload();
+  window.location.reload();
 }
 
