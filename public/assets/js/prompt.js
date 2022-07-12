@@ -1,13 +1,14 @@
-const showP = document.getElementById('showPrompt');
-let newPrompt = '';
+updatePrompt();
 
 function updatePrompt() {
+    const showP = document.getElementById('showPrompt');
+    const promptInput = document.getElementById('prompt');
     fetch('/prompt', { method: 'GET' })
+        .then(res => res.json())
         .then(res => {
             console.log(res);
-            newPrompt = res;
+            showP.innerHTML = res;
+            promptInput.value = res;
         });
 }
 
-showP.innerHTML = 'Hello'
-console.log(newPrompt);

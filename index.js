@@ -20,7 +20,7 @@ let dbArray = [];
 let aFile = 0;
 
 // What collection the app in looking at  
-var collection = 'tet';
+var collection = 'Redruth Reading Room';
 
 /* const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -163,8 +163,8 @@ app.get('/saved.html', (req, res) => {
 app.get('/admin', (req, res) => {
   var project = req.query.project;
   var prompt = req.query.prompt;
-  //createNewTable(project);
-  updatePrompt(prompt);
+  createNewTable(project);
+  updateMongoDBPrompt(prompt);
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
@@ -181,7 +181,7 @@ function createNewTable(project) {
 }
 
 /* update prompt data in PromptData collection, prompt data read from index.html */
-function updatePrompt(newPrompt) {
+function updateMongoDBPrompt(newPrompt) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
     const dbase = db.db('Redruth');
@@ -207,7 +207,7 @@ app.get('/prompt', (req, res) => {
         console.log(err);
         res.json(err);
       } else {
-        return prompt;
+        res.json(prompt.Prompt);
       }
     })
   });
