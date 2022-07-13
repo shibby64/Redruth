@@ -22,7 +22,7 @@ const recordButton = document.getElementById('recordButton');
 const recordButtonImage = recordButton.firstElementChild;
 const recordedAudioContainer = document.getElementById('recordedAudioContainer');
 const saveAudioButton = document.getElementById('saveButton');
-saveAudioButton.setAttribute('onclick', "window.location.assign('/saved.html')");
+// saveAudioButton.setAttribute('onclick', "window.location.assign('/saved.html')");
 const discardAudioButton = document.getElementById('discardButton');
 discardAudioButton.setAttribute('onclick', 'recordReset()')
 
@@ -148,91 +148,103 @@ function resetRecording() {
     audioBlob = null;
 }
 
-//unused?
-function playRecording(e) {
-    let button = e.target;
-    if (button.tagName === 'IMG') {
-        // get parent button
-        button = button.parentElement;
-    }
-    const audio = button.previousElementSibling;
-    if (audio && audio.tagName === 'AUDIO') {
-        if (audio.paused) {
-            audio.play();
-            button.firstElementChild.src = 'images/pause.png';
-        } else {
-            audio.pause();
-            button.firstElementChild.src = 'images/play2.png';
-        }
-    }
-}
+// //unused?
+// function playRecording(e) {
+//     let button = e.target;
+//     if (button.tagName === 'IMG') {
+//         // get parent button
+//         button = button.parentElement;
+//     }
+//     const audio = button.previousElementSibling;
+//     if (audio && audio.tagName === 'AUDIO') {
+//         if (audio.paused) {
+//             audio.play();
+//             button.firstElementChild.src = 'images/pause.png';
+//         } else {
+//             audio.pause();
+//             button.firstElementChild.src = 'images/play2.png';
+//         }
+//     }
+// }
 
-//unused?
-function createRecordingElement(file, i) {
-    const recordingElement = document.createElement('div');
-    let k = 0;
-    if (k === 0) {
-        recordingElement.classList.add("slider-item", 'active');
-        k++;
-    } else {
-        recordingElement.classList.add("slider-item");
-    }
-    recordingElement.setAttribute('id', 'cont' + i)
-    const audio = document.createElement('audio');
-    //audio.classList.add('col-lg-2');
-    audio.src = file;
-    audio.onended = (e) => {
-        e.target.nextElementSibling.firstElementChild.src = 'images/play2.png';
+// //unused?
+// function createRecordingElement(file, i) {
+//     const recordingElement = document.createElement('div');
+//     let k = 0;
+//     if (k === 0) {
+//         recordingElement.classList.add("slider-item", 'active');
+//         k++;
+//     } else {
+//         recordingElement.classList.add("slider-item");
+//     }
+//     recordingElement.setAttribute('id', 'cont' + i)
+//     const audio = document.createElement('audio');
+//     //audio.classList.add('col-lg-2');
+//     audio.src = file;
+//     audio.onended = (e) => {
+//         e.target.nextElementSibling.firstElementChild.src = 'images/play2.png';
 
-    };
-    recordingElement.appendChild(audio);
-    const playButton = document.createElement('button');
-    playButton.setAttribute('id', 'aButton');
-    playButton.classList.add('play-button', 'btn', 'shadow-sm', 'text-center');
-    const playImage = document.createElement('img');
-    playImage.src = '/images/play2.png';
-    playImage.classList.add('img-fluid');
-    playButton.appendChild(playImage);
+//     };
+//     recordingElement.appendChild(audio);
+//     const playButton = document.createElement('button');
+//     playButton.setAttribute('id', 'aButton');
+//     playButton.classList.add('play-button', 'btn', 'shadow-sm', 'text-center');
+//     const playImage = document.createElement('img');
+//     playImage.src = '/images/play2.png';
+//     playImage.classList.add('img-fluid');
+//     playButton.appendChild(playImage);
 
-    playButton.addEventListener('click', playRecording);
-    recordingElement.appendChild(playButton);
-    return recordingElement;
-}
+//     playButton.addEventListener('click', playRecording);
+//     recordingElement.appendChild(playButton);
+//     return recordingElement;
+// }
 
-/**
- * Posts to /record route and uploads mp3, then redirects to saved.html route.
- * If there is an issue, reset and reload.
- * 
- */
-function saveRecording() {
-    const formData = new FormData();
-    formData.append('audio', audioBlob, 'recording.mp3');
-    fetch('/record', {
-            method: 'POST',
-            body: formData,
-        })
-        //.then((response) => response.json())
-        .then(() => {
-            alert('Your recording is saved');
-            window.location.assign('/saved.html');
-        })
-        .catch((err) => {
-            //console.error(err);
-            alert(err + ' An error occurred, please try again later');
-            resetRecording();
-            window.location.assign('/');
-        });
-}
 
-saveAudioButton.addEventListener('click', saveRecording);
 
 /**
  * Wrapper for resetRecording with confirm dialogue.
+ * Also resets form entry
  */
 function discardRecording() {
     if (confirm('Are you sure you want to discard the recording?')) {
         resetRecording();
+        document.forms[0].reset()
     }
 }
 
 discardAudioButton.addEventListener('click', discardRecording);
+
+
+
+/**
+ * Compiles formdata and adds audio file, then posts to route
+ * if the response is 200, then we redirect to saved.html, 
+ * otherwise alert and refresh.
+ * 
+ * This is a submit handler for the first form on the page (the main form)
+ */
+document.forms[0].onsubmit = async(e) => {
+    e.preventDefault();
+    formData = new FormData(document.forms[0])
+    formData.append('audio', audioBlob, 'recording.mp3');
+    for (const [key, value] of formData) {
+        console.log(`${key}: ${value}\n`);
+    }
+    let request = fetch('/insert2', {
+        method: 'POST',
+        body: formData,
+    }).then(response => {
+        //if our response is good, then redirect to saved
+        if (response.status == 200) {
+            console.log(response);
+            // response.json()
+            window.location.assign('/saved.html');
+        } else {
+            throw "request failed";
+        }
+    }).catch((error) => {
+        //otherwise alert then refresh
+        alert("Sorry! Something broke on our end!")
+        window.location.assign('/');
+    });
+};
