@@ -205,15 +205,12 @@ function resetRecording() {
  * Wrapper for resetRecording with confirm dialogue.
  * Also resets form entry
  */
-function discardRecording() {
+discardAudioButton.onclick = function() {
     if (confirm('Are you sure you want to discard the recording?')) {
         resetRecording();
         document.forms[0].reset()
     }
 }
-
-discardAudioButton.addEventListener('click', discardRecording);
-
 
 
 /**
