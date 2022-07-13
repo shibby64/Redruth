@@ -134,7 +134,8 @@ async function getCollections() {
 
 /* update the pull from the db after a admin updates or deletes from the db */
 function updatePageView() { 
-  window.location.reload();
-  window.location.reload();
+  window.location.reload(true);
 }
+
+
 

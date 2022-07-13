@@ -19,19 +19,8 @@ const axios = require('axios');
 let dbArray = [];
 let aFile = 0;
 
-// What collection the app in looking at  
-var collection = 'Redruth Reading Room';
-
-/* const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename(req, file, cb) {
-    const fileNameArr = file.originalname.split('.');
-    aFile = Date.now();
-    cb(null, `${aFile}.${fileNameArr[fileNameArr.length - 1]}`);
-  },
-}); */
+// What collection in Mongo the app in looking at, in future have admin page set this var from available collections 
+var collection = 'test';
 
 const storage = memoryStorage();
 const upload = multer({ storage });
@@ -162,11 +151,17 @@ app.get('/saved.html', (req, res) => {
 /* create new collection and update universal prompt */
 app.get('/admin', (req, res) => {
   var project = req.query.project;
-  var prompt = req.query.prompt;
+  //var prompt = req.query.prompt;
   createNewTable(project);
+  //updateMongoDBPrompt(prompt);
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
+app.get('/adminPrompt', (req, res) => {
+  var prompt = req.query.prompt;
   updateMongoDBPrompt(prompt);
   res.sendFile(path.join(__dirname, 'public/index.html'));
-});
+})
 
 /* create new collection */
 function createNewTable(project) {

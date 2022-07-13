@@ -24,12 +24,23 @@
         <div class="d-flex justify-content-center flex-nowrap">
             <form method="get" action="/admin" name="admin-data" id="admin" autocomplete="on">
                 <div>
-                    <label for="project">Collection</label>
-                    <input type="text" name="project" id="project" placeholder="Collection Name" required>
+                    <label for="project">New Collection:</label>
+                    <input type="text" name="project" id="project" placeholder="Collection" required>
                 </div>
                 <br>
+                <div class="d-flex justify-content-center flex-nowrap">
+                    <input type="submit" value="Submit">
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <div>
+        <h2 class="d-flex justify-content-center flex-nowrap">Update Current Prompt</h2>
+        <div class="d-flex justify-content-center flex-nowrap">
+            <form method="get" action="/adminPrompt" name="admin-data" id="admin" autocomplete="on">
                 <div>
-                    <label for="prompt">Prompt</label>
+                    <label for="prompt">New Prompt:</label>
                     <input type="text" name="prompt" id="prompt" placeholder="Prompt" required>
                 </div>
                 <br>
