@@ -197,7 +197,7 @@ app.get('/prompt', (req, res) => {
     if (err) throw err;
     const dbase = db.db('Redruth');
     dbase.collection('PromptData').findOne({ '_id': ObjectId('62cccad3158754c692f78794') }, function(err, prompt) {
-      console.log("prompt in /prompt get: " + prompt.Prompt);
+      //console.log("prompt in /prompt get: " + prompt.Prompt);
       if (err) {
         console.log(err);
         res.json(err);
@@ -208,7 +208,7 @@ app.get('/prompt', (req, res) => {
   });
 });
 
-/* gets record id to update public boolean from admin page */
+/* gets record id to update public boolean from admin page to true */
 app.get('/updatePublic', (req, res) => {
   var id = req.query.updatePublic;
   updateTable(id);
@@ -251,5 +251,27 @@ function deleteRecord(id) {
         console.log('deleted record ' + id);
       }
     );
+  });
+}
+
+/* gets record id to update public boolean from admin page to false */
+app.get('/removePublic', (req, res) => {
+  var id = req.query.takeOffSite;
+  removeOffPublic(id);
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+})
+
+function removeOffPublic(id) {
+  MongoClient.connect(url, function (err, db) {
+    if (err) throw err;
+    const dbase = db.db('Redruth');
+    dbase.collection(collection)
+      .updateOne(
+        { '_id': ObjectId(id) },
+        { $set: { Public: false } },
+        function (err, res) {
+          if (err) throw err;
+          console.log('updated public flag for record ' + id);
+        });
   });
 }
