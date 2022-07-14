@@ -67,10 +67,10 @@ function mediaRecorderStop() {
  */
 function record() {
     /* this seems to not be working, maybe we can find a way to update this */
-    if (!navigator.mediaDevices) {
-        alert('Your browser does not support recording! We would still love to hear from you, come by and see us to tell your story');
-        return;
-    }
+    // if (!navigator.mediaDevices) {
+    //     alert('Your browser does not support recording! We would still love to hear from you, come by and see us to tell your story');
+    //     return;
+    // }
 
     // browser supports getUserMedia
     // change image in button
