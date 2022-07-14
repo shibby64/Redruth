@@ -247,9 +247,9 @@ function TimeStamp() {
 
 
 /* get record id from admin page to delete record */
-app.post('/insert2', (req, res) => {
-    console.log("here");
-    console.log(req.body, req.query, req.params);
+app.post('/insert2', upload.single('audio'), async(req, res, next) => {
+
+    console.log(JSON.stringify(req.body), req.query, req.params);
     let audio = {
         title: req.body.title,
         comments: req.body.comments,
@@ -265,7 +265,10 @@ app.post('/insert2', (req, res) => {
         link: "",
     }
     audio.link = 'https://' + S3_BUCKET + '.s3.eu-west-2.amazonaws.com/' + audio.fileName;
-
     console.log(audio)
+
+    const file = req.file.audio;
+    const link = await uploadAudio(audio.fileName, S3_BUCKET, file)
+
     res.sendStatus(200)
 });

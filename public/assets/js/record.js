@@ -224,21 +224,22 @@ document.forms[0].onsubmit = async(e) => {
     e.preventDefault();
     formData = new FormData(document.forms[0])
     formData.append('audio', audioBlob, 'recording.mp3');
-    // for (const [key, value] of formData) {
-    //     console.log(`${key}: ${value}\n`);
-    // }
+    //print form data
+    for (const [key, value] of formData) {
+        console.log(`${key}: ${value}\n`);
+    }
     let request = fetch('/insert2', {
         method: 'POST',
         body: formData,
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        },
+        // headers: {
+        //     'Content-Type': 'multipart/form-data'
+        // },
     }).then(response => {
         //if our response is good, then redirect to saved
         if (response.status == 200) {
             console.log(response);
             // response.json()
-            window.location.assign('/saved.html');
+            // window.location.assign('/saved.html');
         } else {
             throw "request failed";
         }
