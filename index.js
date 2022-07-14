@@ -59,7 +59,11 @@ app.use(express.static('public/assets'));
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
-
+app.use(enforce.HTTPS({ trustProtoHeader: true }));
+ 
+http.createServer(app).listen(app.get('port'), function() {
+    console.log('Express server listening on port ' + app.get('port'));
+});
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
