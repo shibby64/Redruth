@@ -246,10 +246,16 @@ function TimeStamp() {
 //add to database
 
 
-/* get record id from admin page to delete record */
-app.post('/insert2', upload.single('audio'), async(req, res, next) => {
-
-    console.log(JSON.stringify(req.body), req.query, req.params);
+/**
+ * Takes upload request, formats it, then uploads the audio file. 
+ * Afterward, it sends all necessary data to the database. 
+ * 
+ * Replys 200 if everything worked
+ * 
+ * TODO: Handle server error if something broke.
+ */
+app.post('/insert', upload.single('audio'), async(req, res, next) => {
+    //format request
     let audio = {
         title: req.body.title,
         comments: req.body.comments,
@@ -265,12 +271,12 @@ app.post('/insert2', upload.single('audio'), async(req, res, next) => {
         link: "",
     }
     audio.link = 'https://' + S3_BUCKET + '.s3.eu-west-2.amazonaws.com/' + audio.fileName;
-    console.log(audio)
 
+    //upload file 
     const file = req.file.buffer;
-    console.log(file);
     const link = await uploadAudio(audio.fileName, S3_BUCKET, file)
 
+    //send to database
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         const dbase = db.db('Redruth');
@@ -294,7 +300,6 @@ app.post('/insert2', upload.single('audio'), async(req, res, next) => {
         }, (err, result) => {});
 
     });
-
 
     res.sendStatus(200)
 });
