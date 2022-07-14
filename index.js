@@ -13,6 +13,7 @@ const path = require('path');
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require("body-parser")
+
 const multer = require('multer');
 const { ObjectId } = require('mongodb');
 require('dotenv').config();
@@ -47,11 +48,18 @@ const storage = memoryStorage();
 const upload = multer({ storage });
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
 const port = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }))
 
 app.use(express.static('public/assets'));
 //app.use(express.static('uploads'));
+
+app.listen(port, () => {
+    console.log(`App listening at http://localhost:${port}`);
+});
+
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
@@ -60,99 +68,81 @@ app.get('/', (req, res) => {
 /* create a filename for record using current date  */
 function filename() {
     aFile = Date.now();
-    return (aFile + '.mp3');
+    return aFile + '.mp3';
 };
 
-app.post('/record', upload.single('audio'), async(req, res) => {
-    const bucketname = S3_BUCKET;
-    const file = req.file.buffer;
-    const fileName = filename();
-    const link = await uploadAudio(fileName, bucketname, file)
-    res.sendStatus(200);
-});
+
+// app.post('/record', upload.single('audio'), async(req, res) => {
+//     const bucketname = S3_BUCKET;
+//     const file = req.file.buffer;
+//     const fileName = filename();
+//     const link = await uploadAudio(fileName, bucketname, file)
+//     res.sendStatus(200);
+// });
 
 
-app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`);
-});
+// MongoClient.connect(url, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// }, (err, client) => {
+//     if (err) {
+//         return console.log(err);
+//     }
+//     app.post("/insert", function(req, res) {
+//         var title = req.body.title;
+//         var comments = req.body.comments;
+//         var prompt = req.body.prompt;
+//         var project = req.body.project;
+//         var postCode = req.body.postCode;
+//         var fullName = req.body.fullName;
+//         var email = req.body.email;
+//         var phone = req.body.phone;
+//         const timeStamp = TimeStamp();
+//         var audio = `https://${S3_BUCKET}.s3.eu-west-2.amazonaws.com/` + aFile + ".mp3";
+//         const public = false;
+//         console.log(audio);
+//         if (aFile != 0) /* && req.body.key === req.body.passkey */ {
+//             myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
+//         }
+//         aFile = 0;
+//     });
 
-MongoClient.connect(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}, (err, client) => {
-    if (err) {
-        return console.log(err);
-    }
-    app.post("/insert", function(req, res) {
-        var title = req.body.title;
-        var comments = req.body.comments;
-        var prompt = req.body.prompt;
-        var project = req.body.project;
-        var postCode = req.body.postCode;
-        var fullName = req.body.fullName;
-        var email = req.body.email;
-        var phone = req.body.phone;
-        const timeStamp = TimeStamp();
-        var audio = `https://${S3_BUCKET}.s3.eu-west-2.amazonaws.com/` + aFile + ".mp3";
-        const public = false;
-        console.log(audio);
-        if (aFile != 0) /* && req.body.key === req.body.passkey */ {
-            myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
-        }
-        aFile = 0;
-    });
 
-    function TimeStamp() {
-        const currentDate = new Date();
-        var year = currentDate.getUTCFullYear();
-        var month = currentDate.getUTCMonth();
-        var day = currentDate.getUTCDate();
-        var hour = currentDate.getUTCHours() + 1;
-        var minute = currentDate.getUTCMinutes();
-        if (minute < 10) {
-            minute = "0" + minute;
-        }
-        if (hour === 24) {
-            hour = "0";
-        }
-        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-        return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year; //swap day month
-    }
-    // Specify database you want to access
-    const db = client.db('Redruth');
-    const record = db.collection(collection); //temp change to test new collection created with admin page
-    record.find().toArray(function(err, filed) {
-        //console.log(filed); // output all records
-        app.post('/metaArr', function(req, res) {
-            return res.json({ success: true, filed });
-        });
-        app.post('/saved', function(req, res) {
-            return res.json({ success: true, filed });
-        });
-    });
+//     // Specify database you want to access
+//     const db = client.db('Redruth');
+//     const record = db.collection(collection); //temp change to test new collection created with admin page
+//     record.find().toArray(function(err, filed) {
+//         //console.log(filed); // output all records
+//         app.post('/metaArr', function(req, res) {
+//             return res.json({ success: true, filed });
+//         });
+//         app.post('/saved', function(req, res) {
+//             return res.json({ success: true, filed });
+//         });
+//     });
 
-    function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
-        record.insertOne({
-            adminData: {
-                Project: project,
-                Prompt: prompt,
-                TimeStamp: timeStamp,
-            },
-            Audio: { url: audio },
-            metaData: {
-                Title: title,
-                Comments: comments,
-                PostalCode: postCode,
-                Name: fullName,
-                Email: email,
-                Phone: phone
-            },
-            Public: public
-        }, (err, result) => {});
-        console.log(`MongoDB Connected: ${url}`);
-    }
-    //location.reload();
-});
+//     function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
+//         record.insertOne({
+//             adminData: {
+//                 Project: project,
+//                 Prompt: prompt,
+//                 TimeStamp: timeStamp,
+//             },
+//             Audio: { url: audio },
+//             metaData: {
+//                 Title: title,
+//                 Comments: comments,
+//                 PostalCode: postCode,
+//                 Name: fullName,
+//                 Email: email,
+//                 Phone: phone
+//             },
+//             Public: public
+//         }, (err, result) => {});
+//         console.log(`MongoDB Connected: ${url}`);
+//     }
+//     //location.reload();
+// });
 
 /* listen page route */
 app.get('/listen.html', (req, res) => {
@@ -231,3 +221,51 @@ function deleteRecord(id) {
         );
     });
 }
+
+function TimeStamp() {
+    const currentDate = new Date();
+    var year = currentDate.getUTCFullYear();
+    var month = currentDate.getUTCMonth();
+    var day = currentDate.getUTCDate();
+    var hour = currentDate.getUTCHours() + 1;
+    var minute = currentDate.getUTCMinutes();
+    if (minute < 10) {
+        minute = "0" + minute;
+    }
+    if (hour === 24) {
+        hour = "0";
+    }
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year; //swap day month
+}
+
+//insert2
+
+// get form data
+//upload file to aws
+//add to database
+
+
+/* get record id from admin page to delete record */
+app.post('/insert2', (req, res) => {
+    console.log("here");
+    console.log(req.body, req.query, req.params);
+    let audio = {
+        title: req.body.title,
+        comments: req.body.comments,
+        prompt: req.body.prompt,
+        project: req.body.project,
+        postCode: req.body.postCode,
+        fullName: req.body.fullName,
+        email: req.body.email,
+        phone: req.body.phone,
+        timeStamp: TimeStamp(),
+        fileName: filename(),
+        public: false,
+        link: "",
+    }
+    audio.link = 'https://' + S3_BUCKET + '.s3.eu-west-2.amazonaws.com/' + audio.fileName;
+
+    console.log(audio)
+    res.sendStatus(200)
+});
