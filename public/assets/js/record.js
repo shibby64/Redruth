@@ -239,7 +239,7 @@ document.forms[0].onsubmit = async(e) => {
         if (response.status == 200) {
             console.log(response);
             // response.json()
-            // window.location.assign('/saved.html');
+            window.location.assign('/saved.html');
         } else {
             throw "request failed";
         }
