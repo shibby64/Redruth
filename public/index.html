@@ -33,29 +33,34 @@
         <!-- <h1 class="text-center">Record Your Voice</h1> -->
 
 
-        <div class="record-button-container text-center mt-5">
-            <button id="redruth">The Redruth Reading Room Project</button>
-            <div id="myModal" class="modal">
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <div>
-                        <h4>Passmore Edwards Recording Studio</h4>
-                        <p>This recording will be added to a repository of stories documenting the history of the town of Redruth and it's residents. We want any story big or small. These stories will be exhibited as part of a library in Redruth Reading
-                            Room, a small space in the old Library building which we will install and respond to the stories of the town. Please contribute a memory or story here.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <h3 id="prompt">What memories come to mind when you think of the Passmore Edwards Free Library?</h3>
-            <div id="form">
-                <form name="record-data" id="record-data" autocomplete="on">
-                    <label for="project" style="display:none"></label>
-                    <input type="hidden" id="project" name="project" value="Redruth Project">
-                    <label for="prompt" style="display:none"></label>
-                    <input type="hidden" id="prompt" name="prompt" value="What memories come to mind when you think of the Passmore Edwards Free Library?">
-                    <div id="recordbutton2"><button type="button" class="border btn record-button rounded-circle shadow-sm text-center" id="recordButton" onclick="recordFunction()"><img src="/images/microphone.png" alt="Record" class="img-fluid"></button></div>
-                    <h5 id="recordyourresponse">Record your response!</h5>
-                    <h6 id="countDownTimer" class="recForm" style="display:none">15:00</h6>
+    <div class="record-button-container text-center mt-5">
+      <button id="redruth">The Redruth Reading Room Project</button>
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <div>
+            <h4>Passmore Edwards Recording Studio</h4>
+            <p>This recording will be added to a repository of stories documenting the history of the town of Redruth
+              and it's residents. We want any story big or small. These stories will be exhibited as part of a library
+              in Redruth Reading Room, a small space in the old Library building which we will install and respond to
+              the stories of the town. Please contribute a memory or story here.
+            </p>
+          </div>
+        </div>
+      </div>
+      <h3 id="showPrompt" ></h3>
+      <div id="form">
+        <form method="post" action="/insert" name="record-data" id="record-data" autocomplete="on">
+          <label for="project" style="display:none"></label>
+          <input type="hidden" id="project" name="project" value="Redruth Project">
+          <label for="prompt" style="display:none"></label>
+          <input type="hidden" id="prompt" name="prompt" value="">
+          <div id="recordbutton2"><button class="border btn record-button rounded-circle shadow-sm text-center"
+              id="recordButton" onclick="recordFunction()"><img src="/images/microphone.png" alt="Record" class="img-fluid"></button></div>
+          <h5 id="recordyourresponse">Record your response!</h5>
+          <h6 id="countDownTimer" class="recForm" style="display:none">15:00</h6>
+      </div>
+
 
                     <div id="password"></div>
 
@@ -100,21 +105,24 @@
                             <button type="submit" name="submit" class="btn btn-success rounded-pill" id="saveButton">Save</button>
                             <button type="button" class="btn btn-transparent rounded-pill" id="discardButton">Discard</button>
                         </div>
-                    </div>
-                    <!-- <div class="actions mt-3"><button class="submitbtn btn rounded-pill" >Submit</button></div> -->
-                    <div id="aboutpara" class="checked contLabel" style="display:none">
-                        <p>The Redruth Reading Room Project is an oral history project meant to refill the center with stories. Any data you provide will only be used to add additional context to your audio recording, and contact information will only be
-                            used by project adminstrators for requests to participate in future projects.</p>
-                    </div>
-                </form>
-            </div>
-        </div>
+                   
+      </div>
+      <!-- <div class="actions mt-3"><button class="submitbtn btn rounded-pill" >Submit</button></div> -->
+      <div id="aboutpara" class="checked contLabel" style="display:none">
+        <p>The Redruth Reading Room Project is an oral history project meant to refill the center with stories. Any data
+          you provide will only be used to add additional context to your audio recording, and contact information will
+          only be used by project administrators for requests to participate in future projects.</p>
+      </div>
     </div>
-    <script src="/js/pWord.js"></script>
-    <script src="/js/checkbox.js"></script>
-    <script src="/js/modal.js"></script>
-    <script src="/js/record.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </form>
+  </div>
+  <script src="/js/prompt.js"></script>
+  <script src="/js/pWord.js"></script>
+  <script src="/js/checkbox.js"></script>
+  <script src="/js/modal.js"></script>
+  <script src="/js/record.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 </body>
 

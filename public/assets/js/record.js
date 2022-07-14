@@ -1,3 +1,4 @@
+
 /**
  * Summary.     Handles recording of audio on the homepage of the website. 
  *              Details about aws, checkbox, modal, and passwords are all 
@@ -249,3 +250,4 @@ document.forms[0].onsubmit = async(e) => {
         window.location.assign('/');
     });
 };
+
