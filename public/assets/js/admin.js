@@ -38,8 +38,7 @@ async function metaGrab() {
       }
     })
     .catch((err) => console.error(err));
-
-
+}
 
 
 /**
@@ -219,4 +218,3 @@ async function getCollections() {
 function updatePageView() { 
   window.location.reload(true);
 }
-
