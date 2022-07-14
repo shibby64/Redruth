@@ -267,8 +267,34 @@ app.post('/insert2', upload.single('audio'), async(req, res, next) => {
     audio.link = 'https://' + S3_BUCKET + '.s3.eu-west-2.amazonaws.com/' + audio.fileName;
     console.log(audio)
 
-    const file = req.file.audio;
+    const file = req.file.buffer;
+    console.log(file);
     const link = await uploadAudio(audio.fileName, S3_BUCKET, file)
+
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        const dbase = db.db('Redruth');
+        const record = dbase.collection(collection);
+        record.insertOne({
+            adminData: {
+                Project: audio.project,
+                Prompt: audio.prompt,
+                TimeStamp: audio.timeStamp,
+            },
+            Audio: { url: audio.link },
+            metaData: {
+                Title: audio.title,
+                Comments: audio.comments,
+                PostalCode: audio.postCode,
+                Name: audio.fullName,
+                Email: audio.email,
+                Phone: audio.phone
+            },
+            Public: audio.public
+        }, (err, result) => {});
+
+    });
+
 
     res.sendStatus(200)
 });
