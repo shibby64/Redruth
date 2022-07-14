@@ -2,24 +2,23 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- <meta property='og:title' content='Passmore Edwards Community Story' />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta property='og:title' content='Passmore Edwards Community Story' />
   <meta property='og:image' content='https://redruthpe.herokuapp.com/images/Redruth.jpg' />
   <meta property='og:description'
     content="Collecting the stories of people related to Redruth's historic Passmore Edwards Free Library" />
   <meta property='og:url' content='https://redruthpe.herokuapp.com/' />
   <meta property='og:image:width' content='1200' />
   <meta property='og:image:height' content='627' /> -->
-  <title>Record</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="\css\index2.css" rel="stylesheet" />
-  
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-GNBV24KT1T"></script>
+    <title>Record</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="\css\index2.css" rel="stylesheet" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-GNBV24KT1T"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
@@ -30,8 +29,8 @@
 </head>
 
 <body class="pt-5">
-  <div class="container">
-    <!-- <h1 class="text-center">Record Your Voice</h1> -->
+    <div class="container">
+        <!-- <h1 class="text-center">Record Your Voice</h1> -->
 
 
     <div class="record-button-container text-center mt-5">
@@ -62,57 +61,51 @@
           <h6 id="countDownTimer" class="recForm" style="display:none">15:00</h6>
       </div>
 
-      <div id="password"></div>
 
-      <div>
-        <label for="title" id="titlelabel">Add a title for your response</label><br>
-        <input type="text" name="title" id="title" placeholder="Title - this field is required" required></input>
-      </div>
-      <div>
-        <label for="comments" id="commentslabel">Additional comments</label> <br>
-        <textarea id="comments" name="comments" rows="2" cols="50"
-          placeholder="Your comments here - this field is required" required></textarea>
-      </div>
-      <h6 id="addinfo">Add Additional Information </h6><input type="checkbox" id="myCheck"
-        onclick="checkFunction()"></input>
-      <div>
-      </div>
-      <div>
-        <label for="fullName" class="checked contLabel" style="display:none">Full Name</label>
-        <input type="text" id="Name" name="fullName" placeholder="Name - Optional" class="checked addContent"
-          style="display:none"></input>
-        <label for="postCode" class="checked contLabel" style="display:none">Post Code</label>
-        <input type="text" id="postCode" name="postCode" placeholder="123456789 - Optional" class="checked addContent"
-          style="display:none"></input>
-      </div>
-      <div>
-        <label for="phone" class="checked contLabel" style="display:none">Phone#</label>
-        <input type="number" id="Phone" name="phone" rows="1" cols="15" placeholder="12345123456 - Optional"
-          class="checked addContent" style="display:none">
-        </input>
-        <label for="email" class="checked contLabel" style="display:none">Email</label>
-        <input type="email" id="email" name="email" placeholder="sue@redruth.com - Optional" class="checked addContent"
-          style="display:none"></input>
-      </div>
-      <div id="keys">
-        <label for="key" id="keyDisplay"></label><br />
-        <h6 id="clue"></h6><br />
-        <select name="key" id="key" required>
-          <option id="opt1">1</option>
-          <option id="opt2">2</option>
-          <option id="opt3">3</option>
-          <option id="opt4">4</option>
-        </select>
-        <input type="hidden" name="passkey" id="passkey"></input>
-        <br /><br />
-      </div>
-      <div class="recorded-audio-container mt-5 d-none flex-column justify-content-center align-items-center"
-        id="recordedAudioContainer">
-        <div class="actions mt-3">
-          <button type="submit" name="submit" class="btn btn-success rounded-pill" id="saveButton"
-            onclick="window.location.href='saved.html';">Save</button>
-          <button class="btn btn-transparent rounded-pill" id="discardButton">Discard</button>
-        </div>
+                    <div id="password"></div>
+
+                    <div>
+                        <label for="title" id="titlelabel">Add a title for your response</label><br>
+                        <input type="text" name="title" id="title" placeholder="Title - this field is required" required></input>
+                    </div>
+                    <div>
+                        <label for="comments" id="commentslabel">Additional comments</label> <br>
+                        <textarea id="comments" name="comments" rows="2" cols="50" placeholder="Your comments here - this field is required" required></textarea>
+                    </div>
+                    <h6 id="addinfo">Add Additional Information </h6><input type="checkbox" id="myCheck" onclick="checkFunction()"></input>
+                    <div>
+                    </div>
+                    <div>
+                        <label for="fullName" class="checked contLabel" style="display:none">Full Name</label>
+                        <input type="text" id="Name" name="fullName" placeholder="Name - Optional" class="checked addContent" style="display:none"></input>
+                        <label for="postCode" class="checked contLabel" style="display:none">Post Code</label>
+                        <input type="text" id="postCode" name="postCode" placeholder="123456789 - Optional" class="checked addContent" style="display:none"></input>
+                    </div>
+                    <div>
+                        <label for="phone" class="checked contLabel" style="display:none">Phone#</label>
+                        <input type="number" id="Phone" name="phone" rows="1" cols="15" placeholder="12345123456 - Optional" class="checked addContent" style="display:none">
+                        </input>
+                        <label for="email" class="checked contLabel" style="display:none">Email</label>
+                        <input type="email" id="email" name="email" placeholder="sue@redruth.com - Optional" class="checked addContent" style="display:none"></input>
+                    </div>
+                    <div id="keys">
+                        <label for="key" id="keyDisplay"></label><br />
+                        <h6 id="clue"></h6><br />
+                        <select name="key" id="key" required>
+                          <option id="opt1">1</option>
+                          <option id="opt2">2</option>
+                          <option id="opt3">3</option>
+                          <option id="opt4">4</option>
+                        </select>
+                        <input type="hidden" name="passkey" id="passkey"></input>
+                        <br /><br />
+                    </div>
+                    <div class="recorded-audio-container mt-5 d-none flex-column justify-content-center align-items-center" id="recordedAudioContainer">
+                        <div class="actions mt-3">
+                            <button type="submit" name="submit" class="btn btn-success rounded-pill" id="saveButton">Save</button>
+                            <button type="button" class="btn btn-transparent rounded-pill" id="discardButton">Discard</button>
+                        </div>
+                   
       </div>
       <!-- <div class="actions mt-3"><button class="submitbtn btn rounded-pill" >Submit</button></div> -->
       <div id="aboutpara" class="checked contLabel" style="display:none">
@@ -129,6 +122,7 @@
   <script src="/js/modal.js"></script>
   <script src="/js/record.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 </body>
 

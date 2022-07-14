@@ -1,3 +1,13 @@
+/**
+ * Summary.     Handles the listing of audio files and metadata on the admin side, 
+ *              the admin is able to publicise audio and delete audio. 
+ *              The page currently lists only private files. 
+ * 
+ * Description. Calls getCollections() to list all audio files from /saved route 
+ *              then sets up html to display files neatly.
+ *
+ */
+
 const recordButton = document.getElementById('recordButton');
 //const recordButtonImage = recordButton.firstElementChild;
 const recordedAudioContainer = document.getElementById('recordedAudioContainer');
@@ -11,6 +21,7 @@ let mediaRecorder = null; // will be used later to record audio
 let audioBlob = null; // the blob that will hold the recorded audio
 let metaArr = [];
 let placeholder = [];
+
 
 getCollections();
 
@@ -27,11 +38,16 @@ async function metaGrab() {
       }
     })
     .catch((err) => console.error(err));
-}
 
 
 
-/* grab records in the database and filter by ones that are not public */
+
+/**
+ * Grab records in the database 
+ * 
+ * Filtered by audio that are not public 
+ *  
+ */
 async function getCollections() {
   fetch('/saved', { method: 'POST' })
     .then((object) => object.json())
@@ -203,6 +219,4 @@ async function getCollections() {
 function updatePageView() { 
   window.location.reload(true);
 }
-
-
 
