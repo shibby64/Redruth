@@ -33,7 +33,7 @@ let aFile = 0;
 
 // What collection in Mongo the app in looking at, in future have admin page set this var from available collections 
 var collection = 'test';
-
+//var collection = 'Redruth Reading Room';
 const storage = memoryStorage();
 const upload = multer({ storage });
 

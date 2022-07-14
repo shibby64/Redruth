@@ -239,7 +239,7 @@ document.forms[0].onsubmit = async(e) => {
         //if our response is good, then redirect to saved
         if (response.status == 200) {
             console.log(response);
-            // response.json()
+            alert("Your Recording Saved!")
             window.location.assign('/saved.html');
         } else {
             throw "request failed";
