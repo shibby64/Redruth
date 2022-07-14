@@ -67,7 +67,7 @@ function mediaRecorderStop() {
  */
 function record() {
     /* this seems to not be working, maybe we can find a way to update this */
-    if (!navigator.mediaDevices.getUserMedia()) {
+    if (!navigator.mediaDevices || ) {
         alert('Your browser does not support recording! We would still love to hear from you, come by and see us to tell your story');
         return;
     }
@@ -225,20 +225,23 @@ document.forms[0].onsubmit = async(e) => {
     formData = new FormData(document.forms[0])
     formData.append('audio', audioBlob, 'recording.mp3');
     //print form data
-    // for (const [key, value] of formData) {
-    //     console.log(`${key}: ${value}\n`);
-    // }
-    let request = fetch('/insert2', {
+    for (const [key, value] of formData) {
+        console.log(`${key}: ${value}\n`);
+    }
+    let request = fetch('/insert', {
         method: 'POST',
         body: formData,
-
+        // headers: {
+        //     'Content-Type': 'multipart/form-data'
+        // },
     }).then(response => {
         //if our response is good, then redirect to saved
         if (response.status == 200) {
             console.log(response);
+            // response.json()
             window.location.assign('/saved.html');
         } else {
-            throw "Request Failed";
+            throw "request failed";
         }
     }).catch((error) => {
         //otherwise alert then refresh
