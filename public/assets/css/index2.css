@@ -10,7 +10,12 @@ body{
     background-color: transparent;
     font-weight: bold;
 }
-
+.metaDataStyle{
+    color: #ff9f00;
+}
+.container{
+    max-width: 400px;
+}
 form div{
     padding: 12px;
 

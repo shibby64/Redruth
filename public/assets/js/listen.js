@@ -48,11 +48,23 @@ function metaData() {
         prompt.appendChild(promptNode);
         document.getElementById("story").append(prompt);
         /*-----------------------------------------------------------*/
-        const ts = document.createElement('p');
-        ts.classList.add('metaDataStyle');
-        const tsnode = document.createTextNode("Timestamp: " + metaArr[i].adminData.TimeStamp);
-        ts.appendChild(tsnode);
-        document.getElementById("story").append(ts);
+        const timeStamp = document.createElement('p');
+        timeStamp.classList.add('metaDataStyle');
+        const timeStampNode = document.createTextNode("Timestamp: " + metaArr[i].adminData.TimeStamp);
+        timeStamp.appendChild(timeStampNode);
+        document.getElementById("story").append(timeStamp);
+        /*-----------------------------------------------------------*/
+        const title = document.createElement('p');
+        title.classList.add('metaDataStyle');
+        const titleNode = document.createTextNode("Title: " + metaArr[i].metaData.Title);
+        title.appendChild(titleNode);
+        document.getElementById("story").append(title);
+        /*-----------------------------------------------------------*/
+        const comment = document.createElement('p');
+        comment.classList.add('metaDataStyle');
+        const commentNode = document.createTextNode("Timestamp: " + metaArr[i].metaData.Comments);
+        comment.appendChild(commentNode);
+        document.getElementById("story").append(comment);
         /*-----------------------------------------------------------*/
         const audioTag = document.createElement('div');
         audioTag.classList.add("playStory");
