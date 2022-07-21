@@ -2,14 +2,19 @@
 body{
     background-color: #3c3d3d;
     color: white;
-    
 }
+#story{
+    max-height: fit-content;
 
+}
 #redruth{
     color: #ff9f00;
     border:0px solid  #3c3d3d; 
     background-color: transparent;
     font-weight: bold;
+}
+.listen {
+    transform: translateX(-5%);
 }
 #listenHeader{
     transform: translateX(-5%);
@@ -19,7 +24,7 @@ body{
     margin-left: 50px;
 }
 .playStory {
-    margin-left: 55px;
+    margin-left: 45px;
 }
 .container{
     max-width: 400px;
@@ -98,13 +103,6 @@ form div{
     margin-left: 0;
     margin-right: .0;
 }
-
-/* #recordButton img{
-    height: 110%;
-    width: 110%;
-    background-color: red;
-    overflow: hidden;
-} */
 
 #recordyourresponse{
     padding-top: 15px;
@@ -239,7 +237,7 @@ textarea{
     color: white;
 }
 .slider {
-    height: 400px;
+    min-height: 80vh;
     overflow: hidden;
     position: relative;
   }
@@ -283,15 +281,15 @@ textarea{
     padding: 0;
     display: flex;
   }
-  .next {
+  /* .next {
     transform: translateX(20%);
-  }
+  } */
   .slider-control-prev,
   .slider-control-next {
     position: absolute;
     z-index: 20;
     cursor: pointer;
-    top: 47%;
+    bottom: 5%;
     opacity: 0.3;
     transition: opacity 300ms;
     background-color: #ff9f00;

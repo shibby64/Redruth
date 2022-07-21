@@ -26,7 +26,7 @@ class Slider {
         }
         this.setEventListeners();
         console.log(this.indicators[this.currentIndex]);
-        //this.indicators[this.currentIndex].classList.add("active");
+        this.indicators[this.currentIndex].classList.add("active");
     }
     setEventListeners() {
         this.prevBtn.addEventListener("click", () => {
@@ -70,8 +70,8 @@ class Slider {
         setTimeout(() => {
             this.sliderItems[this.nextItemIndex].classList.remove("next-item", "slide-end");
             this.sliderItems[this.currentIndex].classList.remove("slide-next", "active");
-            // this.indicators[this.currentIndex].classList.remove("active");
-            // this.indicators[this.nextItemIndex].classList.add("active");
+            this.indicators[this.currentIndex].classList.remove("active");
+            this.indicators[this.nextItemIndex].classList.add("active");
             this.setIndices("NEXT");
             this.isSliding = false;
         }, 400);
@@ -88,8 +88,8 @@ class Slider {
         setTimeout(() =>  {
             this.sliderItems[this.prevItemIndex].classList.remove("prev-item", "slide-end");
             this.sliderItems[this.currentIndex].classList.remove("slide-prev", "active");
-            // this.indicators[this.currentIndex].classList.remove("active");
-            // this.indicators[this.prevItemIndex].classList.add("active");
+            this.indicators[this.currentIndex].classList.remove("active");
+            this.indicators[this.prevItemIndex].classList.add("active");
             this.setIndices("PREV");
             this.isSliding = false;
         }, 400);

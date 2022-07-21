@@ -51,9 +51,9 @@ function metaData() {
     for (let m = 0; m < metaArr.length; m++) {
         const recordingElement = document.createElement('div');
         if(m === 0){
-            recordingElement.classList.add("slider-item", 'active');
+            recordingElement.classList.add("slider-item", 'slide-indicator' ,'active');
         } else {
-            recordingElement.classList.add("slider-item");
+            recordingElement.classList.add("slider-item", 'slide-indicator');
         }
         recordingElement.setAttribute('id', 'cont' + m)
         /*-----------------------------------------------------------*/
@@ -75,25 +75,28 @@ function metaData() {
         timeStamp.appendChild(timeStampNode);
         recordingElement.append(timeStamp);
         /*-----------------------------------------------------------*/
+        if(typeof metaArr[m].adminData.PostalCode !== 'undefined')
+        {
+            const postCode = document.createElement('p');
+            postCode.classList.add('metaDataStyle');
+            const postCodeNode = document.createTextNode("* Post Code: " + metaArr[m].adminData.PostalCode);
+            postCode.appendChild(postCodeNode);
+            recordingElement.append(postCode);
+        }
+        /*---------------------------------------------------------- */
         const audioTag = document.createElement('div');
         audioTag.classList.add("playStory");
         audioTag.innerHTML = '<audio id="audio-player" controls="controls" src= ' + metaArr[m].Audio.url + ' type="audio/mpeg">';
         recordingElement.append(audioTag);
         /*---------------------------------------------------------- */
-        const prevCont = document.createElement('span');
-        prevCont.classList.add("slider-control-prev", 'prev');
-        prevCont.setAttribute('role', "button");
-        prevCont.innerHTML= "<img aria-hidden='true' src='images/Prev.PNG' alt='Previous Recording Button'>";
-        recordingElement.append(prevCont);
-        /*---------------------------------------------------------- */
-        const nextCont = document.createElement('span');
-        nextCont.classList.add("slider-control-next", 'next');
-        nextCont.setAttribute('role', "button");
-        nextCont.innerHTML= "<img aria-hidden='true' src='images/Next.PNG' alt='Next Recording Button'>";
-        recordingElement.append(nextCont);
-        /*---------------------------------------------------------- */
+        const prv = document.getElementById('prv');
+        const nxt = document.getElementById('nxt');
         recordingsContainer.append(recordingElement);
+        recordingsContainer.appendChild(prv);
+        recordingsContainer.appendChild(nxt);
     }
 };
 
 setTimeout(() => metaData(), 200);
+
+
