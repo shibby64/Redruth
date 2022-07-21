@@ -269,18 +269,17 @@ textarea{
   }
   
   .slide-indicators {
-    position: absolute;
+    /* position: absolute; */
     z-index: 20;
     bottom: 0;
     left: 50%;
-    transform: translateX(-50%);
+    /* transform: translateX(-50%); */
     list-style: none;
     padding: 0;
     display: flex;
   }
   .next {
     transform: translateX(20%);
-    transform: translatey(100%);
   }
   .slider-control-prev,
   .slider-control-next {
@@ -288,7 +287,7 @@ textarea{
     z-index: 20;
     cursor: pointer;
     top: 50%;
-    transform: translateY(100%);
+    transform: translateY(150%);
     opacity: 0.3;
     transition: opacity 300ms;
     background-color: #ff9f00;
