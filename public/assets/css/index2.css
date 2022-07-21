@@ -18,6 +18,9 @@ body{
 .playStory {
     margin-left: 45px;
 }
+.container{
+    max-width: 400px;
+}
 .slider{
     max-width: 400px;
     margin: auto;
