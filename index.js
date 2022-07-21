@@ -46,14 +46,14 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static('public/assets'));
 //app.use(express.static('uploads'));
 
-app.listen(port, () => {
-    console.log(`App listening at https://localhost:${port}`);
-});
-// app.use(enforce.HTTPS({ trustProtoHeader: true }));
- 
-// http.createServer(app).listen(port, () => {
-//     console.log('Express server listening on port ' + port);
+// app.listen(port, () => {
+//     console.log(`App listening at https://localhost:${port}`);
 // });
+app.use(enforce.HTTPS({ trustProtoHeader: true }));
+ 
+http.createServer(app).listen(port, () => {
+    console.log('Express server listening on port ' + port);
+});
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
