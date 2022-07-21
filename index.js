@@ -132,6 +132,18 @@ function updateMongoDBPrompt(newPrompt) {
           if (err) throw err;
           console.log('updated prompt: ' + newPrompt);
         });
+    /*dynamically updates admin page with prompt data*/
+    app.post('/saved', function (req, res) {
+      record.find().toArray(function (err, filed) {
+        return res.json({ success: true, filed });
+      });
+    });
+    /*dynamically updates admin and listen pages with story data*/
+    app.post('/metaArr', function (req, res) {
+      record.find().toArray(function (err, filed) {
+        return res.json({ success: true, filed });
+      });
+    });
   });
 }
 
@@ -171,6 +183,12 @@ function updateTable(id) {
                     if (err) throw err;
                     console.log('updated public flag for record ' + id);
                 });
+        /*dynamically updates admin and listen pages with story data*/
+        app.post('/metaArr', function (req, res) {
+          record.find().toArray(function (err, filed) {
+            return res.json({ success: true, filed });
+          });
+        });
     });
 }
 
@@ -193,6 +211,7 @@ function deleteRecord(id) {
                 console.log('deleted record ' + id);
             }
         );
+        
     });
 }
 
@@ -272,19 +291,32 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
             },
             Public: audio.public
         }, (err, result) => {});
+        /*dynamically updates admin and listen pages with story data*/
         app.post('/metaArr', function (req, res) {
           record.find().toArray(function (err, filed) {
             return res.json({ success: true, filed });
           });
         });
-        app.post('/saved', function (req, res) {
-          record.find().toArray(function (err, filed) {
-            return res.json({ success: true, filed });
-          });
-        });
+        
     });
 
     res.sendStatus(200)
+});
+/*initial admin and listen page querries*/
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  const dbase = db.db('Redruth');
+  const record = dbase.collection(collection);
+  app.post('/metaArr', function (req, res) {
+    record.find().toArray(function (err, filed) {
+      return res.json({ success: true, filed });
+    });
+  });
+  app.post('/saved', function (req, res) {
+    record.find().toArray(function (err, filed) {
+      return res.json({ success: true, filed });
+    });
+  });
 });
 
 /* gets record id to update public boolean from admin page to false */

@@ -5,7 +5,7 @@
  *              and sends it to the page. 
  *              
  */
-
+ const recordingsContainer = document.getElementById('story');
 let metaArr = [];
 
 /**
@@ -34,42 +34,49 @@ console.log(metaArr);
  * Used for setting up html for display on the page
  */
 function metaData() {
-
-    for (let i = 0; i < metaArr.length; i++) {
-        const project = document.createElement('p');
-        project.classList.add('metaDataStyle');
-        const projectNode = document.createTextNode("Project: " + metaArr[i].adminData.Project);
+    const project = document.createElement('h4');
+        project.classList.add('metaDataStyle', 'project');
+        const projectNode = document.createTextNode("Project: " + metaArr[0].adminData.Project);
         project.appendChild(projectNode);
-        document.getElementById("story").append(project);
+        recordingsContainer.append(project);
         /*-----------------------------------------------------------*/
-        const prompt = document.createElement('p');
-        prompt.classList.add('metaDataStyle');
-        const promptNode = document.createTextNode("Prompt: " + metaArr[i].adminData.Prompt);
+        const prompt = document.createElement('h6');
+        prompt.classList.add('metaDataStyle', 'prompt');
+        const promptNode = document.createTextNode("Prompt: " + metaArr[0].adminData.Prompt);
         prompt.appendChild(promptNode);
-        document.getElementById("story").append(prompt);
-        /*-----------------------------------------------------------*/
-        const timeStamp = document.createElement('p');
-        timeStamp.classList.add('metaDataStyle');
-        const timeStampNode = document.createTextNode("Timestamp: " + metaArr[i].adminData.TimeStamp);
-        timeStamp.appendChild(timeStampNode);
-        document.getElementById("story").append(timeStamp);
+        recordingsContainer.append(prompt);
+    for (let m = 0; m < metaArr.length; m++) {
+        const recordingElement = document.createElement('div');
+        if(m === 0){
+            recordingElement.classList.add("slider-item", 'active');
+        } else {
+            recordingElement.classList.add("slider-item");
+        }
+        recordingElement.setAttribute('id', 'cont' + m)
         /*-----------------------------------------------------------*/
         const title = document.createElement('p');
         title.classList.add('metaDataStyle');
-        const titleNode = document.createTextNode("Title: " + metaArr[i].metaData.Title);
+        const titleNode = document.createTextNode("* Title: " + metaArr[m].metaData.Title);
         title.appendChild(titleNode);
-        document.getElementById("story").append(title);
+        recordingElement.append(title);
         /*-----------------------------------------------------------*/
         const comment = document.createElement('p');
         comment.classList.add('metaDataStyle');
-        const commentNode = document.createTextNode("Timestamp: " + metaArr[i].metaData.Comments);
+        const commentNode = document.createTextNode("* Comments: " + metaArr[m].metaData.Comments);
         comment.appendChild(commentNode);
-        document.getElementById("story").append(comment);
+        recordingElement.append(comment);
+        /*-----------------------------------------------------------*/
+        const timeStamp = document.createElement('p');
+        timeStamp.classList.add('metaDataStyle');
+        const timeStampNode = document.createTextNode("* Timestamp: " + metaArr[m].adminData.TimeStamp);
+        timeStamp.appendChild(timeStampNode);
+        recordingElement.append(timeStamp);
         /*-----------------------------------------------------------*/
         const audioTag = document.createElement('div');
         audioTag.classList.add("playStory");
-        audioTag.innerHTML = '<audio id="audio-player" controls="controls" src= ' + metaArr[i].Audio.url + ' type="audio/mpeg">';
-        document.getElementById("story").append(audioTag);
+        audioTag.innerHTML = '<audio id="audio-player" controls="controls" src= ' + metaArr[m].Audio.url + ' type="audio/mpeg">';
+        recordingElement.append(audioTag);
+        recordingsContainer.append(recordingElement);
     }
 };
 

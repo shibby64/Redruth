@@ -2,6 +2,7 @@
 body{
     background-color: #3c3d3d;
     color: white;
+    
 }
 
 #redruth{
@@ -12,13 +13,18 @@ body{
 }
 .metaDataStyle{
     color: #ff9f00;
+    margin-left: 50px;
 }
-.container{
+.playStory {
+    margin-left: 45px;
+}
+.slider{
     max-width: 400px;
+    margin: auto;
+    margin-top: 30px;
 }
 form div{
     padding: 12px;
-
 }
 
 #form{
@@ -28,7 +34,13 @@ form div{
 #prompt{
     color:  #39b7dd;
 }
-
+.prompt {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.project {
+    text-align: center;
+}
 #recordbutton{
     padding-top: 10%;
 }
@@ -218,16 +230,79 @@ textarea{
 #aboutpara a{
     color: white;
 }
-/* body{
-    background-color: aqua;
-} */
-
-
-/* ?*@media only screen and (max-width: 600px) {
-  body {
-    background-color: lightblue;
+.slider {
+    height: 400px;
+    overflow: hidden;
+    position: relative;
   }
-} */
-
+  
+  .slider .slider-item {
+    height: 100%;
+    width: 100%;
+    display: none;
+    position: absolute;
+    transition: transform 400ms;
+  }
+  
+  .slider .slider-item.active,
+  .slider .slider-item.prev-item,
+  .slider .slider-item.next-item {
+    display: block;
+  }
+  
+  .slider-item.prev-item,
+  .slider-item.active.slide-next {
+    transform: translateX(-100%);
+  }
+  
+  .slider-item.active.slide-prev,
+  .slider-item.next-item {
+    transform: translateX(100%);
+  }
+  
+  .slider-item.prev-item.slide-end,
+  .slider-item.next-item.slide-end {
+    transform: translateX(0);
+  }
+  
+  .slide-indicators {
+    position: absolute;
+    z-index: 20;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    list-style: none;
+    padding: 0;
+    display: flex;
+  }
+  .next {
+    transform: translateX(20%);
+    transform: translatey(100%);
+  }
+  .slider-control-prev,
+  .slider-control-next {
+    position: absolute;
+    z-index: 20;
+    cursor: pointer;
+    top: 50%;
+    transform: translateY(100%);
+    opacity: 0.3;
+    transition: opacity 300ms;
+    background-color: #ff9f00;
+    border-radius: 20px;
+  }
+  
+  .slider-control-prev {
+    left: 20px;
+  }
+  
+  .slider-control-prev:hover,
+  .slider-control-next:hover{
+    opacity: 1;
+  }
+  
+  .slider-control-next {
+    right: 20px;
+  }
 
 
