@@ -26,7 +26,7 @@ class Slider {
         }
         this.setEventListeners();
         console.log(this.indicators[this.currentIndex]);
-        this.indicators[this.currentIndex].classList.add("active");
+        //this.indicators[this.currentIndex].classList.add("active");
     }
     setEventListeners() {
         this.prevBtn.addEventListener("click", () => {
