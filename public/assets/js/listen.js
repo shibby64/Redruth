@@ -34,7 +34,7 @@ metaGrab();
 console.log(metaArr);
 
 /**
- * Used for setting up html for display on the page
+ * Used for setting up html for display on the listen page
  */
 function metaData() {
     const project = document.createElement('h4');
@@ -75,11 +75,11 @@ function metaData() {
         timeStamp.appendChild(timeStampNode);
         recordingElement.append(timeStamp);
         /*-----------------------------------------------------------*/
-        if(typeof metaArr[m].adminData.PostalCode !== 'undefined')
+        if(metaArr[m].metaData.PostalCode !== "")
         {
             const postCode = document.createElement('p');
             postCode.classList.add('metaDataStyle');
-            const postCodeNode = document.createTextNode("* Post Code: " + metaArr[m].adminData.PostalCode);
+            const postCodeNode = document.createTextNode("* Post Code: " + metaArr[m].metaData.PostalCode);
             postCode.appendChild(postCodeNode);
             recordingElement.append(postCode);
         }

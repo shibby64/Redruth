@@ -22,6 +22,7 @@ body{
 .metaDataStyle{
     color: #ff9f00;
     margin-left: 50px;
+    width: 75%;
 }
 .playStory {
     margin-left: 45px;
@@ -237,7 +238,7 @@ textarea{
     color: white;
 }
 .slider {
-    min-height: 80vh;
+    min-height: 83vh;
     overflow: hidden;
     position: relative;
   }
@@ -272,18 +273,13 @@ textarea{
   }
   
   .slide-indicators {
-    /* position: absolute; */
     z-index: 20;
     bottom: 0;
     left: 50%;
-    /* transform: translateX(-50%); */
     list-style: none;
     padding: 0;
     display: flex;
   }
-  /* .next {
-    transform: translateX(20%);
-  } */
   .slider-control-prev,
   .slider-control-next {
     position: absolute;
