@@ -13,8 +13,8 @@ const path = require('path');
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require("body-parser")
-// var enforce = require('express-sslify');
-// var http = require('http');
+var enforce = require('express-sslify');
+var http = require('http');
 const multer = require('multer');
 const { ObjectId } = require('mongodb');
 require('dotenv').config();
@@ -44,7 +44,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
 
 app.use(express.static('public/assets'));
-//app.use(express.static('uploads'));
+
 
 // app.listen(port, () => {
 //     console.log(`App listening at https://localhost:${port}`);
