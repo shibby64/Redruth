@@ -17,9 +17,11 @@ function metaGrab() {
         .then((object) => object.json())
         .then((object) => {
             if (object.success && object.filed) {
+                let j = 0;
                 for (i = 0; i < object.filed.length; i++) {
                     if (object.filed[i].Public) {
-                        metaArr[i] = object.filed[i];
+                        metaArr[j] = object.filed[i];
+                        j++;
                     }
                 }
             }
