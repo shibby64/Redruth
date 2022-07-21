@@ -11,12 +11,15 @@ body{
     background-color: transparent;
     font-weight: bold;
 }
+#listenHeader{
+    transform: translateX(-5%);
+}
 .metaDataStyle{
     color: #ff9f00;
     margin-left: 50px;
 }
 .playStory {
-    margin-left: 45px;
+    margin-left: 55px;
 }
 .container{
     max-width: 400px;
@@ -40,9 +43,11 @@ form div{
 .prompt {
     text-align: center;
     margin-bottom: 20px;
+    transform: translateX(-5%);
 }
 .project {
     text-align: center;
+    transform: translateX(-5%);
 }
 #recordbutton{
     padding-top: 10%;
@@ -286,8 +291,7 @@ textarea{
     position: absolute;
     z-index: 20;
     cursor: pointer;
-    top: 50%;
-    transform: translateY(150%);
+    top: 47%;
     opacity: 0.3;
     transition: opacity 300ms;
     background-color: #ff9f00;

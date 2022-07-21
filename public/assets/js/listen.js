@@ -6,6 +6,7 @@
  *              
  */
 const recordingsContainer = document.getElementById('story');
+
 let metaArr = [];
 
 /**
@@ -78,6 +79,19 @@ function metaData() {
         audioTag.classList.add("playStory");
         audioTag.innerHTML = '<audio id="audio-player" controls="controls" src= ' + metaArr[m].Audio.url + ' type="audio/mpeg">';
         recordingElement.append(audioTag);
+        /*---------------------------------------------------------- */
+        const prevCont = document.createElement('span');
+        prevCont.classList.add("slider-control-prev", 'prev');
+        prevCont.setAttribute('role', "button");
+        prevCont.innerHTML= "<img aria-hidden='true' src='images/Prev.PNG' alt='Previous Recording Button'>";
+        recordingElement.append(prevCont);
+        /*---------------------------------------------------------- */
+        const nextCont = document.createElement('span');
+        nextCont.classList.add("slider-control-next", 'next');
+        nextCont.setAttribute('role', "button");
+        nextCont.innerHTML= "<img aria-hidden='true' src='images/Next.PNG' alt='Next Recording Button'>";
+        recordingElement.append(nextCont);
+        /*---------------------------------------------------------- */
         recordingsContainer.append(recordingElement);
     }
 };
