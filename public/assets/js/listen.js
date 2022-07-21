@@ -5,7 +5,7 @@
  *              and sends it to the page. 
  *              
  */
- const recordingsContainer = document.getElementById('story');
+const recordingsContainer = document.getElementById('story');
 let metaArr = [];
 
 /**
