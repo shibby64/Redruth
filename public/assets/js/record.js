@@ -238,9 +238,10 @@ document.forms[0].onsubmit = async(e) => {
     }).then(response => {
         //if our response is good, then redirect to saved
         if (response.status == 200) {
-            console.log(response);
             alert("Your Recording Saved!")
             window.location.assign('/saved.html');
+        } else if(response.status == 401) {
+            alert("Invalid passkey selection recording not saved, try again");
         } else {
             throw "request failed";
         }
