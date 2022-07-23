@@ -13,7 +13,7 @@ let metaArr = [];
  * Asks /metaArr for required data and 
  * sends it to metaArr for later use
  */
-function metaGrab() {
+async function metaGrab() {
     await fetch('/metaArr', { method: 'POST' })
         .then((object) => object.json())
         .then((object) => {
