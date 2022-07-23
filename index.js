@@ -47,7 +47,7 @@ app.use(express.static('public/assets'));
 
 
 // app.listen(port, () => {
-//     console.log(`App listening at http://localhost:${port}`);
+//     console.log(`App listening at https://localhost:${port}`);
 // });
 app.use(enforce.HTTPS({ trustProtoHeader: true }));
  
@@ -303,21 +303,16 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
     res.sendStatus(200)
 });
 /*initial admin and listen page querries*/
-app.post('/metaArr', function (req, res) {
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    const dbase = db.db('Redruth');
-    const record = dbase.collection(collection);
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  const dbase = db.db('Redruth');
+  const record = dbase.collection(collection);
+  app.post('/metaArr', function (req, res) {
     record.find().toArray(function (err, filed) {
       return res.json({ success: true, filed });
     });
   });
-});  
-app.post('/saved', function (req, res) {
-    MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  const dbase = db.db('Redruth');
-  const record = dbase.collection(collection);
+  app.post('/saved', function (req, res) {
     record.find().toArray(function (err, filed) {
       return res.json({ success: true, filed });
     });

@@ -13,8 +13,8 @@ let metaArr = [];
  * Asks /metaArr for required data and 
  * sends it to metaArr for later use
  */
-async function metaGrab() {
-    await fetch('/metaArr', { method: 'POST' })
+function metaGrab() {
+    fetch('/metaArr', { method: 'POST' })
         .then((object) => object.json())
         .then((object) => {
             if (object.success && object.filed) {
