@@ -14,7 +14,7 @@ let metaArr = [];
  * sends it to metaArr for later use
  */
 function metaGrab() {
-    fetch('/metaArr', { method: 'POST' })
+    await fetch('/metaArr', { method: 'POST' })
         .then((object) => object.json())
         .then((object) => {
             if (object.success && object.filed) {
