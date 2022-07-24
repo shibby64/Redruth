@@ -65,18 +65,6 @@ function filename() {
     return aFile + '.mp3';
 };
 
-
-// app.post('/record', upload.single('audio'), async(req, res) => {
-//     const bucketname = S3_BUCKET;
-//     const file = req.file.buffer;
-//     const fileName = filename();
-//     const link = await uploadAudio(fileName, bucketname, file)
-//     res.sendStatus(200);
-// });
-
-
-
-
 /* listen page route */
 app.get('/listen.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/listen.html'));
@@ -107,7 +95,6 @@ app.get('/adminPrompt', (req, res) => {
 })
 
 /* create new collection */
-
 function createNewTable(project) {
   /* working, however will crash when you attempt to create a collection that already exists */
   MongoClient.connect(url, function (err, db) {

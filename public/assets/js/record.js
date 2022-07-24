@@ -149,59 +149,6 @@ function resetRecording() {
     audioBlob = null;
 }
 
-// //unused?
-// function playRecording(e) {
-//     let button = e.target;
-//     if (button.tagName === 'IMG') {
-//         // get parent button
-//         button = button.parentElement;
-//     }
-//     const audio = button.previousElementSibling;
-//     if (audio && audio.tagName === 'AUDIO') {
-//         if (audio.paused) {
-//             audio.play();
-//             button.firstElementChild.src = 'images/pause.png';
-//         } else {
-//             audio.pause();
-//             button.firstElementChild.src = 'images/play2.png';
-//         }
-//     }
-// }
-
-// //unused?
-// function createRecordingElement(file, i) {
-//     const recordingElement = document.createElement('div');
-//     let k = 0;
-//     if (k === 0) {
-//         recordingElement.classList.add("slider-item", 'active');
-//         k++;
-//     } else {
-//         recordingElement.classList.add("slider-item");
-//     }
-//     recordingElement.setAttribute('id', 'cont' + i)
-//     const audio = document.createElement('audio');
-//     //audio.classList.add('col-lg-2');
-//     audio.src = file;
-//     audio.onended = (e) => {
-//         e.target.nextElementSibling.firstElementChild.src = 'images/play2.png';
-
-//     };
-//     recordingElement.appendChild(audio);
-//     const playButton = document.createElement('button');
-//     playButton.setAttribute('id', 'aButton');
-//     playButton.classList.add('play-button', 'btn', 'shadow-sm', 'text-center');
-//     const playImage = document.createElement('img');
-//     playImage.src = '/images/play2.png';
-//     playImage.classList.add('img-fluid');
-//     playButton.appendChild(playImage);
-
-//     playButton.addEventListener('click', playRecording);
-//     recordingElement.appendChild(playButton);
-//     return recordingElement;
-// }
-
-
-
 /**
  * Wrapper for resetRecording with confirm dialogue.
  * Also resets form entry
