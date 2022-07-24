@@ -13,8 +13,8 @@ const path = require('path');
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require("body-parser")
-    // var enforce = require('express-sslify');
-    // var http = require('http');
+var enforce = require('express-sslify');
+var http = require('http');
 const multer = require('multer');
 const { ObjectId } = require('mongodb');
 require('dotenv').config();
@@ -32,8 +32,8 @@ let dbArray = [];
 let aFile = 0;
 
 // What collection in Mongo the app in looking at, in future have admin page set this var from available collections 
-var collection = 'test';
-//var collection = 'Redruth Reading Room';
+//var collection = 'test';
+var collection = 'Redruth Reading Room';
 const storage = memoryStorage();
 const upload = multer({ storage });
 
@@ -46,14 +46,14 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static('public/assets'));
 
 
-app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`);
-});
-// app.use(enforce.HTTPS({ trustProtoHeader: true }));
-
-// http.createServer(app).listen(port, () => {
-//     console.log('Express server listening on port ' + port);
+// app.listen(port, () => {
+//     console.log(`App listening at http://localhost:${port}`);
 // });
+app.use(enforce.HTTPS({ trustProtoHeader: true }));
+
+http.createServer(app).listen(port, () => {
+    console.log('Express server listening on port ' + port);
+});
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
