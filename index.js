@@ -217,18 +217,12 @@ function TimeStamp() {
     return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year; //swap day month
 }
 
-//insert2
-
-// get form data
-//upload file to aws
-//add to database
-
 
 /**
  * Takes upload request, formats it, then uploads the audio file. 
  * Afterward, it sends all necessary data to the database. 
  * 
- * Replys 200 if everything worked
+ * Replies 200 if everything worked
  * 
  * TODO: Handle server error if something broke.
  */

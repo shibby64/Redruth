@@ -18,6 +18,7 @@ metaGrab();
 function metaGrab() {
     fetch('/metaArr', { method: 'POST' })
         .then((object) => object.json())
+        //filter the public items
         .then((object) => {
             if (object.success && object.filed) {
                 let j = 0;
@@ -31,6 +32,7 @@ function metaGrab() {
                 }
                 return publicStories
             }
+        //then set up html
         }).then((object) => {
             metaData(object)
         })
