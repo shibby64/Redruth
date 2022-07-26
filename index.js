@@ -151,39 +151,10 @@ app.get('/prompt', (req, res) => {
   });
 });
 
-/* gets record id to update public boolean from admin page to true */
-app.get('/updatePublic', (req, res) => {
-    var id = req.query.updatePublic;
-    updateTable(id);
-    res.redirect('back');
-    res.sendFile(path.join(__dirname, 'public/admin.html'));
-});
-
-/* add public true to record ID */
-function updateTable(id) {
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        const dbase = db.db('Redruth');
-        dbase.collection(collection)
-            .updateOne({ '_id': ObjectId(id) }, { $set: { Public: true } },
-                function(err, res) {
-                    if (err) throw err;
-                    console.log('updated public flag for record ' + id);
-                });
-        /*dynamically updates admin and listen pages with story data*/
-        app.post('/metaArr', function (req, res) {
-          record.find().toArray(function (err, filed) {
-            return res.json({ success: true, filed });
-          });
-        });
-    });
-}
-
 /* get record id from admin page to delete record */
 app.get('/deleteRecord', (req, res) => {
     var id = req.query.deletePublic;
     deleteRecord(id);
-    res.redirect('back');
     res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
@@ -219,18 +190,12 @@ function TimeStamp() {
     return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year; //swap day month
 }
 
-//insert2
-
-// get form data
-//upload file to aws
-//add to database
-
 
 /**
  * Takes upload request, formats it, then uploads the audio file. 
  * Afterward, it sends all necessary data to the database. 
  * 
- * Replys 200 if everything worked
+ * Replies 200 if everything worked
  * 
  * TODO: Handle server error if something broke.
  */
@@ -323,12 +288,39 @@ function removeOffPublic(id) {
     if (err) throw err;
     const dbase = db.db('Redruth');
     dbase.collection(collection)
-      .updateOne(
-        { '_id': ObjectId(id) },
-        { $set: { Public: false } },
+      .updateOne({ '_id': ObjectId(id) }, { $set: { Public: false } },
         function (err, res) {
           if (err) throw err;
-          console.log('updated public flag for record ' + id);
+          console.log('Set ' + id + " to private");
         });
+  });
+}
+
+
+/* gets record id to update public boolean from admin page to true */
+app.get('/updatePublic', (req, res) => {
+  var id = req.query.updatePublic;
+  updateTable(id);
+  // res.redirect('back');
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
+/* add public true to record ID */
+function updateTable(id) {
+  MongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      const dbase = db.db('Redruth');
+      dbase.collection(collection)
+          .updateOne({ '_id': ObjectId(id) }, { $set: { Public: true } },
+              function(err, res) {
+                  if (err) throw err;
+                  console.log('Set ' + id + " to public");
+              });
+      // /*dynamically updates admin and listen pages with story data*/
+      // app.post('/metaArr', function (req, res) {
+      //   record.find().toArray(function (err, filed) {
+      //     return res.json({ success: true, filed });
+      //   });
+      // });
   });
 }

@@ -54,23 +54,68 @@
 
     <!-- select stories to share -->
     <div>
-        <h2 class="d-flex justify-content-center flex-nowrap">Share Recordings on Public Site
-        </h2>
-        <div class="d-flex justify-content-center flex-nowrap">
-            <div id="collections">
+        <h2 class="d-flex justify-content-center flex-nowrap">Share Recordings on Public Site</h2>
+        <div id="collections" class=" container">
+            <div class="row row-cols-auto g-4 " id="collectionContainer">
+                <div class="col" style="display:none" id="cardTemplate">
+                    <div class="card h-100" style="width: 18rem;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center ">
+                                <h5 class="card-title text-truncate pb-3">Title</h5>
+                                <h5 style=" margin-left: auto !important;"> <button 
+                                        class="btn btn-outline-danger" id="trashButton"><svg xmlns="http://www.w3.org/2000/svg"
+                                            width="16" height="16" fill="currentColor" class="bi bi-trash"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                            <path fill-rule="evenodd"
+                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                        </svg></a></h5>
+                            </div>
 
+                            <p style="color:#ccc" class="mb-3 timestamp">0:50 Jul 12, 2022</p>
+                            <audio id="audio-player" style="border-radius:.25rem;width: 100%;" controls="controls"
+                                src="https://redruthrecords.s3.eu-west-2.amazonaws.com/1657825157704.mp3"
+                                type="audio/mpeg"></audio>
+                            <p class="card-text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                eiusmod tempor
+                                incididunt
+                                ut labore et dolore magna aliqua.</p>
+
+                            <div class="btn-group mb-3" role="group" aria-label="Basic example">
+                                <button class="btn btn-primary" id="publicButton">Make Public</button>
+                                <button type="button" id="collapseButton" class="btn btn-outline-dark"
+                                    data-bs-toggle="collapse" href="#collapse" role="button" aria-expanded="false"
+                                    aria-controls="collapse">
+                                    More Data <span class="badge bg-secondary">5</span>
+                                </button>
+                            </div>
+
+                            <div class="collapse" id="collapse">
+                                <div class="card card-body">
+                                    <p id="postal">PostalCode:</p>
+                                    <p id="name">Name:</p>
+                                    <p id="email">Email:</p>
+                                    <p id="phone">Phone:</p>
+                                    <a id="url" href="#">Audio Link</a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted cardID">_id: </small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- select stories to take off public site -->
     <div>
-        <h2 class="d-flex justify-content-center flex-nowrap">Remove Recordings from Public Site
-        </h2>
-        <div class="d-flex justify-content-center flex-nowrap">
-            <div id="onPublicSite">
+        <h2 class="d-flex justify-content-center flex-nowrap">Remove Recordings from Public Site</h2>
+        <div id="onPublicSite" class="d-flex justify-content-center flex-nowrap container">
 
-            </div>
         </div>
     </div>
 
@@ -78,6 +123,7 @@
 
     </div>
     <script src="/js/checkbox.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/js/admin.js"></script>
     <script src="/js/prompt.js"></script>
