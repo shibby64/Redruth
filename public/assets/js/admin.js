@@ -128,11 +128,11 @@ function createCard(object) {
   //if object is public, then button says unpublic
   var publicButton = newCard.find("#publicButton")
   if (object.Public) {
-    publicButton.attr("class", "btn btn-warning public")
+    publicButton.attr("class", "btn btn-danger public")
     publicButton.text("Make Private")
     publicButton.attr("onclick", "makePrivate('" + object._id + "')")
   } else {
-    publicButton.attr("class", "btn btn-primary public")
+    publicButton.attr("class", "btn btn-success public")
     publicButton.text("Make Public")
     publicButton.attr("onclick", "makePublic('" + object._id + "')")
   }
@@ -166,7 +166,7 @@ function makePublic(id) {
       throw err;
     } else {
       var publicButton = $('#' + id + " #publicButton")
-      publicButton.attr("class", "btn btn-warning public")
+      publicButton.attr("class", "btn btn-danger public")
       publicButton.text("Make Private")
       //set the onclick
       publicButton.attr("onclick", "makePrivate('" + id + "')")
@@ -197,7 +197,7 @@ function makePrivate(id) {
     } else {
       console.log("Button says public");
       var publicButton = $('#' + id + " #publicButton")
-      publicButton.attr("class", "btn btn-primary public")
+      publicButton.attr("class", "btn btn-success public")
       publicButton.text("Make Public")
       //set the onclick
       publicButton.attr("onclick", "makePublic('" + id + "')")
