@@ -316,11 +316,5 @@ function updateTable(id) {
                   if (err) throw err;
                   console.log('Set ' + id + " to public");
               });
-      // /*dynamically updates admin and listen pages with story data*/
-      // app.post('/metaArr', function (req, res) {
-      //   record.find().toArray(function (err, filed) {
-      //     return res.json({ success: true, filed });
-      //   });
-      // });
   });
 }
