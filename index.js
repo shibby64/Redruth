@@ -13,8 +13,8 @@ const path = require('path');
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require("body-parser")
-// var enforce = require('express-sslify');
-// var http = require('http');
+    // var enforce = require('express-sslify');
+    // var http = require('http');
 const multer = require('multer');
 const { ObjectId } = require('mongodb');
 require('dotenv').config();
@@ -50,7 +50,7 @@ app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
 // app.use(enforce.HTTPS({ trustProtoHeader: true }));
- 
+
 // http.createServer(app).listen(port, () => {
 //     console.log('Express server listening on port ' + port);
 // });
@@ -81,74 +81,72 @@ app.get('/saved.html', (req, res) => {
 
 /* create new collection and update universal prompt */
 app.get('/admin', (req, res) => {
-  var project = req.query.project;
-  //var prompt = req.query.prompt;
-  createNewTable(project);
-  //updateMongoDBPrompt(prompt);
-  res.sendFile(path.join(__dirname, 'public/admin.html'));
+    var project = req.query.project;
+    //var prompt = req.query.prompt;
+    createNewTable(project);
+    //updateMongoDBPrompt(prompt);
+    res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
 app.get('/adminPrompt', (req, res) => {
-  var prompt = req.query.prompt;
-  updateMongoDBPrompt(prompt);
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+    var prompt = req.query.prompt;
+    updateMongoDBPrompt(prompt);
+    res.sendFile(path.join(__dirname, 'public/index.html'));
 })
 
 /* create new collection */
 function createNewTable(project) {
-  /* working, however will crash when you attempt to create a collection that already exists */
-  MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    const dbase = db.db("Redruth");
-    dbase.createCollection(project, function (err, res) {
-      if (err) throw err;
-    });
-  })
+    /* working, however will crash when you attempt to create a collection that already exists */
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        const dbase = db.db("Redruth");
+        dbase.createCollection(project, function(err, res) {
+            if (err) throw err;
+        });
+    })
 }
 
 /* update prompt data in PromptData collection, prompt data read from index.html */
 function updateMongoDBPrompt(newPrompt) {
-  MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    const dbase = db.db('Redruth');
-    dbase.collection('PromptData')
-      .updateOne(
-        { '_id': ObjectId('62cccad3158754c692f78794') },
-        { $set: { Prompt: newPrompt } },
-        function (err, res) {
-          if (err) throw err;
-          console.log('updated prompt: ' + newPrompt);
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        const dbase = db.db('Redruth');
+        dbase.collection('PromptData')
+            .updateOne({ '_id': ObjectId('62cccad3158754c692f78794') }, { $set: { Prompt: newPrompt } },
+                function(err, res) {
+                    if (err) throw err;
+                    console.log('updated prompt: ' + newPrompt);
+                });
+        /*dynamically updates admin page with prompt data*/
+        app.post('/saved', function(req, res) {
+            record.find().toArray(function(err, filed) {
+                return res.json({ success: true, filed });
+            });
         });
-    /*dynamically updates admin page with prompt data*/
-    app.post('/saved', function (req, res) {
-      record.find().toArray(function (err, filed) {
-        return res.json({ success: true, filed });
-      });
+        /*dynamically updates admin and listen pages with story data*/
+        app.post('/metaArr', function(req, res) {
+            record.find().toArray(function(err, filed) {
+                return res.json({ success: true, filed });
+            });
+        });
     });
-    /*dynamically updates admin and listen pages with story data*/
-    app.post('/metaArr', function (req, res) {
-      record.find().toArray(function (err, filed) {
-        return res.json({ success: true, filed });
-      });
-    });
-  });
 }
 
 /* get prompt from db */
 app.get('/prompt', (req, res) => {
-  MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    const dbase = db.db('Redruth');
-    dbase.collection('PromptData').findOne({ '_id': ObjectId('62cccad3158754c692f78794') }, function(err, prompt) {
-      //console.log("prompt in /prompt get: " + prompt.Prompt);
-      if (err) {
-        console.log(err);
-        res.json(err);
-      } else {
-        res.json(prompt.Prompt);
-      }
-    })
-  });
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        const dbase = db.db('Redruth');
+        dbase.collection('PromptData').findOne({ '_id': ObjectId('62cccad3158754c692f78794') }, function(err, prompt) {
+            //console.log("prompt in /prompt get: " + prompt.Prompt);
+            if (err) {
+                console.log(err);
+                res.json(err);
+            } else {
+                res.json(prompt.Prompt);
+            }
+        })
+    });
 });
 
 /* get record id from admin page to delete record */
@@ -169,7 +167,7 @@ function deleteRecord(id) {
                 console.log('deleted record ' + id);
             }
         );
-        
+
     });
 }
 
@@ -222,65 +220,71 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
     const link = await uploadAudio(audio.fileName, S3_BUCKET, file)
 
     //send to database
-    if(req.body.key === req.body.passkey){
+    if (req.body.key === req.body.passkey) {
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            const dbase = db.db('Redruth');
+            const record = dbase.collection(collection);
+
+            record.insertOne({
+                adminData: {
+                    Project: audio.project,
+                    Prompt: audio.prompt,
+                    TimeStamp: audio.timeStamp,
+                },
+                Audio: { url: audio.link },
+                metaData: {
+                    Title: audio.title,
+                    Comments: audio.comments,
+                    PostalCode: audio.postCode,
+                    Name: audio.fullName,
+                    Email: audio.email,
+                    Phone: audio.phone
+                },
+                Public: audio.public
+            }, (err, result) => {});
+            /*dynamically updates admin and listen pages with story data*/
+            app.post('/metaArr', function(req, res) {
+                record.find().toArray(function(err, filed) {
+                    return res.json({ success: true, filed });
+                });
+            });
+
+        });
+        res.sendStatus(200)
+    } else {
+        res.sendStatus(401)
+    }
+
+});
+/*initial admin and listen page querries*/
+
+app.post('/metaArr', function(req, res) {
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         const dbase = db.db('Redruth');
         const record = dbase.collection(collection);
-        
-        record.insertOne({
-            adminData: {
-                Project: audio.project,
-                Prompt: audio.prompt,
-                TimeStamp: audio.timeStamp,
-            },
-            Audio: { url: audio.link },
-            metaData: {
-                Title: audio.title,
-                Comments: audio.comments,
-                PostalCode: audio.postCode,
-                Name: audio.fullName,
-                Email: audio.email,
-                Phone: audio.phone
-            },
-            Public: audio.public
-        }, (err, result) => {});
-        /*dynamically updates admin and listen pages with story data*/
-        app.post('/metaArr', function (req, res) {
-          record.find().toArray(function (err, filed) {
+        record.find().toArray(function(err, filed) {
             return res.json({ success: true, filed });
-          });
         });
-        
     });
-    res.sendStatus(200)
-  } else {
-    res.sendStatus(401)
-  }
-  
 });
-/*initial admin and listen page querries*/
-MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  const dbase = db.db('Redruth');
-  const record = dbase.collection(collection);
-  app.post('/metaArr', function (req, res) {
-    record.find().toArray(function (err, filed) {
-      return res.json({ success: true, filed });
+app.post('/saved', function(req, res) {
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        const dbase = db.db('Redruth');
+        const record = dbase.collection(collection);
+        record.find().toArray(function(err, filed) {
+            return res.json({ success: true, filed });
+        });
     });
-  });
-  app.post('/saved', function (req, res) {
-    record.find().toArray(function (err, filed) {
-      return res.json({ success: true, filed });
-    });
-  });
 });
 
 /* gets record id to update public boolean from admin page to false */
 app.get('/removePublic', (req, res) => {
-  var id = req.query.takeOffSite;
-  removeOffPublic(id);
-  res.sendFile(path.join(__dirname, 'public/admin.html'));
+    var id = req.query.takeOffSite;
+    removeOffPublic(id);
+    res.sendFile(path.join(__dirname, 'public/admin.html'));
 })
 
 function removeOffPublic(id) {
