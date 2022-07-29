@@ -48,6 +48,7 @@ app.use(express.static('public/assets'));
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
+    
 });
 // app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
@@ -58,12 +59,6 @@ app.listen(port, () => {
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
-
-/* create a filename for record using current date  */
-function filename() {
-    aFile = Date.now();
-    return aFile + '.mp3';
-};
 
 /* listen page route */
 app.get('/listen.html', (req, res) => {
@@ -82,9 +77,7 @@ app.get('/saved.html', (req, res) => {
 /* create new collection and update universal prompt */
 app.get('/admin', (req, res) => {
     var project = req.query.project;
-    //var prompt = req.query.prompt;
     createNewTable(project);
-    //updateMongoDBPrompt(prompt);
     res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
@@ -149,28 +142,12 @@ app.get('/prompt', (req, res) => {
     });
 });
 
-/* get record id from admin page to delete record */
-app.get('/deleteRecord', (req, res) => {
-    var id = req.query.deletePublic;
-    deleteRecord(id);
-    res.sendFile(path.join(__dirname, 'public/admin.html'));
-});
 
-/* delete record from collection */
-function deleteRecord(id) {
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        const dbase = db.db('Redruth'); //eliminates 'db.collection is not a function' TypeError
-        dbase.collection(collection).deleteOne({ '_id': ObjectId(id) },
-            function(err, res) {
-                if (err) throw err;
-                console.log('deleted record ' + id);
-            }
-        );
-
-    });
-}
-
+/**
+ * Generates a timestamp string for the database entry.
+ * 
+ * @returns String 
+ */
 function TimeStamp() {
     const currentDate = new Date();
     var year = currentDate.getUTCFullYear();
@@ -188,14 +165,15 @@ function TimeStamp() {
     return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year; //swap day month
 }
 
-
 /**
  * Takes upload request, formats it, then uploads the audio file. 
  * Afterward, it sends all necessary data to the database. 
  * 
  * Replies 200 if everything worked
  * 
- * TODO: Handle server error if something broke.
+ * Try to respond 403 if something fails
+ * Something breaks when sending to the db, we have to 
+ * log the error and cant save the client
  */
 app.post('/insert', upload.single('audio'), async(req, res, next) => {
     //format request
@@ -209,15 +187,23 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
         email: req.body.email,
         phone: req.body.phone,
         timeStamp: TimeStamp(),
-        fileName: filename(),
+        fileName: Date.now() + '.mp3',
         public: false,
         link: "",
     }
     audio.link = 'https://' + S3_BUCKET + '.s3.eu-west-2.amazonaws.com/' + audio.fileName;
 
-    //upload file 
-    const file = req.file.buffer;
-    const link = await uploadAudio(audio.fileName, S3_BUCKET, file)
+    //try to upload file, if it doesnt work, exit and dont send to db
+    try {
+      //upload file 
+      const file = req.file.buffer;
+      const link = await uploadAudio(audio.fileName, S3_BUCKET, file)
+
+    } catch (error) {
+      console.error(error);
+      res.sendStatus(403)
+      return;
+    }
 
     //send to database
     if (req.body.key === req.body.passkey) {
@@ -242,33 +228,18 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
                     Phone: audio.phone
                 },
                 Public: audio.public
-            }, (err, result) => {});
-            /*dynamically updates admin and listen pages with story data*/
-            app.post('/metaArr', function(req, res) {
-                record.find().toArray(function(err, filed) {
-                    return res.json({ success: true, filed });
-                });
+            }).catch((error) => {
+                console.error(error);
             });
-
         });
         res.sendStatus(200)
     } else {
-        res.sendStatus(401)
+        res.sendStatus(403)
     }
-
 });
-/*initial admin and listen page querries*/
 
-app.post('/metaArr', function(req, res) {
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        const dbase = db.db('Redruth');
-        const record = dbase.collection(collection);
-        record.find().toArray(function(err, filed) {
-            return res.json({ success: true, filed });
-        });
-    });
-});
+
+/*initial listen query for db data*/
 app.post('/saved', function(req, res) {
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
@@ -280,45 +251,73 @@ app.post('/saved', function(req, res) {
     });
 });
 
+
+
+/**
+ * 
+ * ADMIN routes
+ * 
+ */
+
+/*initial admin query for db data*/
+app.post('/metaArr', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      const dbase = db.db('Redruth');
+      const record = dbase.collection(collection);
+      record.find().toArray(function(err, filed) {
+          return res.json({ success: true, filed });
+      });
+  });
+});
+
+
+/* get record id from admin page to delete record */
+app.get('/deleteRecord', (req, res) => {
+  var id = req.query.deletePublic;
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    const dbase = db.db('Redruth'); //eliminates 'db.collection is not a function' TypeError
+    dbase.collection(collection).deleteOne({ '_id': ObjectId(id) },
+        function(err, res) {
+            if (err) throw err;
+            console.log('deleted record ' + id);
+        }
+    );
+  });
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
 /* gets record id to update public boolean from admin page to false */
 app.get('/removePublic', (req, res) => {
     var id = req.query.takeOffSite;
-    removeOffPublic(id);
+    MongoClient.connect(url, function (err, db) {
+      if (err) throw err;
+      const dbase = db.db('Redruth');
+      dbase.collection(collection)
+        .updateOne({ '_id': ObjectId(id) }, { $set: { Public: false } },
+          function (err, res) {
+            if (err) throw err;
+            console.log('Set ' + id + " to private");
+          });
+    });
     res.sendFile(path.join(__dirname, 'public/admin.html'));
 })
-
-function removeOffPublic(id) {
-  MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    const dbase = db.db('Redruth');
-    dbase.collection(collection)
-      .updateOne({ '_id': ObjectId(id) }, { $set: { Public: false } },
-        function (err, res) {
-          if (err) throw err;
-          console.log('Set ' + id + " to private");
-        });
-  });
-}
-
 
 /* gets record id to update public boolean from admin page to true */
 app.get('/updatePublic', (req, res) => {
   var id = req.query.updatePublic;
-  updateTable(id);
-  // res.redirect('back');
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    const dbase = db.db('Redruth');
+    dbase.collection(collection)
+        .updateOne({ '_id': ObjectId(id) }, { $set: { Public: true } },
+            function(err, res) {
+                if (err) throw err;
+                console.log('Set ' + id + " to public");
+            });
+  });
   res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
-/* add public true to record ID */
-function updateTable(id) {
-  MongoClient.connect(url, function(err, db) {
-      if (err) throw err;
-      const dbase = db.db('Redruth');
-      dbase.collection(collection)
-          .updateOne({ '_id': ObjectId(id) }, { $set: { Public: true } },
-              function(err, res) {
-                  if (err) throw err;
-                  console.log('Set ' + id + " to public");
-              });
-  });
-}
+

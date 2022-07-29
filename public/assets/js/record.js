@@ -179,9 +179,6 @@ document.forms[0].onsubmit = async(e) => {
     let request = fetch('/insert', {
         method: 'POST',
         body: formData,
-        // headers: {
-        //     'Content-Type': 'multipart/form-data'
-        // },
     }).then(response => {
         //if our response is good, then redirect to saved
         if (response.status == 200) {
