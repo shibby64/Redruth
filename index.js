@@ -13,8 +13,8 @@ const path = require('path');
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require("body-parser")
-// var enforce = require('express-sslify');
-// var http = require('http');
+var enforce = require('express-sslify');
+var http = require('http');
 const multer = require('multer');
 const { ObjectId } = require('mongodb');
 require('dotenv').config();
@@ -46,15 +46,15 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static('public/assets'));
 
 
-app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`);
+// app.listen(port, () => {
+//     console.log(`App listening at http://localhost:${port}`);
     
-});
-// app.use(enforce.HTTPS({ trustProtoHeader: true }));
-
-// http.createServer(app).listen(port, () => {
-//     console.log('Express server listening on port ' + port);
 // });
+app.use(enforce.HTTPS({ trustProtoHeader: true }));
+
+http.createServer(app).listen(port, () => {
+    console.log('Express server listening on port ' + port);
+});
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
