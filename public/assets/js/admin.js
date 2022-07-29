@@ -31,8 +31,8 @@ async function metaGrab() {
     .then((object) => {
       if (object.success && object.filed) {
         for (i = 0; i < object.filed.length; i++) {
-          if (!object.filed[i].Public){
-              metaArr[i] = object.filed[i];
+          if (!object.filed[i].Public) {
+            metaArr[i] = object.filed[i];
           }
         }
       }
@@ -52,169 +52,182 @@ async function getCollections() {
     .then((object) => object.json())
     .then((object) => {
       if (object.success && object.filed) {
+        // for all objects
         for (i = 0; i < object.filed.length; i++) {
           let isPublic = object.filed[i].Public;
-          console.log(isPublic);
+          createCard(object.filed[i]);
 
-          /* filter by records with a false public flag */
-          if (!isPublic) {
-            var dataContainer = document.getElementById('collections');
-
-            /* create individual containers */
-            var recordContainer = document.createElement('div');
-            recordContainer.setAttribute('id', 'cont' + i);
-
-            /* id */
-            var showId = document.createElement('div');
-            showId.innerHTML = 'Record _id: ' + object.filed[i]._id;
-            var id = object.filed[i]._id;
-
-            /* admin data */
-            var ad = document.createElement('div');
-            ad.innerHTML =
-              'Collection: ' + object.filed[i].adminData.Project + ',  ' +
-              'prompt: ' + object.filed[i].adminData.Prompt + ',  ' +
-              'timeStamp: ' + object.filed[i].adminData.TimeStamp + ',  ';
-
-            /* audio */
-            const audioTag = document.createElement('div');
-            audioTag.classList.add("playStory");
-
-            /* meta data */
-            var meta = document.createElement('div');
-            meta.innerHTML =
-              'Title: ' + object.filed[i].metaData.Title + ', ' +
-              'Comments: ' + object.filed[i].metaData.Comments + ', ' +
-              'PostalCode: ' + object.filed[i].metaData.PostalCode + ', ' +
-              'Name: ' + object.filed[i].metaData.Name + ', ' +
-              'Email: ' + object.filed[i].metaData.Email + ', ' +
-              'Phone: ' + object.filed[i].metaData.Phone + ', ' +
-              'URL: ' + object.filed[i].Audio.url
-              ;
-
-              audioTag.innerHTML = '<audio id="audio-player" controls="controls" src= ' + object.filed[i].Audio.url + ' type="audio/mpeg">';
-            const space = document.createElement('br');
-
-            /* create add to update form */
-            var updateForm = document.createElement('form');
-            updateForm.action = '/updatePublic';
-            updateForm.method = 'get';
-            updateForm.name = 'makePublic';
-
-            /* create update submit button */
-            var updateButton = document.createElement('button');
-            updateButton.type = 'submit';
-            updateButton.value = id;
-            updateButton.innerHTML = 'Add to public site';
-            updateButton.name = 'updatePublic';
-
-            /* create delete form */
-            var deleteForm = document.createElement('form');
-            deleteForm.action = '/deleteRecord';
-            deleteForm.method = 'get';
-            deleteForm.name = 'delete';
-
-            /* create delete record button */
-            var deleteButton = document.createElement('button');
-            deleteButton.type = 'submit';
-            deleteButton.value = id;
-            deleteButton.innerHTML = 'Delete this record';
-            deleteButton.name = 'deletePublic';
-
-            /* create hr line */
-            var hr = document.createElement('hr');
-
-            /* put together html elements to create data container */
-            recordContainer.appendChild(showId);
-            recordContainer.appendChild(ad);
-            recordContainer.appendChild(audioTag);
-            recordContainer.appendChild(meta);
-
-            recordContainer.appendChild(updateForm);
-            updateForm.appendChild(updateButton);
-
-            recordContainer.appendChild(deleteForm);
-            deleteForm.appendChild(deleteButton);
-
-            recordContainer.appendChild(hr);
-            recordContainer.appendChild(space);
-            dataContainer.appendChild(recordContainer);
-
-            updateForm.onsubmit = e => updatePageView();
-            deleteForm.onsubmit = e => updatePageView();
-          }
-
-          /* for records already on public site that we want to take off */
-          else{
-
-            console.log(object.filed[i]);
-            var dataContainer = document.getElementById('onPublicSite');
-
-            /* create individual containers */
-            var recordContainer = document.createElement('div');
-            recordContainer.setAttribute('id', 'cont' + i);
-
-            /* id */
-            var showId = document.createElement('div');
-            showId.innerHTML = 'Record _id: ' + object.filed[i]._id;
-            var id = object.filed[i]._id;
-
-            /* admin data */
-            var ad = document.createElement('div');
-            ad.innerHTML =
-              'Collection: ' + object.filed[i].adminData.Project + ',  ' +
-              'prompt: ' + object.filed[i].adminData.Prompt + ',  ' +
-              'timeStamp: ' + object.filed[i].adminData.TimeStamp + ',  ';
-
-            /* audio */
-            const audioTag = document.createElement('div');
-            audioTag.classList.add("playStory");
-
-            /* meta data */
-            var meta = document.createElement('div');
-            meta.innerHTML =
-              'Title: ' + object.filed[i].metaData.Title + ', ' +
-              'Comments: ' + object.filed[i].metaData.Comments + ', ' +
-              'PostalCode: ' + object.filed[i].metaData.PostalCode + ', ' +
-              'Name: ' + object.filed[i].metaData.Name + ', ' +
-              'Email: ' + object.filed[i].metaData.Email + ', ' +
-              'Phone: ' + object.filed[i].metaData.Phone + ', ' +
-              'URL: ' + object.filed[i].Audio.url
-              ;
-
-              audioTag.innerHTML = '<audio id="audio-player" controls="controls" src= ' + object.filed[i].Audio.url + ' type="audio/mpeg">';
-            const space = document.createElement('br');
-
-            /* create delete from update form */
-            var removeOffPublicForm = document.createElement('form');
-            removeOffPublicForm.action = '/removePublic';
-            removeOffPublicForm.method = 'get';
-            removeOffPublicForm.name = 'takeOffPublic'
-
-            /* create update public button */
-            var takeOffSite = document.createElement('button');
-            takeOffSite.type = 'submit';
-            takeOffSite.value = id;
-            takeOffSite.innerHTML = 'Take off public site';
-            takeOffSite.name = 'takeOffSite';
-
-            recordContainer.appendChild(showId);
-            recordContainer.appendChild(ad);
-            recordContainer.appendChild(audioTag);
-            recordContainer.appendChild(meta);
-
-            recordContainer.appendChild(removeOffPublicForm);
-            removeOffPublicForm.appendChild(takeOffSite);
-
-            dataContainer.appendChild(recordContainer);
-          }
         }
       }
     })
     .catch((err) => console.error(err));
 };
 
+
+/**
+ * takes a database item and creates necessary html in order to display a card 
+ * @param object -- single db object from getCollection
+ */
+function createCard(object) {
+  //setup some initial card details
+  const htmlNode = document.createElement("div");
+  htmlNode.setAttribute('id', object._id)
+  htmlNode.setAttribute('class', "col")
+  //Clone the hidden template from the html
+  var newCard = $('#cardTemplate').clone().attr("id", object._id);
+
+  //append new info from object
+  newCard.find(".card-title").text(object.metaData.Title)
+  newCard.find(".timestamp").text(object.adminData.TimeStamp)
+  newCard.find(".card-text").text(object.metaData.Comments)
+  newCard.find(".cardID").text("_id: " + object._id)
+
+  let num = 5;
+  //delete unneeded elements
+  if (object.metaData.PostalCode) {
+    newCard.find("#postal").text("Postal Code: " + object.metaData.PostalCode)
+  } else {
+    newCard.find("#postal").remove();
+    num--;
+  }
+
+  if (object.metaData.Name) {
+    newCard.find("#name").text("Name: " + object.metaData.Name)
+  } else {
+    newCard.find("#name").remove();
+    num--;
+
+  }
+
+  if (object.metaData.Email) {
+    newCard.find("#email").text("Email: " + object.metaData.Email)
+  } else {
+    newCard.find("#email").remove();
+    num--;
+
+  }
+
+  if (object.metaData.Phone) {
+    newCard.find("#phone").text("Phone: " + object.metaData.Phone)
+  } else {
+    newCard.find("#phone").remove();
+    num--;
+  }
+  newCard.find(".badge").text("" + num)
+
+  newCard.find("#url").attr("href", object.Audio.url)
+  newCard.find("#audio-player").attr("src", object.Audio.url);
+
+
+
+  newCard.find("#collapseButton").attr("href", "#collapse" + object._id);
+  newCard.find("#collapseButton").attr("aria-controls", "collapse" + object._id);
+  newCard.find("#collapse").attr("id", "collapse" + object._id);
+
+  //wire up buttons, delete and public/unpublic
+  //if object is public, then button says unpublic
+  var publicButton = newCard.find("#publicButton")
+  if (object.Public) {
+    publicButton.attr("class", "btn btn-danger public")
+    publicButton.text("Make Private")
+    publicButton.attr("onclick", "makePrivate('" + object._id + "')")
+  } else {
+    publicButton.attr("class", "btn btn-success public")
+    publicButton.text("Make Public")
+    publicButton.attr("onclick", "makePublic('" + object._id + "')")
+  }
+
+  newCard.find("#trashButton").attr("onclick", "deleteRecording('" + object._id + "')")
+  //append the new html to the container
+  htmlNode.innerHTML = newCard[0].innerHTML;
+  document.getElementById("collectionContainer").appendChild(htmlNode);
+}
+
 /* update the pull from the db after a admin updates or deletes from the db */
-function updatePageView() { 
+function updatePageView() {
   window.location.reload(true);
+}
+
+
+/**
+ * sets the recording to public using its id
+ * get request to /updatePublic with name updatePublic and a value of the id
+ * if we dont get 200 back, then we have a problem and should not switch the button to public 
+ * @param  id  
+ */
+function makePublic(id) {
+  console.log(id);
+  let promise = fetch("/updatePublic?updatePublic=" + id);
+  promise.then(response => {
+    if (response.status !== 200) {
+      console.log('Looks like there was a problem. Status Code: ' +
+        response.status);
+      err = new Error("Not 200")
+      throw err;
+    } else {
+      var publicButton = $('#' + id + " #publicButton")
+      publicButton.attr("class", "btn btn-danger public")
+      publicButton.text("Make Private")
+      //set the onclick
+      publicButton.attr("onclick", "makePrivate('" + id + "')")
+    }
+  }).catch(function (err) {
+    throw err;
+  });
+}
+
+
+
+/**
+ * sets the recording to private using its id
+ * get request to /removePublic with name takeOffSite and value of the id
+ * if we dont get 200 back, then we have a problem and should not switch the button to public 
+ * @param  id  
+ */
+function makePrivate(id) {
+  console.log(id);
+  let promise = fetch("/removePublic?takeOffSite=" + id);
+
+  promise.then(response => {
+    if (response.status !== 200) {
+      console.log('Looks like there was a problem. Status Code: ' +
+        response.status);
+      err = new Error("Not 200")
+      throw err;
+    } else {
+      console.log("Button says public");
+      var publicButton = $('#' + id + " #publicButton")
+      publicButton.attr("class", "btn btn-success public")
+      publicButton.text("Make Public")
+      //set the onclick
+      publicButton.attr("onclick", "makePublic('" + id + "')")
+    }
+  }).catch(function (err) {
+    throw err;
+  });
+}
+
+/**
+ * Deletes recording from the database
+ * TODO: add a confirmation screen?
+ * @param  id 
+ */
+function deleteRecording(id) {
+  console.log(id);
+  let promise = fetch("/deleteRecord?deletePublic=" + id);
+
+  promise.then(response => {
+    if (response.status !== 200) {
+      console.log('Looks like there was a problem. Status Code: ' +
+        response.status);
+      err = new Error("Not 200")
+      throw err;
+    } else {
+      console.log("Recording Deleted");
+      var card = $('#' + id)
+      card.fadeOut(300, function () { $(this).remove(); });
+    }
+  }).catch(function (err) {
+    throw err;
+  });
 }
