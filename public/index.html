@@ -31,7 +31,7 @@
 <body class="pt-5">
     <div class="container">
     <div class="alert alert-danger" id="browserAlert" style="display: none;" role="alert">
-    It looks like your browser isn't supported, maybe try Safari or updating your browser/iOS.
+    It looks like your browser may not be supported, if the app doesn't work maybe try Safari or updating your browser/iOS.
     </div>
   
 
@@ -125,7 +125,10 @@
   <script>
     console.log(navigator.userAgent);
     //navigator.webkitGetUserMedia?
-    if (navigator.userAgent.indexOf("CriOS") != -1 || !navigator.mediaDevices) {
+
+    //notify anyone on chrome and safari on mobile
+    //also anyone that doesnt have navigator.mediaDevices
+    if (((navigator.userAgent.indexOf("Chrome/") != -1 || navigator.userAgent.indexOf("Safari/") != -1 ) && (navigator.userAgent.indexOf("Mobile") || navigator.userAgent.indexOf("Tablet")))  || !navigator.mediaDevices) {
       //maybe need navigator.userAgent.indexOf("mobile") != -1 ??
         document.getElementById('browserAlert').style.display = "inherit";
         document.getElementById('browserAlert').innerHTML += "<br><a href=\"mailto:user@example.com?subject=Broken Browser Redruth&amp;body= "+ navigator.userAgent +"\">Want to help? Email us this info!</a>"
