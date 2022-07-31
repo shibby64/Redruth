@@ -30,7 +30,10 @@
 
 <body class="pt-5">
     <div class="container">
-        <!-- <h1 class="text-center">Record Your Voice</h1> -->
+    <div class="alert alert-danger" id="browserAlert" style="display: none;" role="alert">
+    It looks like your browser isn't supported, maybe try Safari or updating your browser/iOS.
+    </div>
+  
 
 
     <div class="record-button-container text-center mt-5">
@@ -55,8 +58,13 @@
           <input type="hidden" id="project" name="project" value="Redruth Project">
           <label for="prompt" style="display:none"></label>
           <input type="hidden" id="prompt" name="prompt" value="">
-          <div id="recordbutton2"><button class="border btn record-button rounded-circle shadow-sm text-center"
-              id="recordButton" onclick="recordFunction()" type="button"><img src="/images/microphone.png" alt="Record" class="img-fluid"></button></div>
+          <div id="recordbutton2">
+            <!-- There is an event listener for this button in record.js calls record()-->
+            <button class="border btn record-button rounded-circle shadow-sm text-center"
+              id="recordButton" onclick="recordFunction()" type="button">
+              <img src="/images/microphone.png" alt="Record" class="img-fluid">
+            </button>
+          </div>
           <h5 id="recordyourresponse">Record your response!</h5>
           <h6 id="countDownTimer" class="recForm" style="display:none">15:00</h6>
       </div>
@@ -112,6 +120,19 @@
     </div>
     </form>
   </div>
+
+
+  <script>
+    console.log(navigator.userAgent);
+    //navigator.webkitGetUserMedia?
+    if (navigator.userAgent.indexOf("CriOS") != -1 || !navigator.mediaDevices) {
+      //maybe need navigator.userAgent.indexOf("mobile") != -1 ??
+        document.getElementById('browserAlert').style.display = "inherit";
+        document.getElementById('browserAlert').innerHTML += "<br><a href=\"mailto:user@example.com?subject=Broken Browser Redruth&amp;body= "+ navigator.userAgent +"\">Want to help? Email us this info!</a>"
+    }
+  </script>
+
+
   <script src="/js/prompt.js"></script>
   <script src="/js/pWord.js"></script>
   <script src="/js/checkbox.js"></script>
