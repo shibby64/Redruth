@@ -53,8 +53,21 @@ async function getCollections() {
     
 };
 
+function currentPromptUpdate(htmlElement){
+  document.getElementById("promptUpdate").value = htmlElement.innerText
+  console.log(htmlElement);
+}
 
 function createSelectListElement(collectionPrompt){
+  const dropdownhtmlList = document.createElement("li");
+  const dropdownhtmlA = document.createElement("a");
+  dropdownhtmlA.setAttribute("class", "dropdown-item")
+  dropdownhtmlA.setAttribute("onclick", "currentPromptUpdate(this)")
+  dropdownhtmlA.innerText = collectionPrompt
+  dropdownhtmlList.append(dropdownhtmlA)
+  document.getElementById("dropdown-menu").append(dropdownhtmlList)
+
+
   const htmlNode = document.createElement("option");
   htmlNode.setAttribute('value', collectionPrompt)
   htmlNode.innerText = collectionPrompt

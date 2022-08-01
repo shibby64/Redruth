@@ -7,7 +7,11 @@ function updatePrompt() {
         .then(res => res.json())
         .then(res => {
             console.log(res);
-            showP.innerHTML = res;
+            try {
+                showP.innerHTML = res;
+            } catch (error) {
+                console.error(error);
+            }
             promptInput.value = res;
         });
 }
