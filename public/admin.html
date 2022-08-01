@@ -57,7 +57,11 @@
     <div class="mb-5">
         <div id="collections" class="container">
             <h2 class="mb-4">Share Recordings on Public Site</h2>
-            <div class="row row-cols-auto g-4 justify-content-between " id="collectionContainer">
+            <label for="selectPrompt" class="col-form-label">Filter by Prompt:</label>
+            <select onchange="filterPrompt(this)" class="form-select form-select-lg mb-4" id="selectPrompt" aria-label="selectPrompt">
+                <option value="">All Prompts</option>
+            </select>
+            <div class="row row-cols-auto g-4 justify-content-between" id="collectionContainer">
                 <div class="col" style="display:none" id="cardTemplate">
                     <div class="card h-100" style="width: 18rem;">
                         <div class="card-body">
@@ -98,6 +102,7 @@
                                     <p id="name">Name:</p>
                                     <p id="email">Email:</p>
                                     <p id="phone">Phone:</p>
+                                    <p id="prompt">Prompt:</p>
                                     <a id="url" href="#">Audio Link</a>
                                 </div>
                             </div>
