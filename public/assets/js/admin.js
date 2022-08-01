@@ -47,18 +47,29 @@ async function getCollections() {
         }
       }
     })
-    .then((object) => {prompts.forEach(createSelectListElement)})
+    .then((object) => {prompts.forEach(createListElement)})
     .catch((err) => console.error(err));
 
     
 };
 
+/**
+ * Updates the input#promptUpdate's value to whatever the user clicked on in the dropdown
+ * @param htmlElement the onclick passes the html element clicked
+ */
 function currentPromptUpdate(htmlElement){
   document.getElementById("promptUpdate").value = htmlElement.innerText
-  console.log(htmlElement);
 }
 
-function createSelectListElement(collectionPrompt){
+
+/**
+ * Handles the creation of both the dropdown on the update prompt box and the option list in the filter box
+ * called multiple times for each item in the lists
+ * @param {String} collectionPrompt 
+ */
+function createListElement(collectionPrompt){
+
+  //update prompt dropdown
   const dropdownhtmlList = document.createElement("li");
   const dropdownhtmlA = document.createElement("a");
   dropdownhtmlA.setAttribute("class", "dropdown-item")
@@ -67,7 +78,7 @@ function createSelectListElement(collectionPrompt){
   dropdownhtmlList.append(dropdownhtmlA)
   document.getElementById("dropdown-menu").append(dropdownhtmlList)
 
-
+  //update filter dropdown
   const htmlNode = document.createElement("option");
   htmlNode.setAttribute('value', collectionPrompt)
   htmlNode.innerText = collectionPrompt
