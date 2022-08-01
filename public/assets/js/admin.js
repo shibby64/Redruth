@@ -20,7 +20,9 @@ let chunks = []; // will be used later to record audio
 let mediaRecorder = null; // will be used later to record audio
 let audioBlob = null; // the blob that will hold the recorded audio
 let placeholder = [];
-const collections = new Set();
+
+//stores all 
+const prompts = new Set();
 let recordings = [];
 let filteredRecordings = [];
 
@@ -41,11 +43,11 @@ async function getCollections() {
           let isPublic = object.filed[i].Public;
           recordings.push(object.filed[i]);
           createCard(object.filed[i]);
-          collections.add(object.filed[i].adminData.Prompt)
+          prompts.add(object.filed[i].adminData.Prompt)
         }
       }
     })
-    .then((object) => {collections.forEach(createSelectListElement)})
+    .then((object) => {prompts.forEach(createSelectListElement)})
     .catch((err) => console.error(err));
 
     
