@@ -96,7 +96,7 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
-app.get('/adminPrompt', (req, res) => {
+app.get('/updatePrompt', (req, res) => {
     var prompt = req.query.prompt;
     updateMongoDBPrompt(prompt);
     res.sendFile(path.join(__dirname, 'public/index.html'));
@@ -123,7 +123,7 @@ function updateMongoDBPrompt(newPrompt) {
             .updateOne({ '_id': ObjectId('62cccad3158754c692f78794') }, { $set: { Prompt: newPrompt } },
                 function(err, res) {
                     if (err) throw err;
-                    console.log('updated prompt: ' + newPrompt);
+                    console.log('Updated Prompt: ' + newPrompt);
                 });
         /*dynamically updates admin page with prompt data*/
         app.post('/saved', function(req, res) {
