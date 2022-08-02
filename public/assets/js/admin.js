@@ -3,44 +3,32 @@
  *              the admin is able to publicise audio and delete audio. 
  *              The page currently lists only private files. 
  * 
- * Description. Calls getCollections() to list all audio files from /saved route 
+ * Description. Calls getRecordings() to list all audio files from /saved route 
  *              then sets up html to display files neatly.
  *
  */
 
-const recordButton = document.getElementById('recordButton');
-//const recordButtonImage = recordButton.firstElementChild;
-const recordedAudioContainer = document.getElementById('recordedAudioContainer');
-const saveAudioButton = document.getElementById('saveButton');
-const discardAudioButton = document.getElementById('discardButton');
-const recordingsContainer = document.getElementById('recordings');
 
-
-let chunks = []; // will be used later to record audio
-let mediaRecorder = null; // will be used later to record audio
-let audioBlob = null; // the blob that will hold the recorded audio
-let placeholder = [];
-
-//stores all 
 const prompts = new Set();
 let recordings = [];
 let filteredRecordings = [];
+let collections = [];
 
+getRecordings();
 getCollections();
 
 
 /**
- * Grab records in the database 
+ * Grab recording records in the database 
  *  
  */
-async function getCollections() {
+async function getRecordings() {
   fetch('/saved', { method: 'POST' })
     .then((object) => object.json())
     .then((object) => {
       if (object.success && object.filed) {
-        // for all objects
+        // for all objects set up cards and add to various arrays
         for (i = 0; i < object.filed.length; i++) {
-          let isPublic = object.filed[i].Public;
           recordings.push(object.filed[i]);
           createCard(object.filed[i]);
           prompts.add(object.filed[i].adminData.Prompt)
@@ -49,9 +37,37 @@ async function getCollections() {
     })
     .then((object) => {prompts.forEach(createListElement)})
     .catch((err) => console.error(err));
-
-    
 };
+
+/**
+ * Grab collection names 
+ *  
+ */
+async function getCollections() {
+  fetch('/collections', { method: 'GET' })
+    .then((object) => object.json())
+    .then((object) => {
+      if (object.success && object.filed) {
+        object.filed.forEach(collection => {
+          if (collection.current) {
+            document.getElementById("current").innerHTML = "Current Collection: <i>" +  collection.name + "</i>";
+          }
+          collections.push(collection.name)
+        });
+      }
+    })
+    .then((object) => {collections.forEach(createCollectionDropdownItem)})
+    .catch((err) => console.error(err));
+};
+
+
+/**
+ * Updates the input#collectionsUpdate's value to whatever the user clicked on in the dropdown
+ * @param htmlElement the onclick passes the html element clicked
+ */
+function currentCollectionUpdate(htmlElement){
+  document.getElementById("collectionsUpdate").value = htmlElement.innerText
+}
 
 /**
  * Updates the input#promptUpdate's value to whatever the user clicked on in the dropdown
@@ -68,7 +84,6 @@ function currentPromptUpdate(htmlElement){
  * @param {String} collectionPrompt 
  */
 function createListElement(collectionPrompt){
-
   //update prompt dropdown
   const dropdownhtmlList = document.createElement("li");
   const dropdownhtmlA = document.createElement("a");
@@ -85,6 +100,21 @@ function createListElement(collectionPrompt){
   document.getElementById("selectPrompt").append(htmlNode)
 }
 
+/**
+ * Handles the creation of the dropdown on the collection prompt box
+ * called multiple times for each item in the lists
+ * @param {String} collectionName 
+ */
+function createCollectionDropdownItem(collectionName){
+  //update collection dropdown
+  const dropdownhtmlList = document.createElement("li");
+  const dropdownhtmlA = document.createElement("a");
+  dropdownhtmlA.setAttribute("class", "dropdown-item")
+  dropdownhtmlA.setAttribute("onclick", "currentCollectionUpdate(this)")
+  dropdownhtmlA.innerText = collectionName
+  dropdownhtmlList.append(dropdownhtmlA)
+  document.getElementById("collections-dropdown-menu").append(dropdownhtmlList)
+}
 
 /**
  * Takes the selected value and filters the list of recordings.
@@ -198,7 +228,6 @@ function updatePageView() {
   window.location.reload(true);
 }
 
-
 /**
  * sets the recording to public using its id
  * get request to /updatePublic with name updatePublic and a value of the id
@@ -225,8 +254,6 @@ function makePublic(id) {
     throw err;
   });
 }
-
-
 
 /**
  * sets the recording to private using its id
