@@ -170,6 +170,8 @@ discardAudioButton.onclick = function() {
  */
 document.forms[0].onsubmit = async(e) => {
     e.preventDefault();
+    //to prevent the user from submitting multiple times, we disable the button
+    saveAudioButton.disabled = true;
     formData = new FormData(document.forms[0])
     formData.append('audio', audioBlob, 'recording.mp3');
     //print form data

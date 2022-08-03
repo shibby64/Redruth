@@ -3,66 +3,148 @@
  *              the admin is able to publicise audio and delete audio. 
  *              The page currently lists only private files. 
  * 
- * Description. Calls getCollections() to list all audio files from /saved route 
+ * Description. Calls getRecordings() to list all audio files from /saved route 
  *              then sets up html to display files neatly.
  *
  */
 
-const recordButton = document.getElementById('recordButton');
-//const recordButtonImage = recordButton.firstElementChild;
-const recordedAudioContainer = document.getElementById('recordedAudioContainer');
-const saveAudioButton = document.getElementById('saveButton');
-const discardAudioButton = document.getElementById('discardButton');
-const recordingsContainer = document.getElementById('recordings');
 
+const prompts = new Set();
+let recordings = [];
+let filteredRecordings = [];
+let collections = [];
 
-let chunks = []; // will be used later to record audio
-let mediaRecorder = null; // will be used later to record audio
-let audioBlob = null; // the blob that will hold the recorded audio
-let metaArr = [];
-let placeholder = [];
-
-
+getRecordings();
 getCollections();
-
-async function metaGrab() {
-  fetch('/metaArr', { method: 'POST' })
-    .then((object) => object.json())
-    .then((object) => {
-      if (object.success && object.filed) {
-        for (i = 0; i < object.filed.length; i++) {
-          if (!object.filed[i].Public) {
-            metaArr[i] = object.filed[i];
-          }
-        }
-      }
-    })
-    .catch((err) => console.error(err));
-}
 
 
 /**
- * Grab records in the database 
- * 
- * Filtered by audio that are not public 
+ * Grab recording records in the database 
  *  
  */
-async function getCollections() {
+async function getRecordings() {
   fetch('/saved', { method: 'POST' })
     .then((object) => object.json())
     .then((object) => {
       if (object.success && object.filed) {
-        // for all objects
+        // for all objects set up cards and add to various arrays
         for (i = 0; i < object.filed.length; i++) {
-          let isPublic = object.filed[i].Public;
+          recordings.push(object.filed[i]);
           createCard(object.filed[i]);
-
+          prompts.add(object.filed[i].adminData.Prompt)
         }
       }
     })
+    .then((object) => {prompts.forEach(createListElement)})
     .catch((err) => console.error(err));
 };
 
+/**
+ * Grab collection names 
+ *  
+ */
+async function getCollections() {
+  fetch('/collections', { method: 'GET' })
+    .then((object) => object.json())
+    .then((object) => {
+      if (object.success && object.filed) {
+        object.filed.forEach(collection => {
+          if (collection.current) {
+            document.getElementById("current").innerHTML = "Current Collection: <i>" +  collection.name + "</i>";
+          }
+          collections.push(collection.name)
+        });
+      }
+    })
+    .then((object) => {collections.forEach(createCollectionDropdownItem)})
+    .catch((err) => console.error(err));
+};
+
+
+/**
+ * Updates the input#collectionsUpdate's value to whatever the user clicked on in the dropdown
+ * @param htmlElement the onclick passes the html element clicked
+ */
+function currentCollectionUpdate(htmlElement){
+  document.getElementById("collectionsUpdate").value = htmlElement.innerText
+}
+
+/**
+ * Updates the input#promptUpdate's value to whatever the user clicked on in the dropdown
+ * @param htmlElement the onclick passes the html element clicked
+ */
+function currentPromptUpdate(htmlElement){
+  document.getElementById("promptUpdate").value = htmlElement.innerText
+}
+
+
+/**
+ * Handles the creation of both the dropdown on the update prompt box and the option list in the filter box
+ * called multiple times for each item in the lists
+ * @param {String} collectionPrompt 
+ */
+function createListElement(collectionPrompt){
+  //update prompt dropdown
+  const dropdownhtmlList = document.createElement("li");
+  const dropdownhtmlA = document.createElement("a");
+  dropdownhtmlA.setAttribute("class", "dropdown-item")
+  dropdownhtmlA.setAttribute("onclick", "currentPromptUpdate(this)")
+  dropdownhtmlA.innerText = collectionPrompt
+  dropdownhtmlList.append(dropdownhtmlA)
+  document.getElementById("dropdown-menu").append(dropdownhtmlList)
+
+  //update filter dropdown
+  const htmlNode = document.createElement("option");
+  htmlNode.setAttribute('value', collectionPrompt)
+  htmlNode.innerText = collectionPrompt
+  document.getElementById("selectPrompt").append(htmlNode)
+}
+
+/**
+ * Handles the creation of the dropdown on the collection prompt box
+ * called multiple times for each item in the lists
+ * @param {String} collectionName 
+ */
+function createCollectionDropdownItem(collectionName){
+  //update collection dropdown
+  const dropdownhtmlList = document.createElement("li");
+  const dropdownhtmlA = document.createElement("a");
+  dropdownhtmlA.setAttribute("class", "dropdown-item")
+  dropdownhtmlA.setAttribute("onclick", "currentCollectionUpdate(this)")
+  dropdownhtmlA.innerText = collectionName
+  dropdownhtmlList.append(dropdownhtmlA)
+  document.getElementById("collections-dropdown-menu").append(dropdownhtmlList)
+}
+
+/**
+ * Takes the selected value and filters the list of recordings.
+ * Called when filter by collection select onchange.
+ * 
+ * @param selected item  
+ */
+function filterPrompt(selected){
+  // if no filter show all
+  if (selected.value == "") {
+    $(".item").remove();
+    recordings.forEach(recording => {
+      createCard(recording)
+    });
+    return;
+  }
+
+  filteredRecordings = [];
+  recordings.forEach(recording => {
+    if (recording.adminData.Prompt == selected.value) {
+      filteredRecordings.push(recording)
+    }
+  });
+  $(".item").remove();
+
+  filteredRecordings.forEach(recording => {
+    createCard(recording)
+  });
+
+}
 
 /**
  * takes a database item and creates necessary html in order to display a card 
@@ -72,7 +154,7 @@ function createCard(object) {
   //setup some initial card details
   const htmlNode = document.createElement("div");
   htmlNode.setAttribute('id', object._id)
-  htmlNode.setAttribute('class', "col")
+  htmlNode.setAttribute('class', "col item")
   //Clone the hidden template from the html
   var newCard = $('#cardTemplate').clone().attr("id", object._id);
 
@@ -82,8 +164,8 @@ function createCard(object) {
   newCard.find(".card-text").text(object.metaData.Comments)
   newCard.find(".cardID").text("_id: " + object._id)
 
-  let num = 5;
-  //delete unneeded elements
+  let num = 6;
+  newCard.find("#prompt").text("Prompt: " + object.adminData.Prompt)
   if (object.metaData.PostalCode) {
     newCard.find("#postal").text("Postal Code: " + object.metaData.PostalCode)
   } else {
@@ -96,7 +178,6 @@ function createCard(object) {
   } else {
     newCard.find("#name").remove();
     num--;
-
   }
 
   if (object.metaData.Email) {
@@ -104,7 +185,6 @@ function createCard(object) {
   } else {
     newCard.find("#email").remove();
     num--;
-
   }
 
   if (object.metaData.Phone) {
@@ -148,7 +228,6 @@ function updatePageView() {
   window.location.reload(true);
 }
 
-
 /**
  * sets the recording to public using its id
  * get request to /updatePublic with name updatePublic and a value of the id
@@ -175,8 +254,6 @@ function makePublic(id) {
     throw err;
   });
 }
-
-
 
 /**
  * sets the recording to private using its id

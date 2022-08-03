@@ -29,7 +29,6 @@ const axios = require('axios');
 let dbArray = [];
 let aFile = 0;
 
-// What collection in Mongo the app in looking at, in future have admin page set this var from available collections 
 const storage = memoryStorage();
 const upload = multer({ storage });
 
@@ -46,6 +45,7 @@ app.use(express.static('public/assets'));
  * Comment below when pushing to heroku
  */
 
+// What collection in Mongo the app in looking at
 var collection = 'test';
 app.listen(port,'0.0.0.0', () => {
     console.log(`App listening at http://localhost:${port}`);
@@ -89,30 +89,59 @@ app.get('/saved.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/saved.html'));
 });
 
+
+
+
+/**
+ * if collection exists, swap to that collection
+ * otherwise create new and swap
+ */
 /* create new collection and update universal prompt */
-app.get('/admin', (req, res) => {
-    var project = req.query.project;
-    createNewTable(project);
-    res.sendFile(path.join(__dirname, 'public/admin.html'));
+app.get('/updateCollection', (req, res) => {
+    var newCollectionName = req.query.collection;
+    MongoClient.connect(url, function(err, db) {
+        let existingCollection = false
+        if (err) throw err;
+        const dbase = db.db("Redruth");
+        dbase.listCollections().toArray(function(err, collectionList) {
+            //run through collections to check if the new one exists already
+            for (let i = 0; i < collectionList.length; i++) {
+                if (collectionList[i].name == newCollectionName) {
+                    console.log("Collection exists, swap global to new");
+                    collection = newCollectionName;   
+                    existingCollection = true;            
+                    break;  
+                }
+            }
+            //collection doesnt exist, so we create a new one 
+            if (existingCollection == false){
+                console.log("Collection does not exist, create new");
+                createNewTable(newCollectionName)
+            }
+        });
+    });
+    res.redirect('/admin.html');
+    // res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
-app.get('/adminPrompt', (req, res) => {
-    var prompt = req.query.prompt;
-    updateMongoDBPrompt(prompt);
-    res.sendFile(path.join(__dirname, 'public/index.html'));
-})
-
-/* create new collection */
-function createNewTable(project) {
+/* create new collection and update global after creating*/
+function createNewTable(newCollectionName) {
     /* working, however will crash when you attempt to create a collection that already exists */
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         const dbase = db.db("Redruth");
-        dbase.createCollection(project, function(err, res) {
+        dbase.createCollection(newCollectionName, function(err, res) {
             if (err) throw err;
+            collection = newCollectionName;
         });
     })
 }
+
+app.get('/updatePrompt', (req, res) => {
+    var prompt = req.query.prompt;
+    updateMongoDBPrompt(prompt);
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+})
 
 /* update prompt data in PromptData collection, prompt data read from index.html */
 function updateMongoDBPrompt(newPrompt) {
@@ -123,7 +152,7 @@ function updateMongoDBPrompt(newPrompt) {
             .updateOne({ '_id': ObjectId('62cccad3158754c692f78794') }, { $set: { Prompt: newPrompt } },
                 function(err, res) {
                     if (err) throw err;
-                    console.log('updated prompt: ' + newPrompt);
+                    console.log('Updated Prompt: ' + newPrompt);
                 });
         /*dynamically updates admin page with prompt data*/
         app.post('/saved', function(req, res) {
@@ -253,9 +282,8 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
     }
 });
 
-
 /*initial listen query for db data*/
-app.post('/saved', function(req, res) {
+app.post('/metaArr', function(req, res) {
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         const dbase = db.db('Redruth');
@@ -264,7 +292,9 @@ app.post('/saved', function(req, res) {
             return res.json({ success: true, filed });
         });
     });
-});
+  });
+  
+
 
 
 
@@ -274,16 +304,47 @@ app.post('/saved', function(req, res) {
  * 
  */
 
+/**
+ * Lists collections that store audio.
+ * 
+ * Does not list promptData
+ */
+app.get('/collections', (req, res) => {
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        const dbase = db.db('Redruth');
+        dbase.listCollections().toArray(function(err, collections) {
+
+            // We dont want to send the promptdata collection 
+            // because it isn't used for storing audio data
+            const filed = collections.filter((collection)=> {
+                if (collection.name != 'PromptData'){
+                    return collection;
+                } 
+            })
+            //we also want to setup which one is currently being used.
+            for (let i = 0; i < filed.length; i++) {
+                if (filed[i].name == collection) {
+                    filed[i].current = true;
+                } else{
+                    filed[i].current = false;
+                }
+            }
+            return res.json({ success: true, filed });
+        });
+    });
+});
+
 /*initial admin query for db data*/
-app.post('/metaArr', function(req, res) {
-  MongoClient.connect(url, function(err, db) {
-      if (err) throw err;
-      const dbase = db.db('Redruth');
-      const record = dbase.collection(collection);
-      record.find().toArray(function(err, filed) {
-          return res.json({ success: true, filed });
-      });
-  });
+app.post('/saved', function(req, res) {
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        const dbase = db.db('Redruth');
+        const record = dbase.collection(collection);
+        record.find().toArray(function(err, filed) {
+            return res.json({ success: true, filed });
+        });
+    });
 });
 
 
