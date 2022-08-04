@@ -328,7 +328,8 @@ textarea{
   background-color: #39b7dd;
   text-align: center;
   line-height: 32px;
-  color: black !important;
+  color: black;
+  text-shadow: 1px 1px #ddd;
   z-index: 31;
 }
 
