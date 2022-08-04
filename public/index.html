@@ -99,6 +99,11 @@
               <button type="submit" name="submit" class="btn btn-success rounded-pill" id="saveButton">Save</button>
               <button type="button" class="btn btn-transparent rounded-pill" id="discardButton">Discard</button>
           </div>
+          <p id = "loadText" style = "display: none;">Your audio file is being uploaded.</p>
+          <div id="Progress_Status" style = "display: none;">
+            
+            <div id="progressBar"></div>
+          </div>
       </div>
       <!-- <div class="actions mt-3"><button class="submitbtn btn rounded-pill" >Submit</button></div> -->
       <div id="aboutpara" class="checked contLabel" style="display:none">
@@ -122,8 +127,9 @@
         document.getElementById('browserAlert').style.display = "inherit";
         document.getElementById('browserAlert').innerHTML += "<br><a href=\"mailto:behrndc@wwu.edu?subject=Broken Browser Redruth&amp;body= "+ navigator.userAgent +"\">Want to help? Email us this info!</a>"
     }
-  </script>
 
+    
+    </script>
 
   <script src="/js/prompt.js"></script>
   <script src="/js/checkbox.js"></script>
