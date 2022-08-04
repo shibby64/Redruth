@@ -57,14 +57,14 @@ app.listen(port,'0.0.0.0', () => {
  * Uncomment below when pushing to heroku
  */
 
-//var collection = 'Redruth Reading Room';
+// var collection = 'Redruth Reading Room';
 
 // var enforce = require('express-sslify');
 // var http = require('http');
 // app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
 // http.createServer(app).listen(port, () => {
-    //     console.log('Express server listening on port ' + port);
+//         console.log('Express server listening on port ' + port);
 // });
 
 
