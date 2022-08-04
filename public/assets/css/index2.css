@@ -304,5 +304,31 @@ textarea{
   .slider-control-next {
     right: 20px;
   }
-
+  #Progress_Status {
+    position: fixed;
+    top: 48%;
+    left:auto;
+    width: 300px;
+    background-color: #ddd;
+    border-radius: 6px;
+    z-index: 30;
+}
+#loadText{
+    position: fixed;
+    top: 44%;
+    left:auto;
+    margin: 5px;
+    color: #ff9f00;
+    text-shadow: 1px 1px #39b7dd;
+    z-index: 30;
+}
+#progressBar {
+  width: 1%;
+  height: 35px;
+  background-color: #39b7dd;
+  text-align: center;
+  line-height: 32px;
+  color: black !important;
+  z-index: 31;
+}
 

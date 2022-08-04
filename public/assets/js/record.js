@@ -178,6 +178,7 @@ document.forms[0].onsubmit = async(e) => {
     for (const [key, value] of formData) {
         console.log(`${key}: ${value}\n`);
     }
+    update();
     let request = fetch('/insert', {
         method: 'POST',
         body: formData,
@@ -197,4 +198,23 @@ document.forms[0].onsubmit = async(e) => {
         window.location.assign('/');
     });
 };
+function update() {
+    var bar = document.getElementById("progressBar");
+    var status = document.getElementById("Progress_Status");
+    var text = document.getElementById("loadText");
 
+    status.style.display = "block";
+    text.style.display = "block";
+    var width = 1;
+    var identity = setInterval(scene, 10);
+    function scene() {
+      if (width >= 100) {
+        clearInterval(identity);
+        update();
+      } else {
+        width++; 
+        bar.style.width = width  + "%"; 
+        bar.innerHTML = width + "%";
+      }
+    }
+  }
