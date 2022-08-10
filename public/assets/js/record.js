@@ -19,51 +19,48 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-restricted-globals */
 // initialize elements we'll use
-const recordButton = document.getElementById('recordButton');
-const recordButtonImage = recordButton.firstElementChild;
-const recordedAudioContainer = document.getElementById('recordedAudioContainer');
-const saveAudioButton = document.getElementById('saveButton');
-// saveAudioButton.setAttribute('onclick', "window.location.assign('/saved.html')");
-const discardAudioButton = document.getElementById('discardButton');
-discardAudioButton.setAttribute('onclick', 'recordReset()')
 
+//Recording Pages
+let recordingPage = $("#recording")
+let info1Page = $("#info1")
+let info2Page = $("#info2")
+let submittedPage = $("#submitted")
+let loadingPage = $("#loading")
+let aboutPage = $("#about")
+let currentPage = null;
 
+//Wavesurfer audio visualizer
+let wavesurfer = WaveSurfer.create({
+    container: document.querySelector('#waveform'),
+    barWidth: 4,
+    height: 64,
+    waveColor: 'rgb(20, 20, 51)',
+    progressColor: 'rgba(21, 0, 191, 1)',
+    barRadius: 2,
+    normalize: true,
+    barHeight: 1,
+    barGap: .3,
+});
 
-let chunks = []; // will be used later to record audio
-let mediaRecorder = null; // will be used later to record audio
-let audioBlob = null; // the blob that will hold the recorded audio
+//Recording Data
+let chunks = [];
+let mediaRecorder = null;
+let audioBlob = null;
+let audioURL = null;
+let formData = new FormData()
 
-
-function mediaRecorderDataAvailable(e) {
-    chunks.push(e.data);
-}
-
-
-/**
- * Stops recording and sets up an html element for audio.
- */
-function mediaRecorderStop() {
-    // check if there are any previous recordings and remove them
-    if (recordedAudioContainer.firstElementChild.tagName === 'AUDIO') {
-        recordedAudioContainer.firstElementChild.remove();
-    }
-    const audioElm = document.createElement('audio');
-    audioElm.setAttribute('controls', ''); // add controls
-    audioBlob = new Blob(chunks, { type: 'audio/mp3' });
-    const audioURL = window.URL.createObjectURL(audioBlob);
-    audioElm.src = audioURL;
-    // show audio
-    recordedAudioContainer.insertBefore(audioElm, recordedAudioContainer.firstElementChild);
-    recordedAudioContainer.classList.add('d-flex');
-    recordedAudioContainer.classList.remove('d-none');
-    // reset to default
-    mediaRecorder = null;
-    chunks = [];
-}
+//Countdown Timer, starts paused
+const countDownTimer = document.getElementById('countDownTimer');
+const startingMinutes = 15; //set this variable for desired time limit
+let time = startingMinutes * 60;
+setInterval(countdown, 1000);
+let startCountDown = false;
 
 /**
  * Records audio using mediaDevices and mediaRecorder to start and stop. 
  * Also handles setting up audio html once audio is recorded.
+ * 
+ * Record gets called twice, once to start, once to stop.
  * 
  */
 function record() {
@@ -73,19 +70,30 @@ function record() {
         return;
     }
 
-    // browser supports getUserMedia
-    // change image in button
-    startCountDown = true; //begin timer countdown
-    recordButtonImage.src = `/images/${mediaRecorder && mediaRecorder.state === 'recording' ? 'microphone' : 'stop'}.png`;
+    // begin timer countdown
+    startCountDown = true;
+
+    // change button to a stop button
+    // $("#recordButton").attr("style", "display:none");
+    // $("#stopButton").attr("style", "display:inital");
+    // $("#recordText").text("Press Again to Stop Recording");
+    $("#recordText").fadeOut(200, function() {
+        $(this).text("Press Again to Stop Recording").fadeIn(200);
+      });
+    $("#recordButton").fadeOut(200, function () { $("#stopButton").fadeIn(200) });
+
+
     if (!mediaRecorder) {
         // start recording
         navigator.mediaDevices.getUserMedia({
-                audio: true,
-            })
+            audio: true,
+        })
             .then((stream) => {
                 mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.start();
-                mediaRecorder.ondataavailable = mediaRecorderDataAvailable;
+                mediaRecorder.ondataavailable = function (e) {
+                    chunks.push(e.data);
+                };
                 mediaRecorder.onstop = mediaRecorderStop;
                 /* this doesn't seem to be working, need to find way to stop recording when time expires. */
                 if (time < 0) {
@@ -95,8 +103,6 @@ function record() {
             })
             .catch((err) => {
                 alert(`The following error occurred: ${err}`);
-                // change image in button
-                recordButtonImage.src = '/images/microphone.png';
             });
     } else {
         // stop recording
@@ -107,17 +113,40 @@ function record() {
     }
 }
 
-/* line that calls recording to start when user clicks microphone jpg */
-recordButton.addEventListener('click', record);
+/**
+ * Stops recording and sets up an html element for audio.
+ */
+function mediaRecorderStop() {
 
-/* variables for setting time limit */
-const startingMinutes = 15; //set this variable for desired time limit
-let time = startingMinutes * 60;
+    audioBlob = new Blob(chunks, { type: 'audio/mp3' });
+    audioURL = window.URL.createObjectURL(audioBlob);
 
-/* grabbing html element */
-const countDownTimer = document.getElementById('countDownTimer');
-setInterval(countdown, 1000);
-let startCountDown = false;
+    // recordingPage.attr("style", "display:none")
+    // info1Page.attr("style", "display:initial")
+    recordingPage.fadeOut(300, function () {
+        info1Page.fadeIn(300, function () {
+            wavesurfer.load(audioURL);
+        })
+    });
+
+    //Set up play button when ready
+    wavesurfer.on('ready', function () {
+        $("#playButton").attr("style", "display:initial")
+        $("#playButton").on('click', function () {
+            play();
+        });
+    });
+
+    //If the audio reaches the end, switch button to pause.
+    wavesurfer.on('finish', function () {
+        pause();
+    });
+
+    //reset to default
+    mediaRecorder = null;
+    chunks = [];
+}
+
 
 /**
  * setInterval calls this to set recording limit, 
@@ -130,55 +159,142 @@ function countdown() {
         const minutes = Math.floor(time / 60);
         let seconds = time % 60;
         seconds = seconds < 10 ? '0' + seconds : seconds;
-        countDownTimer.innerHTML = `${minutes}: ${seconds}`
+        countDownTimer.innerHTML = `${minutes}:${seconds}`
         time--;
         time = time < 0 ? 0 : time;
     }
 }
 
+
 /**
- * Removes audio hmtl and hides container. Deletes audioBlob.
+ * Play audio and switch click handler to pause 
  */
-function resetRecording() {
-    if (recordedAudioContainer.firstElementChild.tagName === 'AUDIO') {
-        recordedAudioContainer.firstElementChild.remove();
-        // hide recordedAudioContainer
-        recordedAudioContainer.classList.add('d-none');
-        recordedAudioContainer.classList.remove('d-flex');
-    }
-    audioBlob = null;
+function play() {
+    wavesurfer.play()
+    $("#playButton").text("Pause")
+    $("#playButton").on('click', function () {
+        pause()
+    });
 }
 
 /**
- * Wrapper for resetRecording with confirm dialogue.
- * Also resets form entry
+ * Pause audio and switch click handler to play 
  */
-discardAudioButton.onclick = function() {
-    if (confirm('Are you sure you want to discard the recording?')) {
-        resetRecording();
-        document.forms[0].reset()
+function pause() {
+    wavesurfer.pause()
+    $("#playButton").text("Play")
+    $("#playButton").on('click', function () {
+        play()
+    });
+}
+
+//event handler for moving from info 1 to info 2
+$("#info1NextButton").on('click', function () {
+    if (checkInfo1()) {
+        // switch to info2
+        wavesurfer.stop();
+        info1Page.fadeOut(300, function () { info2Page.fadeIn(300) });
+
+        // info1Page.attr("style", "display:none")
+        // info2Page.attr("style", "display:initial")
     }
+
+});
+
+//event handler for moving from info 1 to submission page
+$("#info1SubmitButton").on('click', function () {
+    if (checkInfo1()) {
+        // switch to submission page
+        wavesurfer.stop();
+        info1Page.fadeOut(300, function () { loadingPage.fadeIn(300) });
+
+        // info1Page.attr("style", "display:none")
+        // loadingPage.attr("style", "display:initial")
+        submitFormData()
+    }
+});
+
+//event handler for moving from info 2 to submission page
+$("#info2SubmitButton").on('click', function () {
+    checkInfo2()
+    // switch to submission page
+
+    // info2Page.attr("style", "display:none")
+    // loadingPage.attr("style", "display:initial")
+    info2Page.fadeOut(300, function () { loadingPage.fadeIn(300) });
+    submitFormData()
+});
+
+//event handler for moving from any page to an about page
+$("#aboutButton").on('click', function () {
+    if (recordingPage[0].style.display == "") {
+        console.log("on recording page");
+        currentPage = recordingPage;
+    } else if (info1Page[0].style.display == "") {
+        console.log("on info1Page page");
+        currentPage = info1Page;
+    } else if (info2Page[0].style.display == "") {
+        console.log("on info2Page page");
+        currentPage = info2Page;
+    } else if (submittedPage[0].style.display == "") {
+        console.log("on submittedPage page");
+        currentPage = submittedPage; 
+    }else{
+        return;
+    }
+    
+    currentPage.fadeOut(300, function () { aboutPage.fadeIn(300) });
+    aboutPage.find("#backButton").on("click", function (){
+        aboutPage.fadeOut(300, function () { currentPage.fadeIn(300) });
+    });
+});
+
+
+
+/**
+ * Checks that comments and title are filled out before moving to the next page
+ * @returns true if values exist, otherwise show error message and return false
+ */
+function checkInfo1() {
+    if ($("#comments").val() && $('#title').val()) {
+        //save values to global form including audio and hidden values
+        formData.append('audio', audioBlob, 'recording.mp3');
+
+        formData.append('title', $('#title').val().trim())
+        formData.append('comments', $('#comments').val().trim())
+        formData.append('project', document.getElementById("projectVal").value.trim())
+        formData.append('prompt', document.getElementById("prompt").value.trim())
+        return true;
+    } else {
+        //show error message
+        $('#errorMessage').attr("style", "display:initial")
+        return false;
+    }
+}
+
+/**
+ * Adds info from info page two to the formdata, 
+ * no checking needed because these values are optional.
+ */
+function checkInfo2() {
+    //save values to global form, no need to check for null
+    formData.append('fullName', $('#name').val().trim())
+    formData.append('email', $('#email').val().trim())
+    formData.append('phone', $('#phone').val().trim())
+    formData.append('postCode', $('#post').val().trim())
 }
 
 
 /**
- * Compiles formdata and adds audio file, then posts to route
- * if the response is 200, then we redirect to saved.html, 
+ * If the response is 200 (good), then we transition to the submitted page, 
  * otherwise alert and refresh.
  * 
- * This is a submit handler for the first form on the page (the main form)
+ * This is called when user hits a submit button.
  */
-document.forms[0].onsubmit = async(e) => {
-    e.preventDefault();
-    //to prevent the user from submitting multiple times, we disable the button
-    saveAudioButton.disabled = true;
-    formData = new FormData(document.forms[0])
-    formData.append('audio', audioBlob, 'recording.mp3');
-    //print form data
+function submitFormData() {
     for (const [key, value] of formData) {
         console.log(`${key}: ${value}\n`);
     }
-    update();
     let request = fetch('/insert', {
         method: 'POST',
         body: formData,
@@ -186,8 +302,10 @@ document.forms[0].onsubmit = async(e) => {
         //if our response is good, then redirect to saved
         if (response.status == 200) {
             // alert("Your Recording Saved!")
-            window.location.assign('/saved.html');
-        } else if(response.status == 401) {
+            // loadingPage.attr("style", "display:none")
+            // submittedPage.attr("style", "display:initial")
+            loadingPage.fadeOut(300, function () { submittedPage.fadeIn(300) });
+        } else if (response.status == 401) {
             alert("Invalid passkey selection recording not saved, try again");
         } else {
             throw "request failed";
@@ -197,24 +315,7 @@ document.forms[0].onsubmit = async(e) => {
         alert("Sorry! Something broke on our end!")
         window.location.assign('/');
     });
-};
-function update() {
-    var bar = document.getElementById("progressBar");
-    var status = document.getElementById("Progress_Status");
-    var text = document.getElementById("loadText");
+}
 
-    status.style.display = "block";
-    text.style.display = "block";
-    var width = 1;
-    var identity = setInterval(scene, 10);
-    function scene() {
-      if (width >= 100) {
-        clearInterval(identity);
-        update();
-      } else {
-        width++; 
-        bar.style.width = width  + "%"; 
-        bar.innerHTML = width + "%";
-      }
-    }
-  }
+
+
