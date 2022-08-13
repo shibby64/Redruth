@@ -79,9 +79,15 @@ function record() {
     // $("#recordText").text("Press Again to Stop Recording");
     $("#recordText").fadeOut(200, function() {
         $(this).text("Press Again to Stop Recording").fadeIn(200);
-      });
+    });
+
+    $("#recordButton").fadeOut(200, function () { $("#stopButton").fadeIn(200) });
     $("#recordButton").fadeOut(200, function () { $("#stopButton").fadeIn(200) });
 
+
+    $("#countDownTimer").addClass("redText");
+
+    $(".backgroundGradientRed").fadeIn(500, function () { $(".backgroundGradient").fadeOut(500) });
 
     if (!mediaRecorder) {
         // start recording
@@ -123,6 +129,8 @@ function mediaRecorderStop() {
 
     // recordingPage.attr("style", "display:none")
     // info1Page.attr("style", "display:initial")
+    $(".backgroundGradient").fadeIn(200, function () { $(".backgroundGradientRed").fadeOut(200) });
+
     recordingPage.fadeOut(300, function () {
         info1Page.fadeIn(300, function () {
             wavesurfer.load(audioURL);

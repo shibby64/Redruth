@@ -6,6 +6,7 @@
 
 body {
     overflow-x: hidden;
+    background: rgb(0,0,0);
     
 }
 
@@ -28,6 +29,20 @@ body {
     z-index: -101;
 }
 
+
+.backgroundGradientRed {
+    background: rgb(0,0,0);
+    background : linear-gradient(180deg, rgba(69, 26, 48, 1) 0%, rgba(67, 25, 46, 1) 0.71%, rgba(45, 18, 31, 1) 9.4%, rgba(28, 13, 19, 1) 19.58%, rgba(17, 9, 11, 1) 32.26%, rgba(10, 7, 6, 1) 50.05%);
+    /* background: linear-gradient(180deg, var(--blue) 00%, rgba(0, 0, 23) 100%); */
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -101;
+}
+
+
 .backgroundRadial {
     background-image: url("/images/background.png");
     width: 101vw;
@@ -41,6 +56,11 @@ body {
     background-size: 100vw;
 }
 
+
+.redText{
+    color: rgb(110, 42, 42) !important;
+    transition: all 0.9s ease-out 0s;
+}
 
 @media (min-width: 900px) {
     .backgroundRadial {
@@ -134,7 +154,7 @@ h2 {
     color: var(--blue-text-light);
     outline: none;
     border-radius: 120px;
-    background-color: rgb(30, 38, 49);
+    background-color: rgb(49, 30, 38);
     display: inline-block;
 }
 
@@ -147,13 +167,13 @@ h2 {
   
   @keyframes pulse{
     0%{
-      box-shadow: 0px 0px 39px 0px rgb(23, 43, 61, 0);
+      box-shadow: 0px 0px 39px 0px rgba(61, 23, 34, 0);
     }
     65%{
-      box-shadow: 0px 0px 39px 15px rgb(23, 43, 61, 1);
+      box-shadow: 0px 0px 39px 15px rgb(61, 23, 34);
     }
     90%{
-      box-shadow: 0px 0px 39px 15px rgb(23, 43, 61, 0);
+      box-shadow: 0px 0px 39px 15px rgba(61, 23, 34, 0);
     }
   }
 
