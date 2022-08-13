@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3({
+    region: 'eu-west-2',
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
@@ -17,6 +18,7 @@ const uploadAudio = (filename, bucketname, file) => {
 
         s3.upload(params, (err, data) => {
             if (err) {
+                console.log('S3 upload error');
                 reject(err)
             } else {
                 resolve(data.Location)
@@ -26,4 +28,3 @@ const uploadAudio = (filename, bucketname, file) => {
 }
 
 module.exports = uploadAudio
-

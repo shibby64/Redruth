@@ -1,3 +1,13 @@
+/**
+ * Summary.     Handles the routing and main database setup of the application.
+ *              
+ * Description. Some routes send a related html file, other routes send an 
+ *              API response for something to respond to. For example, 
+ *              uploading a recording sends a 200 response when complete.
+ *
+ */
+
+
 /* eslint-disable no-console */
 const path = require('path');
 const fs = require('fs');
@@ -8,7 +18,7 @@ const { ObjectId } = require('mongodb');
 require('dotenv').config();
 
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb+srv://dskrocks:a3blog@cluster0.0dnde.mongodb.net/?retryWrites=true&w=majority';//update this to remove usr/pw using .env
+const url = 'mongodb+srv://dskrocks:a3blog@cluster0.0dnde.mongodb.net/?retryWrites=true&w=majority'; //update this to remove usr/pw using .env
 
 const aws = require('aws-sdk');
 aws.config.region = 'eu-west-2';
@@ -19,79 +29,170 @@ const axios = require('axios');
 let dbArray = [];
 let aFile = 0;
 
-// What collection the app in looking at  
-var collection = 'Test';
-
-/* const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename(req, file, cb) {
-    const fileNameArr = file.originalname.split('.');
-    aFile = Date.now();
-    cb(null, `${aFile}.${fileNameArr[fileNameArr.length - 1]}`);
-  },
-}); */
-
 const storage = memoryStorage();
 const upload = multer({ storage });
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
 const port = process.env.PORT || 3000;
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }))
+
 app.use(express.static('public/assets'));
-//app.use(express.static('uploads'));
+
+
+/**
+ * Comment below when pushing to heroku
+ */
+
+// What collection in Mongo the app in looking at
+var collection = 'test';
+app.listen(port,'0.0.0.0', () => {
+    console.log(`App listening at http://localhost:${port}`);
+    
+});
+
+
+/**
+ * Uncomment below when pushing to heroku
+ */
+
+// var collection = 'Redruth Reading Room';
+
+// var enforce = require('express-sslify');
+// var http = require('http');
+// app.use(enforce.HTTPS({ trustProtoHeader: true }));
+
+// http.createServer(app).listen(port, () => {
+//         console.log('Express server listening on port ' + port);
+// });
+
+
+
+
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+    res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-/* create a filename for record using current date  */
-function filename() {
-  aFile = Date.now();
-  return (aFile + '.mp3');
-};
+/* listen page route */
+app.get('/listen.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/listen.html'));
+});
 
-app.post('/record', upload.single('audio'), async (req, res) => {
-  const bucketname = S3_BUCKET;
-  const file = req.file.buffer;
-  const fileName = filename();
-  const link = await uploadAudio(fileName, bucketname, file)
-  return res.json({ success: true});
+/* admin page route */
+app.get('/admin.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
+app.get('/saved.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/saved.html'));
 });
 
 
-app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
+
+
+/**
+ * if collection exists, swap to that collection
+ * otherwise create new and swap
+ */
+/* create new collection and update universal prompt */
+app.get('/updateCollection', (req, res) => {
+    var newCollectionName = req.query.collection;
+    MongoClient.connect(url, function(err, db) {
+        let existingCollection = false
+        if (err) throw err;
+        const dbase = db.db("Redruth");
+        dbase.listCollections().toArray(function(err, collectionList) {
+            //run through collections to check if the new one exists already
+            for (let i = 0; i < collectionList.length; i++) {
+                if (collectionList[i].name == newCollectionName) {
+                    console.log("Collection exists, swap global to new");
+                    collection = newCollectionName;   
+                    existingCollection = true;            
+                    break;  
+                }
+            }
+            //collection doesnt exist, so we create a new one 
+            if (existingCollection == false){
+                console.log("Collection does not exist, create new");
+                createNewTable(newCollectionName)
+            }
+        });
+    });
+    res.redirect('/admin.html');
+    // res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
-MongoClient.connect(url, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}, (err, client) => {
-  if (err) {
-    return console.log(err);
-  }
-  app.post("/insert", function (req, res) {
-    var title = req.body.title;
-    var comments = req.body.comments;
-    var prompt = req.body.prompt;
-    var project = req.body.project;
-    var postCode = req.body.postCode;
-    var fullName = req.body.fullName;
-    var email = req.body.email;
-    var phone = req.body.phone;
-    const timeStamp = TimeStamp();
-    var audio = `https://${S3_BUCKET}.s3.eu-west-2.amazonaws.com/` + aFile + ".mp3";
-    const public = false;
-    console.log(audio);
-    if (aFile != 0 && req.body.key === req.body.passkey)/* && req.body.key === req.body.passkey */ {
-      myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public);
-    }
-    aFile =0;
-  });
-  function TimeStamp() {
+/* create new collection and update global after creating*/
+function createNewTable(newCollectionName) {
+    /* working, however will crash when you attempt to create a collection that already exists */
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        const dbase = db.db("Redruth");
+        dbase.createCollection(newCollectionName, function(err, res) {
+            if (err) throw err;
+            collection = newCollectionName;
+        });
+    })
+}
+
+app.get('/updatePrompt', (req, res) => {
+    var prompt = req.query.prompt;
+    updateMongoDBPrompt(prompt);
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+})
+
+/* update prompt data in PromptData collection, prompt data read from index.html */
+function updateMongoDBPrompt(newPrompt) {
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        const dbase = db.db('Redruth');
+        dbase.collection('PromptData')
+            .updateOne({ '_id': ObjectId('62cccad3158754c692f78794') }, { $set: { Prompt: newPrompt } },
+                function(err, res) {
+                    if (err) throw err;
+                    console.log('Updated Prompt: ' + newPrompt);
+                });
+        /*dynamically updates admin page with prompt data*/
+        app.post('/saved', function(req, res) {
+            record.find().toArray(function(err, filed) {
+                return res.json({ success: true, filed });
+            });
+        });
+        /*dynamically updates admin and listen pages with story data*/
+        app.post('/metaArr', function(req, res) {
+            record.find().toArray(function(err, filed) {
+                return res.json({ success: true, filed });
+            });
+        });
+    });
+}
+
+/* get prompt from db */
+app.get('/prompt', (req, res) => {
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        const dbase = db.db('Redruth');
+        dbase.collection('PromptData').findOne({ '_id': ObjectId('62cccad3158754c692f78794') }, function(err, prompt) {
+            //console.log("prompt in /prompt get: " + prompt.Prompt);
+            if (err) {
+                console.log(err);
+                res.json(err);
+            } else {
+                res.json(prompt.Prompt);
+            }
+        })
+    });
+});
+
+
+/**
+ * Generates a timestamp string for the database entry.
+ * 
+ * @returns String 
+ */
+function TimeStamp() {
     const currentDate = new Date();
     var year = currentDate.getUTCFullYear();
     var month = currentDate.getUTCMonth();
@@ -99,126 +200,200 @@ MongoClient.connect(url, {
     var hour = currentDate.getUTCHours() + 1;
     var minute = currentDate.getUTCMinutes();
     if (minute < 10) {
-      minute = "0" + minute;
+        minute = "0" + minute;
     }
     if (hour === 24) {
-      hour = "0";
+        hour = "0";
     }
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year;//swap day month
-  }
-  // Specify database you want to access
-  const db = client.db('Redruth');
-    const record = db.collection(collection);//temp change to test new collection created with admin page
-    record.find().toArray(function (err, filed) {
-      //console.log(filed); // output all records
-      app.post('/metaArr', function (req, res) {
-        return res.json({ success: true, filed });
-      });
-      /* app.post('/saved', function (req, res) {
-        return res.json({ success: true, filed });
-      }); */
-    });
-  
-  function myFunction(title, comments, prompt, project, timeStamp, audio, postCode, fullName, email, phone, public) {
-    record.insertOne({
-      adminData: {
-        Project: project,
-        Prompt: prompt,
-        TimeStamp: timeStamp,
-      },
-      Audio: { url: audio },
-      metaData: {
-        Title: title,
-        Comments: comments,
-        PostalCode: postCode,
-        Name: fullName,
-        Email: email,
-        Phone: phone
-      },
-      Public: public
-    }, (err, result) => { });
-    console.log(`MongoDB Connected: ${url}`);
-  }
-  //location.reload();
-});
-
-/* listen page route */
-app.get('/listen.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/listen.html'));
-});
-/* admin page route */
-app.get('/admin.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/admin.html'));
-});
-app.get('/saved.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/saved.html'));
-});
-/* get info from admin form */
-app.get('/admin', (req, res) => {
-  var project = req.query.project;
-  var prompt = req.query.prompt;
-  //createNewTable(project, prompt); //TEMP NOT WORKING FOR BETA WEEKEND
-  //console.log("project" + project, "prompt" + prompt);//testing
-  console.log("disabled for beta weekend");
-});
-
-/* create new collection */
-function createNewTable(project, prompt) {
-  /* working, however will crash when you attempt to create a collection that already exists */
-  MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    const dbase = db.db("Redruth");
-    dbase.createCollection(project, function (err, res) {
-      if (err) throw err;
-      console.log("created collection");
-    });
-  });
+    return "" + hour + ":" + minute + " " + months[month] + " " + day + ", " + year; //swap day month
 }
-//update to get audio files from s3 bucket or try to get url from mongoDB
 
-/* gets record id to update public boolean from admin page */
-app.get('/updatePublic', (req, res) => {
-  var id = req.query.updatePublic;
-  updateTable(id);
-  res.redirect('back');
-  //res.sendFile(path.join(__dirname, 'public/admin.html'));
-});
+/**
+ * Takes upload request, formats it, then uploads the audio file. 
+ * Afterward, it sends all necessary data to the database. 
+ * 
+ * Replies 200 if everything worked
+ * 
+ * Try to respond 403 if something fails
+ * Something breaks when sending to the db, we have to 
+ * log the error and cant save the client
+ */
+app.post('/insert', upload.single('audio'), async(req, res, next) => {
+    //format request
+    let audio = {
+        title: req.body.title,
+        comments: req.body.comments,
+        prompt: req.body.prompt,
+        project: req.body.project,
+        postCode: req.body.postCode,
+        fullName: req.body.fullName,
+        email: req.body.email,
+        phone: req.body.phone,
+        timeStamp: TimeStamp(),
+        fileName: Date.now() + '.mp3',
+        public: false,
+        link: "",
+    }
+    audio.link = 'https://' + S3_BUCKET + '.s3.eu-west-2.amazonaws.com/' + audio.fileName;
 
-/* add public true to record ID */
-function updateTable(id) {
-  MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    const dbase = db.db('Redruth');
-    dbase.collection(collection)
-      .updateOne(
-        { '_id': ObjectId(id) },
-        { $set: { Public: true } },
-        function (err, res) {
-          if (err) throw err;
-          console.log('updated public flag for record ' + id);
+    //try to upload file, if it doesnt work, exit and dont send to db
+    try {
+      //upload file 
+      const file = req.file.buffer;
+      const link = await uploadAudio(audio.fileName, S3_BUCKET, file)
+
+    } catch (error) {
+      console.error(error);
+      res.sendStatus(403)
+      return;
+    }
+
+    //send to database
+    if (req.body.key === req.body.passkey) {
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            const dbase = db.db('Redruth');
+            const record = dbase.collection(collection);
+
+            record.insertOne({
+                adminData: {
+                    Project: audio.project,
+                    Prompt: audio.prompt,
+                    TimeStamp: audio.timeStamp,
+                },
+                Audio: { url: audio.link },
+                metaData: {
+                    Title: audio.title,
+                    Comments: audio.comments,
+                    PostalCode: audio.postCode,
+                    Name: audio.fullName,
+                    Email: audio.email,
+                    Phone: audio.phone
+                },
+                Public: audio.public
+            }).catch((error) => {
+                console.error(error);
+            });
         });
+        res.sendStatus(200)
+    } else {
+        res.sendStatus(403)
+    }
+});
+
+/*initial listen query for db data*/
+app.post('/metaArr', function(req, res) {
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        const dbase = db.db('Redruth');
+        const record = dbase.collection(collection);
+        record.find().toArray(function(err, filed) {
+            return res.json({ success: true, filed });
+        });
+    });
   });
-}
+  
+
+
+
+
+/**
+ * 
+ * ADMIN routes
+ * 
+ */
+
+/**
+ * Lists collections that store audio.
+ * 
+ * Does not list promptData
+ */
+app.get('/collections', (req, res) => {
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        const dbase = db.db('Redruth');
+        dbase.listCollections().toArray(function(err, collections) {
+
+            // We dont want to send the promptdata collection 
+            // because it isn't used for storing audio data
+            const filed = collections.filter((collection)=> {
+                if (collection.name != 'PromptData'){
+                    return collection;
+                } 
+            })
+            //we also want to setup which one is currently being used.
+            for (let i = 0; i < filed.length; i++) {
+                if (filed[i].name == collection) {
+                    filed[i].current = true;
+                } else{
+                    filed[i].current = false;
+                }
+            }
+            return res.json({ success: true, filed });
+        });
+    });
+});
+
+/*initial admin query for db data*/
+app.post('/saved', function(req, res) {
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        const dbase = db.db('Redruth');
+        const record = dbase.collection(collection);
+        record.find().toArray(function(err, filed) {
+            return res.json({ success: true, filed });
+        });
+    });
+});
+
 
 /* get record id from admin page to delete record */
 app.get('/deleteRecord', (req, res) => {
   var id = req.query.deletePublic;
-  deleteRecord(id);
-  res.redirect('back');
-  //res.sendFile(path.join(__dirname, 'public/admin.html'));
-});
-
-/* delete record from collection */
-function deleteRecord(id) {
-  MongoClient.connect(url, function (err, db) {
+  MongoClient.connect(url, function(err, db) {
     if (err) throw err;
-    const dbase = db.db('Redruth');//eliminates 'db.collection is not a function' TypeError
+    const dbase = db.db('Redruth'); //eliminates 'db.collection is not a function' TypeError
     dbase.collection(collection).deleteOne({ '_id': ObjectId(id) },
-      function (err, res) {
-        if (err) throw err;
-        console.log('deleted record ' + id);
-      }
+        function(err, res) {
+            if (err) throw err;
+            console.log('deleted record ' + id);
+        }
     );
   });
-}
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
+/* gets record id to update public boolean from admin page to false */
+app.get('/removePublic', (req, res) => {
+    var id = req.query.takeOffSite;
+    MongoClient.connect(url, function (err, db) {
+      if (err) throw err;
+      const dbase = db.db('Redruth');
+      dbase.collection(collection)
+        .updateOne({ '_id': ObjectId(id) }, { $set: { Public: false } },
+          function (err, res) {
+            if (err) throw err;
+            console.log('Set ' + id + " to private");
+          });
+    });
+    res.sendFile(path.join(__dirname, 'public/admin.html'));
+})
+
+/* gets record id to update public boolean from admin page to true */
+app.get('/updatePublic', (req, res) => {
+  var id = req.query.updatePublic;
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    const dbase = db.db('Redruth');
+    dbase.collection(collection)
+        .updateOne({ '_id': ObjectId(id) }, { $set: { Public: true } },
+            function(err, res) {
+                if (err) throw err;
+                console.log('Set ' + id + " to public");
+            });
+  });
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
+

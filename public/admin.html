@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page</title>
+    <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link href="\css\index.css" rel="stylesheet" />
@@ -13,50 +13,135 @@
 
 <body>
     <!-- admin form container -->
-    <h1 class="d-flex justify-content-center flex-nowrap">
-        Admin Page
-    </h1>
-    <hr>
+    <div class="container">
+        <div class="row">
+            <h1 class="display-4 mb-5">
+                Admin Dashboard
+            </h1>
+        </div>
+    </div>
 
     <!-- create new project -->
-    <div>
-        <h2 class="d-flex justify-content-center flex-nowrap">Create New Collection</h2>
-        <div class="d-flex justify-content-center flex-nowrap">
-            <form method="get" action="/admin" name="admin-data" id="admin" autocomplete="on">
-                <div>
-                    <label for="project">Collection</label>
-                    <input type="text" name="project" id="project" placeholder="Collection Name" required>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg col-sm-12 mb-3">
+                <h3 class="">Create New Collection</h3>
+                <div class="">
+                    <form method="get" action="/updateCollection" name="admin-data" id="admin" autocomplete="on">
+                        <div class="mb-3">
+
+                            <label for="collection" class="form-label" id="current">Current Collection:</label>
+
+                            <div class="input-group mb-3">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">Previous Collections</button>
+                                <ul class="dropdown-menu" id="collections-dropdown-menu">
+                                </ul>
+                                <input type="text" name="collection" id="collectionsUpdate" class="form-control"
+                                    aria-label="Aim for less than 140 characters."
+                                    placeholder="Aim for less than 140 characters.">
+                            </div>
+                        </div>
+                        <input class="btn btn-primary" type="submit" value="Submit">
+                    </form>
                 </div>
-                <br>
-                <div>
-                    <label for="prompt">Prompt</label>
-                    <input type="text" name="prompt" id="prompt" placeholder="Prompt" required>
+            </div>
+            <div class="col-lg col-sm-12">
+                <h3 class="">Update Current Prompt</h3>
+                <div class="">
+                    <form method="get" action="/updatePrompt" name="admin-data" id="admin" autocomplete="on">
+                        <label for="prompt" class="form-label">New Prompt Text:</label>
+                        <div class="input-group mb-3">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">Previous prompts</button>
+                            <ul class="dropdown-menu" id="dropdown-menu">
+                            </ul>
+                            <input type="text" name="prompt" id="promptUpdate" class="form-control"
+                                aria-label="Aim for less than 140 characters."
+                                placeholder="Aim for less than 140 characters.">
+                        </div>
+                        <input class="btn btn-primary" type="submit" value="Submit" onsubmit="updatePrompt()">
+                    </form>
                 </div>
-                <br>
-                <div class="d-flex justify-content-center flex-nowrap">
-                    <!-- <input type="submit" value="Submit"> -->
-                </div>
-            </form>
+            </div>
         </div>
+    </div>
     </div>
     <hr>
 
     <!-- select stories to share -->
-    <div>
-        <h2 class="d-flex justify-content-center flex-nowrap">Share Recordings on Public Site
-        </h2>
-        <div class="d-flex justify-content-center flex-nowrap">
-            <div id="collections">
+    <div class="mb-5">
+        <div id="collections" class="container">
+            <h2 class="mb-4">Share Recordings on Public Site</h2>
+            <label for="selectPrompt" class="col-form-label">Filter by Prompt:</label>
+            <select onchange="filterPrompt(this)" class="form-select form-select-lg mb-4" id="selectPrompt"
+                aria-label="selectPrompt">
+                <option value="">All Prompts</option>
+            </select>
+            <div class="row row-cols-auto g-4 justify-content-between" id="collectionContainer">
+                <div class="col" style="display:none" id="cardTemplate">
+                    <div class="card h-100" style="width: 18rem;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center ">
+                                <h5 class="card-title text-truncate pb-3">Title</h5>
+                                <h5 style=" margin-left: auto !important;"> <button class="btn btn-outline-danger"
+                                        id="trashButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                            <path
+                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                            <path fill-rule="evenodd"
+                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                        </svg></a></h5>
+                            </div>
 
+                            <p style="color:#ccc" class="mb-3 timestamp">0:50 Jul 12, 2022</p>
+                            <audio id="audio-player" style="border-radius:.25rem;width: 100%;" controls="controls"
+                                src="https://redruthrecords.s3.eu-west-2.amazonaws.com/1657825157704.mp3"
+                                type="audio/mpeg"></audio>
+                            <p class="card-text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                                do
+                                eiusmod tempor
+                                incididunt
+                                ut labore et dolore magna aliqua.</p>
+
+                            <div class="btn-group mb-3" role="group" aria-label="Basic example">
+                                <button class="btn btn-primary" id="publicButton">Make Public</button>
+                                <button type="button" id="collapseButton" class="btn btn-outline-dark"
+                                    data-bs-toggle="collapse" href="#collapse" role="button" aria-expanded="false"
+                                    aria-controls="collapse">
+                                    More Data <span class="badge bg-secondary">5</span>
+                                </button>
+                            </div>
+
+                            <div class="collapse" id="collapse">
+                                <div class="card card-body">
+                                    <p id="postal">PostalCode:</p>
+                                    <p id="name">Name:</p>
+                                    <p id="email">Email:</p>
+                                    <p id="phone">Phone:</p>
+                                    <p id="prompt">Prompt:</p>
+                                    <a id="url" href="#">Audio Link</a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted cardID">_id: </small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- <input type="submit" value="add checked records to public site"> -->
+    </div>
 
-    </div>
-    </div>
+
+
     <script src="/js/checkbox.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/js/admin.js"></script>
+    <script src="/js/prompt.js"></script>
 </body>
 
 </html>
