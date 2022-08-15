@@ -33,7 +33,9 @@
 <body class="d-flex flex-column h-100">
   <div class="backgroundRadial">
   </div>
-  <div class="backgroundBlue">
+  <div class="backgroundGradient">
+  </div>
+  <div class="backgroundGradientRed" style="display: none;" >
   </div>
   <!-- header -->
   <header class="mt-3">
@@ -79,15 +81,13 @@
           <!-- stopButton -->
           <a href="#" id="stopButton" class="mx-auto buttonGradient Rec" style="display:none;" onclick="record()">
             <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-stop-fill"
-              viewBox="0 0 16 16">
-              <path
-                d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z" />
+              viewBox="0 0 16 16"><path d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z" />
             </svg>
           </a>
         </div>
-        <div class="col-12 text-center mt-4 mb-5" id="buttonText">
+        <div class="col-12 text-center mt-5 mb-5" id="buttonText">
           <h6 class="mb-3" id="recordText">Press to Start Recording</h6>
-          <h6 id="countDownTimer">15:00</h6>
+          <h5 id="countDownTimer">15:00</h5>
         </div>
 
       </div>
@@ -100,8 +100,18 @@
       <div class="row justify-content-around align-content-center flex-wrap main-content">
         <div class="col-12 text-center">
           <div class="smallwidth">
-            <div id="waveform" class="mb-2"></div>
-            <a href="#" class="btn round-button-small" id="playButton" style="display:none;">Play</a>
+            <div class="row text-center">
+              <div class="col-9"><div id="waveform" class="mb-2"></div></div>
+              <div class="col-3">
+                <a href="#" class="btn round-button-small" id="playButton" style="display:none; "><svg xmlns="http://www.w3.org/2000/svg" width="60" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16"> <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/> </svg></a>
+                <br>
+                <a href="#" class="btn round-button-small" style="margin-top: 20px" onclick="discard()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
             <h6 class="mt-3 text-center showPrompt">
 
             </h6>
@@ -124,7 +134,7 @@
             <p>Please fill out both Title and Comments</p>
           </div>
           <div class="mb-3 col-12 text-center">
-            <button type="button" class="btn round-button" id="info1NextButton">Add More Info</button>
+            <button type="button" class="btn round-button" id="info1NextButton">Add Contact Info</button>
             <button type="button" class="btn round-button" id="info1SubmitButton">Submit</button>
           </div>
         </div>

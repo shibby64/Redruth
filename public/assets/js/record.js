@@ -33,9 +33,9 @@ let currentPage = null;
 let wavesurfer = WaveSurfer.create({
     container: document.querySelector('#waveform'),
     barWidth: 4,
-    height: 64,
-    waveColor: 'rgb(20, 20, 51)',
-    progressColor: 'rgba(21, 0, 191, 1)',
+    height: 82,
+    waveColor: 'rgb(40, 43, 47)',
+    progressColor: '#dee5f3',
     barRadius: 2,
     normalize: true,
     barHeight: 1,
@@ -79,9 +79,15 @@ function record() {
     // $("#recordText").text("Press Again to Stop Recording");
     $("#recordText").fadeOut(200, function() {
         $(this).text("Press Again to Stop Recording").fadeIn(200);
-      });
+    });
+
+    $("#recordButton").fadeOut(200, function () { $("#stopButton").fadeIn(200) });
     $("#recordButton").fadeOut(200, function () { $("#stopButton").fadeIn(200) });
 
+
+    $("#countDownTimer").addClass("redText");
+
+    $(".backgroundGradientRed").fadeIn(500, function () { $(".backgroundGradient").fadeOut(500) });
 
     if (!mediaRecorder) {
         // start recording
@@ -123,6 +129,8 @@ function mediaRecorderStop() {
 
     // recordingPage.attr("style", "display:none")
     // info1Page.attr("style", "display:initial")
+    $(".backgroundGradient").fadeIn(200, function () { $(".backgroundGradientRed").fadeOut(200) });
+
     recordingPage.fadeOut(300, function () {
         info1Page.fadeIn(300, function () {
             wavesurfer.load(audioURL);
@@ -171,7 +179,7 @@ function countdown() {
  */
 function play() {
     wavesurfer.play()
-    $("#playButton").text("Pause")
+    document.getElementById("playButton").innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="24" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/></svg>';
     $("#playButton").on('click', function () {
         pause()
     });
@@ -182,11 +190,23 @@ function play() {
  */
 function pause() {
     wavesurfer.pause()
-    $("#playButton").text("Play")
+    document.getElementById("playButton").innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16"> <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/> </svg>';
+
     $("#playButton").on('click', function () {
         play()
     });
 }
+
+/**
+ * Pause audio and switch click handler to play 
+ */
+ function discard() {
+    if(confirm("Are you sure you want to discard your recorded audio?")){
+        window.location.reload()
+    }
+}
+
+
 
 //event handler for moving from info 1 to info 2
 $("#info1NextButton").on('click', function () {
