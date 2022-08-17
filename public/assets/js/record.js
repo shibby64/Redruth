@@ -277,21 +277,32 @@ $("#aboutButton").on('click', function () {
  * @returns true if values exist, otherwise show error message and return false
  */
 function checkInfo1() {
+    /*this is used to swap between title and comments being optional or mandatory
+    the comments let you know how to switch it*/
     if ($("#comments").val() && $('#title').val()) {
         //save values to global form including audio and hidden values
         formData.append('audio', audioBlob, 'recording.mp3');
-
         formData.append('title', $('#title').val().trim())
         formData.append('comments', $('#comments').val().trim())
         formData.append('project', document.getElementById("projectVal").value.trim())
         formData.append('prompt', document.getElementById("prompt").value.trim())
         return true;
     } else {
+        /*Currently accepts audio if title and comments are empty, if they are intended
+        to be mandatory comment in errorMessage and return false line comment out 
+        everything else*/
         //show error message
-        $('#errorMessage').attr("style", "display:initial")
-        return false;
+        //$('#errorMessage').attr("style", "display:initial")
+        //return false;
+        formData.append('audio', audioBlob, 'recording.mp3');
+        formData.append('title', "")
+        formData.append('comments', "")
+        formData.append('project', document.getElementById("projectVal").value.trim())
+        formData.append('prompt', document.getElementById("prompt").value.trim())
+        return true;
     }
 }
+
 
 /**
  * Adds info from info page two to the formdata, 
