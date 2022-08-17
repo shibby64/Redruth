@@ -87,7 +87,7 @@ function record() {
 
     $("#countDownTimer").addClass("redText");
 
-    $(".backgroundGradientRed").fadeIn(500, function () { $(".backgroundGradient").fadeOut(500) });
+    $(".backgroundGradientRed").fadeIn(500);
 
     if (!mediaRecorder) {
         // start recording
@@ -129,7 +129,8 @@ function mediaRecorderStop() {
 
     // recordingPage.attr("style", "display:none")
     // info1Page.attr("style", "display:initial")
-    $(".backgroundGradient").fadeIn(200, function () { $(".backgroundGradientRed").fadeOut(200) });
+    $(".backgroundGradientRed").fadeOut(200)
+
 
     recordingPage.fadeOut(300, function () {
         info1Page.fadeIn(300, function () {
