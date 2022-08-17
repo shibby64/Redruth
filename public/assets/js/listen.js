@@ -82,7 +82,7 @@ function metaData(publicStories) {
         timeStamp.appendChild(timeStampNode);
         recordingElement.append(timeStamp);
         /*-----------------------------------------------------------*/
-        if (publicStories[m].metaData.PostalCode !== "") {
+        if (publicStories[m].metaData.PostalCode !== null && publicStories[m].metaData.PostalCode !== "") {
             const postCode = document.createElement('p');
             postCode.classList.add('metaDataStyle');
             const postCodeNode = document.createTextNode("* Post Code: " + publicStories[m].metaData.PostalCode);
