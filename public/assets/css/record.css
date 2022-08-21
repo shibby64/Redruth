@@ -179,18 +179,18 @@ h2 {
 @-webkit-keyframes sploosh {
     0% {
         box-shadow: 0 0 2px 0px rgba(38, 55, 81, .7);
-        background: rgba(66, 166, 223, .8);
+        background: rgba(66, 166, 223, .4);
     }
     60% {
         box-shadow: 0 0 2px 0px rgba(38, 55, 81, .55);
-        background: rgba(66, 166, 223, 6);
+        background: rgba(66, 166, 223, .5);
     }
     80% {
         box-shadow: 0 0 2px 0px rgba(38, 55, 81, .4);
-        background: rgba(66, 166, 223, .4);
+        background: rgba(66, 166, 223, .8);
     }
     100% {
-        background: rgba(66, 166, 223, .2);
+        background: rgba(66, 166, 223, 1);
         box-shadow: 0 0 2px 15px rgba(38, 55, 81, 0);
     }
 }
