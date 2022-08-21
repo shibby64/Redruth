@@ -7,10 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Record</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <link href="\css\index2.css" rel="stylesheet" />
+    <link href="\css\record.css" rel="stylesheet" />
 </head>
 
 <body class="pt-5">
+  <div class="backgroundGradient">
+  </div>
     <div class="container">
         <h1 class="text-center metaDataStyle listen">Listen to Stories</h1>
         <hr>
@@ -23,12 +25,21 @@
         <span class="slider-control-next next" id="nxt" role="button">
           <img aria-hidden="true" src="images/next.PNG" alt="Next Slide Button">
         </span>
+        <div class="row text-center waves">
+          <div class="col-9"><div id="waveform2" class="mb-2"></div></div>
+          <div class="col-3">
+            <a href="#" class="btn round-button-small" id="playButton2" style="display:none; "><svg xmlns="http://www.w3.org/2000/svg" width="60" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16"> <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/> </svg></a>
+            <br>
+          </div>
+        </div>
     </div>
 
-
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/wavesurfer.js"></script>
     <script src="/js/listen.js"></script>
     <script src="/js/Slider.js"></script>
+
 </body>
 
 </html>

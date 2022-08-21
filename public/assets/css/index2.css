@@ -1,7 +1,37 @@
 
 body{
-    background-color: #3c3d3d;
-    color: white;
+  overflow-x: hidden;
+  background: rgb(0,0,0);
+}
+:root {
+  --blue: #172B3D;
+  --blue-med: rgb(40, 43, 47);
+  --blue-text-light: #dee5f3;
+  --blue-text-dark: rgb(145, 159, 177);
+}
+.backgroundGradient {
+  background: rgb(0,0,0);
+  background : linear-gradient(180deg, rgba(23, 43, 61, 1) 0%, rgba(18, 31, 42, 1) 7.84%, rgba(13, 20, 25, 1) 18.2%, rgba(10, 12, 14, 1) 31.1%, rgba(9, 7, 7, 1) 49.19%);
+  /* background: linear-gradient(180deg, var(--blue) 00%, rgba(0, 0, 23) 100%); */
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -101;
+}
+
+
+.backgroundGradientRed {
+  background: rgb(0,0,0);
+  background : linear-gradient(180deg, rgba(69, 26, 48, 1) 0%, rgba(67, 25, 46, 1) 0.71%, rgba(45, 18, 31, 1) 9.4%, rgba(28, 13, 19, 1) 19.58%, rgba(17, 9, 11, 1) 32.26%, rgba(10, 7, 6, 1) 50.05%);
+  /* background: linear-gradient(180deg, var(--blue) 00%, rgba(0, 0, 23) 100%); */
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -101;
 }
 #story{
     max-height: fit-content;

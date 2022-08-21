@@ -5,6 +5,7 @@
  *              and sends it to the page. 
  *              
  */
+
 const recordingsContainer = document.getElementById('story');
 
 //run metaGrab on load
@@ -55,6 +56,7 @@ function metaData(publicStories) {
     const promptNode = document.createTextNode("Prompt: " + publicStories[0].adminData.Prompt);
     prompt.appendChild(promptNode);
     recordingsContainer.append(prompt);
+
     for (let m = 0; m < publicStories.length; m++) {
         const recordingElement = document.createElement('div');
         if (m === 0) {
@@ -102,6 +104,39 @@ function metaData(publicStories) {
         recordingsContainer.appendChild(prv);
         recordingsContainer.appendChild(nxt);
     }
+    
+    // console.log(publicStories[0].Audio.url);
+    // wavesurfer.load(""+ publicStories[0].Audio.url);
 };
 
 // setTimeout(() => metaData(), 200);
+let wavesurfer = WaveSurfer.create({
+    container: document.querySelector('#waveform2'),
+    barWidth: 4,
+    height: 82,
+    waveColor: 'rgb(40, 43, 47)',
+    progressColor: '#dee5f3',
+    barRadius: 2,
+    normalize: true,
+    barHeight: 1,
+    barGap: .3,
+});
+function play() {
+    wavesurfer.play()
+    document.getElementById("playButton2").innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="24" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/></svg>';
+    $("#playButton2").on('click', function () {
+        pause(m)
+    });
+}
+
+/**
+ * Pause audio and switch click handler to play 
+ */
+function pause() {
+    wavesurfer.pause()
+    document.getElementById("playButton2").innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16"> <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/> </svg>';
+
+    $("#playButton2").on('click', function () {
+        play()
+    });
+}
