@@ -314,6 +314,9 @@ color: var(--blue-text-light);
 #info1NextButton{
     margin-right: 20px;
 }
+#playIcon {
+    text-align: center;
+}
 /*the following is styling specific to the listen page*/
 .listen {
     transform: translateX(10%);
