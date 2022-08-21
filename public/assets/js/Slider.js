@@ -1,3 +1,4 @@
+let placeHolder = 0;
 class Slider {
     constructor(sliderElem) {
         this.slider = sliderElem;
@@ -59,6 +60,12 @@ class Slider {
         }
     }
     next() {
+        placeHolder++;
+        if(placeHolder === publicStories.length){
+            placeHolder = 0;
+        }
+        wavesurfer.load(""+ publicStories[placeHolder].Audio.url);
+        console.log(publicStories[placeHolder])
         if (this.isSliding) return;
         this.isSliding = !this.isSliding;
         this.sliderItems[this.nextItemIndex].classList.add("next-item");
@@ -77,6 +84,12 @@ class Slider {
         }, 400);
     }
     prev() {
+        placeHolder--;
+        if(placeHolder < 0){
+            placeHolder = publicStories.length -1;
+        }
+        wavesurfer.load(""+ publicStories[placeHolder].Audio.url);
+        console.log(publicStories[placeHolder])
         if (this.isSliding) return;
         this.isSliding = !this.isSliding;
         this.sliderItems[this.prevItemIndex].classList.add("prev-item");

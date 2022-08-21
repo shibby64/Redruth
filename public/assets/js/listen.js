@@ -11,7 +11,7 @@ const recordingsContainer = document.getElementById('story');
 //run metaGrab on load
 metaGrab();
 
-
+let publicStories = [];
 /**
  * Asks /metaArr for required data and 
  * sends it to metaArr for later use
@@ -23,7 +23,7 @@ function metaGrab() {
         .then((object) => {
             if (object.success && object.filed) {
                 let j = 0;
-                let publicStories = [];
+                
                 //for every element in recieved data, get public items and add to publicStories
                 for (i = 0; i < object.filed.length; i++) {
                     if (object.filed[i].Public) {
@@ -39,8 +39,20 @@ function metaGrab() {
         })
         .catch((err) => console.error(err));
 }
-
-
+let wavesurfer = WaveSurfer.create({
+    container: document.querySelector('#waveform2'),
+    barWidth: 4,
+    height: 82,
+    waveColor: 'rgb(40, 43, 47)',
+    progressColor: '#dee5f3',
+    barRadius: 2,
+    normalize: true,
+    barHeight: 1,
+    barGap: .3,
+    backend: 'MediaElement',
+    mode: 'no-cors'
+});
+// export { stories, wavesurfer};
 /**
  * Used for setting up html for display on the listen page
  */
@@ -106,26 +118,30 @@ function metaData(publicStories) {
     }
     
     // console.log(publicStories[0].Audio.url);
-    // wavesurfer.load(""+ publicStories[0].Audio.url);
+    wavesurfer.load(""+ publicStories[0].Audio.url);
+    //Set up play button when ready
+    wavesurfer.on('ready', function () {
+        $("#playButton2").attr("style", "display:initial")
+        $("#playButton2").on('click', function () {
+            play();
+        });
+    });
+
+    //If the audio reaches the end, switch button to pause.
+    wavesurfer.on('finish', function () {
+        pause();
+    });
+
+
 };
 
 // setTimeout(() => metaData(), 200);
-let wavesurfer = WaveSurfer.create({
-    container: document.querySelector('#waveform2'),
-    barWidth: 4,
-    height: 82,
-    waveColor: 'rgb(40, 43, 47)',
-    progressColor: '#dee5f3',
-    barRadius: 2,
-    normalize: true,
-    barHeight: 1,
-    barGap: .3,
-});
+
 function play() {
     wavesurfer.play()
     document.getElementById("playButton2").innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="24" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/></svg>';
     $("#playButton2").on('click', function () {
-        pause(m)
+        pause()
     });
 }
 

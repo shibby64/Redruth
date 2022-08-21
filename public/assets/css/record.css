@@ -179,7 +179,7 @@ h2 {
   @-webkit-keyframes sploosh {
     0% {
       box-shadow: 0 0 2px 0px rgba(38, 55, 81, .7);
-      background: rgba(38, 55, 81, .7);
+      background: rgba(153, 177, 215, .8);
     }
     80% {
       background: rgba(66, 166, 223, 0);
@@ -287,9 +287,15 @@ color: var(--blue-text-light);
     transform: translateX(10%);
 }
 .waves{
-    z-index: 190;
+    z-index: 10;
     position: relative;
-    top:50vh;
+    top:35vh;
+    width:93%;
+    left:2%;
+}
+.playButton2{
+    float: left;
+    transform: translateY(65%);
 }
 #audio-player {
     margin-left: 40px;
