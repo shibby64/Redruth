@@ -179,18 +179,18 @@ h2 {
 @-webkit-keyframes sploosh {
     0% {
         box-shadow: 0 0 2px 0px rgba(38, 55, 81, .7);
-        background: rgba(153, 177, 215, .8);
+        background: rgba(66, 166, 223, .8);
     }
     60% {
         box-shadow: 0 0 2px 0px rgba(38, 55, 81, .55);
-        background: rgba(153, 177, 215, .6);
+        background: rgba(66, 166, 223, 6);
     }
     80% {
         box-shadow: 0 0 2px 0px rgba(38, 55, 81, .4);
         background: rgba(66, 166, 223, .4);
     }
     100% {
-        background: rgba(66, 166, 223, 0.2);
+        background: rgba(66, 166, 223, .2);
         box-shadow: 0 0 2px 15px rgba(38, 55, 81, 0);
     }
 }
@@ -279,7 +279,7 @@ color: var(--blue-text-light);
 
 .highlight-button{
     animation-name: sploosh;
-    animation-duration: 1.5s;
+    animation-duration: 1s;
     animation-iteration-count: infinite;
     animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
     color: #1b1c1f !important;
