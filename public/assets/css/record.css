@@ -307,7 +307,7 @@ color: var(--blue-text-light);
 
 .highlight-button{
     animation-name: sploosh;
-    animation-duration: 1s;
+    animation-duration: 3s;
     animation-iteration-count: infinite;
     animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
     color: #1b1c1f !important;
