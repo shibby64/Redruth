@@ -182,13 +182,15 @@ h2 {
         background: rgba(153, 177, 215, .8);
     }
     60% {
+        box-shadow: 0 0 2px 0px rgba(38, 55, 81, .55);
         background: rgba(153, 177, 215, .6);
     }
     80% {
+        box-shadow: 0 0 2px 0px rgba(38, 55, 81, .4);
         background: rgba(66, 166, 223, .4);
     }
     100% {
-        background: rgba(35, 89, 121, 0.3);
+        background: rgba(66, 166, 223, 0.2);
         box-shadow: 0 0 2px 15px rgba(38, 55, 81, 0);
     }
 }
