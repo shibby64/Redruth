@@ -178,47 +178,36 @@ h2 {
 }
 @-webkit-keyframes sploosh {
     0% {
-        box-shadow: 0 0 1px 1px rgba(38, 55, 81, .3);
-        background: rgba(66, 166, 223, 1);
+        box-shadow: 0 0 1px 1px rgba(38, 55, 81, .5);
     }
     10% {
-        box-shadow: 0 0 2px 2px rgba(38, 55, 81, .3);
-        background: rgba(66, 166, 223, 1);
+        box-shadow: 0 0 2px 2px rgba(38, 55, 81, .5);
     }
     20% {
-        box-shadow: 0 0 2px 5px rgba(38, 55, 81, .3);
-        background: rgba(66, 166, 223, 1);
+        box-shadow: 0 0 2px 5px rgba(38, 55, 81, .5);
     }
     30% {
-        box-shadow: 0 0 4px 8px rgba(38, 55, 81, .4);
-        background: rgba(66, 166, 223, 1);
+        box-shadow: 0 0 4px 8px rgba(38, 55, 81, .5);
     }
     40% {
-        box-shadow: 0 0 5px 11px rgba(38, 55, 81, .4);
-        background: rgba(66, 166, 223, 1);
+        box-shadow: 0 0 5px 11px rgba(38, 55, 81, .5);
     }
     50% {
-        box-shadow: 0 0 8px 15px rgba(38, 55, 81, .4);
-        background: rgba(66, 166, 223, 1);
+        box-shadow: 0 0 8px 15px rgba(38, 55, 81, .5);
     }
     60% {
-        box-shadow: 0 0 5px 11px rgba(38, 55, 81, .4);
-        background: rgba(66, 166, 223, 1);
+        box-shadow: 0 0 5px 11px rgba(38, 55, 81, .5);
     }
     70% {
-        box-shadow: 0 0 4px 8px rgba(38, 55, 81, .4);
-        background: rgba(66, 166, 223, 1);
+        box-shadow: 0 0 4px 8px rgba(38, 55, 81, .5);
     }
     80% {
         box-shadow: 0 0 2px 5px rgba(38, 55, 81, .5);
-        background: rgba(66, 166, 223, 1);
     }
     90% {
         box-shadow: 0 0 2px 2px rgba(38, 55, 81, .5);
-        background: rgba(66, 166, 223, 1);
     }
     100% {
-        background: rgba(66, 166, 223, 1);
         box-shadow: 0 0 1px 1px rgba(38, 55, 81, .5);
     }
 }
@@ -304,9 +293,12 @@ hr {
 #about{
 color: var(--blue-text-light);
 }
-@media screen and (max-width: 450px) {
-    #trash {
-        margin-left: 27%;
+@media screen and (max-height: 740px) {
+    #waveContainer {
+        margin-top: 3vh;
+    }
+    #replayPrompt {
+        display: none;
     }
 }
 

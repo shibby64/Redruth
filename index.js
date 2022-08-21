@@ -47,10 +47,10 @@ app.use(express.static('public/assets'));
 
 // What collection in Mongo the app in looking at
 // var collection = 'test';
-app.listen(port,'0.0.0.0', () => {
-    console.log(`App listening at http://localhost:${port}`);
+// app.listen(port,'0.0.0.0', () => {
+//     console.log(`App listening at http://localhost:${port}`);
     
-});
+// });
 
 
 /**
@@ -59,13 +59,13 @@ app.listen(port,'0.0.0.0', () => {
 
 var collection = 'Redruth Reading Room';
 
-// var enforce = require('express-sslify');
-// var http = require('http');
-// app.use(enforce.HTTPS({ trustProtoHeader: true }));
+var enforce = require('express-sslify');
+var http = require('http');
+app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
-// http.createServer(app).listen(port, () => {
-//         console.log('Express server listening on port ' + port);
-// });
+http.createServer(app).listen(port, () => {
+        console.log('Express server listening on port ' + port);
+});
 
 
 
