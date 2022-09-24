@@ -16,7 +16,7 @@ only be used by project adminstrators for requests to participate in future proj
 - `npm install` to grab all the required packages
 - `npm start` to start the project
 - The local site is now hosted at `localhost:3000`
-
+- Review comments in index.js to avoid issues with HTTPS and localhost
 
 #### Troubleshooting tips:
 - I am running `npm@8.5.5`
