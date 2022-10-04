@@ -12,6 +12,7 @@ only be used by project adminstrators for requests to participate in future proj
 ## Development setup
 
 - `git clone` with the url of the repo
+- ensure you have the latest version of node.js installed: https://nodejs.org/en/download/
 - `cd Redruth` into the new directory
 - `npm install` to grab all the required packages
 - `npm start` to start the project
