@@ -15,9 +15,9 @@ only be used by project adminstrators for requests to participate in future proj
 - ensure you have the latest version of node.js installed: https://nodejs.org/en/download/
 - `cd Redruth` into the new directory
 - `npm install` to grab all the required packages
+- Review comments in index.js to avoid issues with HTTPS and localhost
 - `npm start` to start the project
 - The local site is now hosted at `localhost:3000`
-
 
 #### Troubleshooting tips:
 - I am running `npm@8.5.5`
