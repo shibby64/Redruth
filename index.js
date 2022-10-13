@@ -18,7 +18,7 @@ const { ObjectId } = require('mongodb');
 require('dotenv').config();
 
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb+srv://dskrocks:a3blog@cluster0.0dnde.mongodb.net/?retryWrites=true&w=majority'; //update this to remove usr/pw using .env
+const url = 'mongodb+srv://RedruthTeam:mLUxBmvPUCgQkcW2@redruth.u5i4978.mongodb.net/test?retryWrites=true&w=majority'; //update this to remove usr/pw using .env
 
 const aws = require('aws-sdk');
 aws.config.region = 'eu-west-2';
@@ -174,7 +174,7 @@ app.get('/prompt', (req, res) => {
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         const dbase = db.db('Redruth');
-        dbase.collection('PromptData').findOne({ '_id': ObjectId('62cccad3158754c692f78794') }, function(err, prompt) {
+        dbase.collection('PromptData').findOne({ '_id': ObjectId('63486b7537c7cb55c3a4b83b') }, function(err, prompt) {
             //console.log("prompt in /prompt get: " + prompt.Prompt);
             if (err) {
                 console.log(err);
