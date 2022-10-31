@@ -12,13 +12,11 @@
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
+const mysql = require('mysql');
 const bodyParser = require("body-parser")
 const multer = require('multer');
-const { ObjectId } = require('mongodb');
-require('dotenv').config();
 
-const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb+srv://RedruthTeam:mLUxBmvPUCgQkcW2@redruth.u5i4978.mongodb.net/test?retryWrites=true&w=majority'; //update this to remove usr/pw using .env
+require('dotenv').config();
 
 const aws = require('aws-sdk');
 aws.config.region = 'eu-west-2';
@@ -28,6 +26,27 @@ const { memoryStorage } = require('multer');
 const axios = require('axios');
 let dbArray = [];
 let aFile = 0;
+
+// Create connection to mySQL db using variables in .env
+var connection = mysql.createConnection({
+    host     : process.env.RDS_HOSTNAME,
+    user     : process.env.RDS_USERNAME,
+    password : process.env.RDS_PASSWORD,
+    port     : process.env.RDS_PORT,
+    database : 'redruthdb',
+    ssl      : 'Amazon RDS'
+});
+
+// Attempt connection, log results
+connection.connect(function(err) {
+    if (err) {
+      console.error('Database connection failed: ' + err.stack);
+      return;
+    }
+  
+    console.log('Connected to database.');
+});
+
 
 const storage = memoryStorage();
 const upload = multer({ storage });
@@ -45,8 +64,6 @@ app.use(express.static('public/assets'));
  * Comment below when pushing to heroku
  */
 
-// What collection in Mongo the app in looking at
-// var collection = 'test';
 app.listen(port,'0.0.0.0', () => {
     console.log(`App listening at http://localhost:${port}`);
     
@@ -56,8 +73,6 @@ app.listen(port,'0.0.0.0', () => {
 /**
  * Uncomment below when pushing to heroku
  */
-
-var collection = 'Redruth Reading Room';
 
 // var enforce = require('express-sslify');
 // var http = require('http');
