@@ -26,12 +26,12 @@ async function getRecordings() {
   fetch('/saved', { method: 'POST' })
     .then((object) => object.json())
     .then((object) => {
-      if (object.success && object.filed) {
+      if (object.success && object.results) {
         // for all objects set up cards and add to various arrays
-        for (i = 0; i < object.filed.length; i++) {
-          recordings.push(object.filed[i]);
-          createCard(object.filed[i]);
-          prompts.add(object.filed[i].adminData.Prompt)
+        for (i = 0; i < object.results.length; i++) {
+          recordings.push(object.results[i]);
+          createCard(object.results[i]);
+          prompts.add(object.results[i].prompt)
         }
       }
     })
@@ -47,12 +47,12 @@ async function getCollections() {
   fetch('/collections', { method: 'GET' })
     .then((object) => object.json())
     .then((object) => {
-      if (object.success && object.filed) {
-        object.filed.forEach(collection => {
-          if (collection.current) {
-            document.getElementById("current").innerHTML = "Current Collection: <i>" +  collection.name + "</i>";
+      if (object.success && object.results) {
+        object.results.forEach(collection => {
+          if (collection) { // TODO currently uses the last created prompt as the default. will eventually need to query t_admin_cache with the user_id 
+            document.getElementById("current").innerHTML = "Current Collection: <i>" +  collection.title + "</i>";
           }
-          collections.push(collection.name)
+          collections.push(collection.title)
         });
       }
     })
@@ -134,7 +134,7 @@ function filterPrompt(selected){
 
   filteredRecordings = [];
   recordings.forEach(recording => {
-    if (recording.adminData.Prompt == selected.value) {
+    if (recording.prompt == selected.value) {
       filteredRecordings.push(recording)
     }
   });
@@ -156,68 +156,68 @@ function createCard(object) {
   htmlNode.setAttribute('id', object._id)
   htmlNode.setAttribute('class', "col item")
   //Clone the hidden template from the html
-  var newCard = $('#cardTemplate').clone().attr("id", object._id);
+  var newCard = $('#cardTemplate').clone().attr("id", object.file_id);
 
   //append new info from object
-  newCard.find(".card-title").text(object.metaData.Title)
-  newCard.find(".timestamp").text(object.adminData.TimeStamp)
-  newCard.find(".card-text").text(object.metaData.Comments)
-  newCard.find(".cardID").text("_id: " + object._id)
+  newCard.find(".card-title").text(object.title)
+  newCard.find(".timestamp").text(object.timestamp)
+  newCard.find(".card-text").text(object.remarks)
+  newCard.find(".cardID").text("file_id: " + object.file_id)
 
   let num = 6;
-  newCard.find("#prompt").text("Prompt: " + object.adminData.Prompt)
-  if (object.metaData.PostalCode) {
-    newCard.find("#postal").text("Postal Code: " + object.metaData.PostalCode)
+  newCard.find("#prompt").text("Prompt: " + object.prompt)
+  if (object.postal_code) {
+    newCard.find("#postal").text("Postal Code: " + object.postal_code)
   } else {
     newCard.find("#postal").remove();
     num--;
   }
 
-  if (object.metaData.Name) {
-    newCard.find("#name").text("Name: " + object.metaData.Name)
+  if (object.name) {
+    newCard.find("#name").text("Name: " + object.name)
   } else {
     newCard.find("#name").remove();
     num--;
   }
 
-  if (object.metaData.Email) {
-    newCard.find("#email").text("Email: " + object.metaData.Email)
+  if (object.email) {
+    newCard.find("#email").text("Email: " + object.email)
   } else {
     newCard.find("#email").remove();
     num--;
   }
 
-  if (object.metaData.Phone) {
-    newCard.find("#phone").text("Phone: " + object.metaData.Phone)
+  if (object.phone_num) {
+    newCard.find("#phone").text("Phone: " + object.phone_num)
   } else {
     newCard.find("#phone").remove();
     num--;
   }
   newCard.find(".badge").text("" + num)
 
-  newCard.find("#url").attr("href", object.Audio.url)
-  newCard.find("#audio-player").attr("src", object.Audio.url);
+  newCard.find("#url").attr("href", object.filepath)
+  newCard.find("#audio-player").attr("src", object.filepath);
 
 
 
-  newCard.find("#collapseButton").attr("href", "#collapse" + object._id);
-  newCard.find("#collapseButton").attr("aria-controls", "collapse" + object._id);
-  newCard.find("#collapse").attr("id", "collapse" + object._id);
+  newCard.find("#collapseButton").attr("href", "#collapse" + object.file_id);
+  newCard.find("#collapseButton").attr("aria-controls", "collapse" + object.file_id);
+  newCard.find("#collapse").attr("id", "collapse" + object.file_id);
 
   //wire up buttons, delete and public/unpublic
   //if object is public, then button says unpublic
   var publicButton = newCard.find("#publicButton")
-  if (object.Public) {
+  if (object.public_flg) {
     publicButton.attr("class", "btn btn-danger public")
     publicButton.text("Make Private")
-    publicButton.attr("onclick", "makePrivate('" + object._id + "')")
+    publicButton.attr("onclick", "makePrivate('" + object.file_id + "')")
   } else {
     publicButton.attr("class", "btn btn-success public")
     publicButton.text("Make Public")
-    publicButton.attr("onclick", "makePublic('" + object._id + "')")
+    publicButton.attr("onclick", "makePublic('" + object.file_id + "')")
   }
 
-  newCard.find("#trashButton").attr("onclick", "deleteRecording('" + object._id + "')")
+  newCard.find("#trashButton").attr("onclick", "deleteRecording('" + object.file_id + "')")
   //append the new html to the container
   htmlNode.innerHTML = newCard[0].innerHTML;
   document.getElementById("collectionContainer").appendChild(htmlNode);
