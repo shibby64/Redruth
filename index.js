@@ -114,71 +114,44 @@ app.get('/saved.html', (req, res) => {
 /* create new collection and update universal prompt */
 app.get('/updateCollection', (req, res) => {
     var newCollectionName = req.query.collection;
-    MongoClient.connect(url, function(err, db) {
-        let existingCollection = false
-        if (err) throw err;
-        const dbase = db.db("Redruth");
-        dbase.listCollections().toArray(function(err, collectionList) {
-            //run through collections to check if the new one exists already
-            for (let i = 0; i < collectionList.length; i++) {
-                if (collectionList[i].name == newCollectionName) {
-                    console.log("Collection exists, swap global to new");
-                    collection = newCollectionName;   
-                    existingCollection = true;            
-                    break;  
-                }
-            }
-            //collection doesnt exist, so we create a new one 
-            if (existingCollection == false){
-                console.log("Collection does not exist, create new");
-                createNewTable(newCollectionName)
-            }
-        });
+    connection.query('SELECT 1 FROM t_collection WHERE nme = ', [newCollectionName], function (error, results, fields) {
+        if (error) throw error;
+        if (results) {
+            alert('Collection already exists!');
+        } else {
+            connection.query('INSERT INTO t_collection (user_id, title, description, public_flg) VALUES (1, "Hello World", "Hello World 2", false)', function (error, results, fields) {
+                if (error) throw error;
+            });
+        }
+
     });
+
     res.redirect('/admin.html');
     // res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
-/* create new collection and update global after creating*/
-function createNewTable(newCollectionName) {
-    /* working, however will crash when you attempt to create a collection that already exists */
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        const dbase = db.db("Redruth");
-        dbase.createCollection(newCollectionName, function(err, res) {
-            if (err) throw err;
-            collection = newCollectionName;
-        });
-    })
-}
-
 app.get('/updatePrompt', (req, res) => {
     var prompt = req.query.prompt;
-    updateMongoDBPrompt(prompt);
+    updatePrompt(prompt);
     res.sendFile(path.join(__dirname, 'public/index.html'));
 })
 
 /* update prompt data in PromptData collection, prompt data read from index.html */
-function updateMongoDBPrompt(newPrompt) {
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        const dbase = db.db('Redruth');
-        dbase.collection('PromptData')
-            .updateOne({ '_id': ObjectId('62cccad3158754c692f78794') }, { $set: { Prompt: newPrompt } },
-                function(err, res) {
-                    if (err) throw err;
-                    console.log('Updated Prompt: ' + newPrompt);
-                });
+function updatePrompt(newPrompt) {
+    connection.query('UPDATE t_prompt SET prompt = ?', [newPrompt], function (error, results, fields) {
+        if (error) throw error;
         /*dynamically updates admin page with prompt data*/
         app.post('/saved', function(req, res) {
-            record.find().toArray(function(err, filed) {
-                return res.json({ success: true, filed });
+            connection.query('SELECT * FROM t_prompt', function (error, results, fields) {
+                if (error) throw error;
+                return res.json({ success: true, results});
             });
         });
         /*dynamically updates admin and listen pages with story data*/
         app.post('/metaArr', function(req, res) {
-            record.find().toArray(function(err, filed) {
-                return res.json({ success: true, filed });
+            connection.query('SELECT * FROM t_prompt', function (error, results, fields) {
+                if (error) throw error;
+                return res.json({ success: true, results});
             });
         });
     });
@@ -186,18 +159,9 @@ function updateMongoDBPrompt(newPrompt) {
 
 /* get prompt from db */
 app.get('/prompt', (req, res) => {
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        const dbase = db.db('Redruth');
-        dbase.collection('PromptData').findOne({ '_id': ObjectId('63486b7537c7cb55c3a4b83b') }, function(err, prompt) {
-            //console.log("prompt in /prompt get: " + prompt.Prompt);
-            if (err) {
-                console.log(err);
-                res.json(err);
-            } else {
-                res.json(prompt.Prompt);
-            }
-        })
+    connection.query('SELECT * FROM t_prompt LIMIT 1', function (error, results, fields) {
+        if (error) throw error;
+        res.json(results[0].prompt); // sends a JSON response containing the first prompt.
     });
 });
 
@@ -256,56 +220,32 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
     try {
       //upload file 
       const file = req.file.buffer;
-      const link = await uploadAudio(audio.fileName, S3_BUCKET, file)
+      link = await uploadAudio(audio.fileName, S3_BUCKET, file);
 
     } catch (error) {
       console.error(error);
-      res.sendStatus(403)
+      res.sendStatus(403);
       return;
     }
 
     //send to database
-    if (req.body.key === req.body.passkey) {
-        MongoClient.connect(url, function(err, db) {
-            if (err) throw err;
-            const dbase = db.db('Redruth');
-            const record = dbase.collection(collection);
-
-            record.insertOne({
-                adminData: {
-                    Project: audio.project,
-                    Prompt: audio.prompt,
-                    TimeStamp: audio.timeStamp,
-                },
-                Audio: { url: audio.link },
-                metaData: {
-                    Title: audio.title,
-                    Comments: audio.comments,
-                    PostalCode: audio.postCode,
-                    Name: audio.fullName,
-                    Email: audio.email,
-                    Phone: audio.phone
-                },
-                Public: audio.public
-            }).catch((error) => {
-                console.error(error);
-            });
+    connection.query('INSERT INTO t_user (email, name, phone_num, postal_code, usertype) VALUES (?, ?, ?, ?, 3)', [audio.email, audio.fullName, audio.phone, audio.postCode], function (error, results, fields) { // TODO create a sproc to do this
+        if (error) throw error;
+        var insertid = results.insertId
+        connection.query('INSERT INTO t_audio_file (user_id, prompt_id, filepath, timestamp, title, remarks, public_flg) VALUES (?, 1, ?, ?, ?, ?, ?)', [insertid, audio.link, audio.timeStamp, audio.title, audio.comments, audio.public], function (error, results, fields) { // TODO create a sproc to do this
+            if (error) throw error;
         });
-        res.sendStatus(200)
-    } else {
-        res.sendStatus(403)
-    }
+    });
+
+
+    res.sendStatus(200);
 });
 
 /*initial listen query for db data*/
 app.post('/metaArr', function(req, res) {
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        const dbase = db.db('Redruth');
-        const record = dbase.collection(collection);
-        record.find().toArray(function(err, filed) {
-            return res.json({ success: true, filed });
-        });
+    connection.query('SELECT t_collection.title AS collection_name, t_audio_file.title AS audio_name, t_audio_file.public_flg AS public_flg, t_prompt.prompt AS prompt, t_audio_file.remarks AS remarks, t_audio_file.timestamp AS timestamp, t_user.postal_code AS postal_code, t_audio_file.filepath AS filepath FROM t_audio_file JOIN t_user on t_audio_file.user_id = t_user.user_id JOIN t_prompt ON t_audio_file.prompt_id = t_prompt.prompt_id JOIN t_collection ON t_prompt.collection_id = t_collection.collection_id', function (error, results, fields) {
+        if (error) throw error;
+        return res.json({ success: true, results});
     });
   });
   
@@ -325,90 +265,48 @@ app.post('/metaArr', function(req, res) {
  * Does not list promptData
  */
 app.get('/collections', (req, res) => {
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        const dbase = db.db('Redruth');
-        dbase.listCollections().toArray(function(err, collections) {
-
-            // We dont want to send the promptdata collection 
-            // because it isn't used for storing audio data
-            const filed = collections.filter((collection)=> {
-                if (collection.name != 'PromptData'){
-                    return collection;
-                } 
-            })
-            //we also want to setup which one is currently being used.
-            for (let i = 0; i < filed.length; i++) {
-                if (filed[i].name == collection) {
-                    filed[i].current = true;
-                } else{
-                    filed[i].current = false;
-                }
-            }
-            return res.json({ success: true, filed });
-        });
+    connection.query('SELECT * FROM t_collection', function (error, results, fields) {
+        if (error) throw error;
+        return res.json({ success: true, results});
     });
 });
 
 /*initial admin query for db data*/
 app.post('/saved', function(req, res) {
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        const dbase = db.db('Redruth');
-        const record = dbase.collection(collection);
-        record.find().toArray(function(err, filed) {
-            return res.json({ success: true, filed });
-        });
+    connection.query('SELECT * FROM t_audio_file JOIN t_user ON t_audio_file.user_id = t_user.user_id JOIN t_prompt ON t_audio_file.prompt_id = t_prompt.prompt_id', function (error, results, fields) {
+        if (error) throw error;
+        return res.json({ success: true, results});
     });
 });
 
 
 /* get record id from admin page to delete record */
 app.get('/deleteRecord', (req, res) => {
-  var id = req.query.deletePublic;
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    const dbase = db.db('Redruth'); //eliminates 'db.collection is not a function' TypeError
-    dbase.collection(collection).deleteOne({ '_id': ObjectId(id) },
-        function(err, res) {
-            if (err) throw err;
-            console.log('deleted record ' + id);
-        }
-    );
-  });
-  res.sendFile(path.join(__dirname, 'public/admin.html'));
+    var file_id = req.query.deletePublic;
+    connection.query('DELETE FROM t_audio_file WHERE file_id = ?', [file_id], function (error, results, fields) {
+        if (error) throw error;
+        console.log('deleted record ' + file_id);
+        return res.json({ success: true, results});
+    });
+    res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
 /* gets record id to update public boolean from admin page to false */
 app.get('/removePublic', (req, res) => {
     var id = req.query.takeOffSite;
-    MongoClient.connect(url, function (err, db) {
-      if (err) throw err;
-      const dbase = db.db('Redruth');
-      dbase.collection(collection)
-        .updateOne({ '_id': ObjectId(id) }, { $set: { Public: false } },
-          function (err, res) {
-            if (err) throw err;
-            console.log('Set ' + id + " to private");
-          });
+    connection.query('UPDATE t_audio_file SET public_flg = false where file_id = ?', [id], function (error, results, fields) {
+        if (error) throw error;
     });
     res.sendFile(path.join(__dirname, 'public/admin.html'));
 })
 
 /* gets record id to update public boolean from admin page to true */
 app.get('/updatePublic', (req, res) => {
-  var id = req.query.updatePublic;
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    const dbase = db.db('Redruth');
-    dbase.collection(collection)
-        .updateOne({ '_id': ObjectId(id) }, { $set: { Public: true } },
-            function(err, res) {
-                if (err) throw err;
-                console.log('Set ' + id + " to public");
-            });
-  });
-  res.sendFile(path.join(__dirname, 'public/admin.html'));
+    var id = req.query.updatePublic;
+    connection.query('UPDATE t_audio_file SET public_flg = true where file_id = ?', [id], function (error, results, fields) {
+        if (error) throw error;
+    });
+    res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
 
 
