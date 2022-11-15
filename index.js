@@ -240,7 +240,7 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
     connection.query('INSERT INTO t_user (email, name, phone_num, postal_code, usertype) VALUES (?, ?, ?, ?, 3)', [audio.email, audio.fullName, audio.phone, audio.postCode], function (error, results, fields) { // TODO create a sproc to do this
         if (error) throw error;
         var insertid = results.insertId
-        connection.query('INSERT INTO t_audio_file (user_id, prompt_id, filepath, timestamp, title, remarks, public_flg) VALUES (?, 1, ?, ?, ?, ?, ?)', [insertid, audio.link, audio.timeStamp, audio.title, audio.comments, audio.public], function (error, results, fields) { // TODO create a sproc to do this
+        connection.query('INSERT INTO t_audio_file (user_id, prompt_id, filepath, timestamp, title, remarks, public_flg) VALUES (?, 1, ?, CURRENT_TIMESTAMP(), ?, ?, ?)', [insertid, audio.link, audio.title, audio.comments, audio.public], function (error, results, fields) { // TODO create a sproc to do this
             if (error) throw error;
         });
     });
