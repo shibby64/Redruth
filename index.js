@@ -104,6 +104,14 @@ app.get('/saved.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/saved.html'));
 });
 
+app.get('/logged_in.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/logged_in.html'));
+});
+
+app.get('/logged_out.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/logged_out.html'));
+});
+
 
 
 
