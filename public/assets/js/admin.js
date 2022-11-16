@@ -119,31 +119,128 @@ function createCollectionDropdownItem(collectionName){
 /**
  * Takes the selected value and filters the list of recordings.
  * Called when filter by collection select onchange.
+ * Default sort recordings in order of timestamp
  * 
  * @param selected item  
  */
 function filterPrompt(selected){
-  // if no filter show all
-  if (selected.value == "") {
-    $(".item").remove();
-    recordings.forEach(recording => {
-      createCard(recording)
-    });
+  var name = selected.value;
+  filter(name); 
+}
+
+/**
+ * Actually does the prompt filtering
+ * Allows for use by filterPrompt and search
+ *  
+ * @param name -- name of desired prompt filter
+ */
+
+function filter(name) {
+   // store timestamps in array
+   const times = new Array();
+   const stuff = new Array();
+   for(var i = 0; i < recordings.length; i++) {
+     times.push(recordings[i].timestamp); 
+     stuff.push(recordings[i]); 
+   }
+
+   // Sort the timestamps
+   times.sort();
+   times.sort(function(a, b){
+       const date1 = new Date(a);
+       const date2 = new Date(b);
+       
+       return date1 - date2;
+   });
+   const sorted = compare(stuff, times);
+ 
+   // if no filter show all, default sort by timestamp
+   if (name == "") {
+     $(".item").remove();
+     sorted.forEach(object => {
+       recordings.forEach(recording => {
+         if (object.timestamp == recording.timestamp && object.file_id == recording.file_id) {
+           createCard(recording);
+         }
+       });
+     });
+     return;
+   }
+ 
+   // else sort items by prompt
+   filteredRecordings = [];
+   recordings.forEach(recording => {
+     if (recording.prompt == name) {
+       filteredRecordings.push(recording)
+     }
+   });
+   $(".item").remove();
+ 
+   filteredRecordings.forEach(recording => {
+     createCard(recording)
+   });
+}
+
+/**
+ * Helper function for filter
+ * Compares array of sorted timestamps to db objects timestamps
+ *  
+ * @param stuff -- array of db objects
+ * @param times -- array of sorted timestamps
+ */
+
+function compare(stuff, times) {
+  const sorted = new Array();
+  if (!stuff || !times) return  
+  // Check for matching timestamps to create sorted order
+  stuff.forEach((e1, i)=>times.forEach((e2=> {
+    if (e1.timestamp == e2) {
+      sorted.push(e1);
+    } 
+  })));
+  // Remove item duplicates
+  return sorted.filter((item,
+    index) => sorted.indexOf(item) === index);
+}
+
+/**
+ * Receives the title search value and filters the list of recordings.
+ * Called when event listener submit button pressed
+ * 
+ */ 
+
+var submit = document.getElementById("searchSubmit");
+submit.addEventListener('click', search);
+
+function search(){
+  document.getElementById("noResult").innerHTML = "";
+  let count = 0;
+  // get search input
+  var input = document.getElementById("searchInput").value;
+  // if blank input, display all by prompt input value
+  if (input == "") {
+    var name = document.getElementById("selectPrompt").value;
+    filter(name);
     return;
   }
-
   filteredRecordings = [];
+  // filter recordings with matching title to search input
+  // track total incase of no match
   recordings.forEach(recording => {
-    if (recording.prompt == selected.value) {
-      filteredRecordings.push(recording)
+    if (recording.title == input) {
+      filteredRecordings.push(recording);
+      count++;
     }
   });
   $(".item").remove();
-
+  // create a card for each recording
   filteredRecordings.forEach(recording => {
     createCard(recording)
   });
-
+  // if no recordings match title value, alert
+  if (count == 0) {
+    document.getElementById("noResult").innerHTML = "No file named '" + input + "' found.";
+  }
 }
 
 /**
