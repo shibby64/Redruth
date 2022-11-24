@@ -51,7 +51,7 @@ let formData = new FormData()
 
 //Countdown Timer, starts paused
 const countDownTimer = document.getElementById('countDownTimer');
-const startingMinutes = 1; //set this variable for desired time limit
+const startingMinutes = 10; //set this variable for desired time limit
 let time = startingMinutes * 60; //sets time in seconds
 setInterval(countdown, 1000);
 let startCountDown = false;
