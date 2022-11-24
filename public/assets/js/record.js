@@ -77,31 +77,31 @@ function record() {
         return;
     }
 
-    // begin timer countdown
-    startCountDown = true;
-
-    // change button to a stop button
-    // $("#recordButton").attr("style", "display:none");
-    // $("#stopButton").attr("style", "display:inital");
-    // $("#recordText").text("Press Again to Stop Recording");
-    $("#recordText").fadeOut(200, function() {
-        $(this).text("Press Again to Stop Recording").fadeIn(200);
-    });
-
-    $("#recordButton").fadeOut(200, function () { $("#stopButton").fadeIn(200) });
-    $("#recordButton").fadeOut(200, function () { $("#stopButton").fadeIn(200) });
-
-
-    $("#countDownTimer").addClass("redText");
-
-    $(".backgroundGradientRed").fadeIn(500);
-
     if (!mediaRecorder) {
         // start recording
         navigator.mediaDevices.getUserMedia({
             audio: true,
         })
             .then((stream) => {
+                // begin timer countdown
+                startCountDown = true;
+            
+                // change button to a stop button
+                /* $("#recordButton").attr("style", "display:none");
+                   $("#stopButton").attr("style", "display:inital");
+                   $("#recordText").text("Press Again to Stop Recording"); */
+                $("#recordText").fadeOut(200, function() {
+                    $(this).text("Press Again to Stop Recording").fadeIn(200);
+                });
+
+                $("#recordButton").fadeOut(200, function () { $("#stopButton").fadeIn(200) });
+                $("#recordButton").fadeOut(200, function () { $("#stopButton").fadeIn(200) });
+
+                $("#countDownTimer").addClass("redText");
+
+                $(".backgroundGradientRed").fadeIn(500);
+                
+                // direct audio stream and collect data
                 mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.start();
                 mediaRecorder.ondataavailable = function (e) {
