@@ -51,10 +51,17 @@ let formData = new FormData()
 
 //Countdown Timer, starts paused
 const countDownTimer = document.getElementById('countDownTimer');
-const startingMinutes = 15; //set this variable for desired time limit
-let time = startingMinutes * 60;
+const startingMinutes = 1; //set this variable for desired time limit
+let time = startingMinutes * 60; //sets time in seconds
 setInterval(countdown, 1000);
 let startCountDown = false;
+
+/**
+ * Acts as a timer with its sole argument being time in milliseconds.
+ */
+function wait(timeMS) {
+    return new Promise(resolve => setTimeout(resolve, timeMS));
+}
 
 /**
  * Records audio using mediaDevices and mediaRecorder to start and stop. 
@@ -100,12 +107,15 @@ function record() {
                 mediaRecorder.ondataavailable = function (e) {
                     chunks.push(e.data);
                 };
+                let recorded = wait(time*1000).then(
+                    () => {
+                        if (mediaRecorder.state === "recording") {
+                            mediaRecorder.stop();
+                            //clearInterval(countdown); this is outdated code but could be useful for reference
+                        }
+                    }
+                )
                 mediaRecorder.onstop = mediaRecorderStop;
-                /* this doesn't seem to be working, need to find way to stop recording when time expires. */
-                if (time < 0) {
-                    clearInterval(countdown);
-                    mediaRecorder.stop();
-                }
             })
             .catch((err) => {
                 alert(`The following error occurred: ${err}`);
@@ -115,7 +125,7 @@ function record() {
         mediaRecorder.stop();
         startCountDown = false; // stop countdown
         countDownTimer.innerHTML = ''; //make the counter disappear
-        time = 15 * 60;
+        time = startingMinutes * 60;
     }
 }
 
