@@ -90,6 +90,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
+app.get('/record', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
 /* listen page route */
 app.get('/listen.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/listen.html'));
@@ -167,9 +171,15 @@ function updatePrompt(newPrompt) {
 
 /* get prompt from db */
 app.get('/prompt', (req, res) => {
-    connection.query('SELECT * FROM t_prompt LIMIT 1', function (error, results, fields) {
+    var promptid;
+    if (req.query.promptid) {
+        promptid = req.query.promptid;
+    } else {
+        promptid = 1;
+    }
+    connection.query('SELECT * FROM t_prompt WHERE prompt_id = ?', [promptid], function (error, results, fields) {
         if (error) throw error;
-        res.json(results[0].prompt); // sends a JSON response containing the first prompt.
+        res.json(results[0]); // sends a JSON response containing the first prompt.
     });
 });
 
@@ -240,7 +250,7 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
     connection.query('INSERT INTO t_user (email, name, phone_num, postal_code, usertype) VALUES (?, ?, ?, ?, 3)', [audio.email, audio.fullName, audio.phone, audio.postCode], function (error, results, fields) { // TODO create a sproc to do this
         if (error) throw error;
         var insertid = results.insertId
-        connection.query('INSERT INTO t_audio_file (user_id, prompt_id, filepath, timestamp, title, remarks, public_flg) VALUES (?, 1, ?, CURRENT_TIMESTAMP(), ?, ?, ?)', [insertid, audio.link, audio.title, audio.comments, audio.public], function (error, results, fields) { // TODO create a sproc to do this
+        connection.query('INSERT INTO t_audio_file (user_id, prompt_id, filepath, timestamp, title, remarks, public_flg) VALUES (?, ?, ?, CURRENT_TIMESTAMP(), ?, ?, ?)', [insertid, audio.prompt, audio.link, audio.title, audio.comments, audio.public], function (error, results, fields) { // TODO create a sproc to do this
             if (error) throw error;
         });
     });
