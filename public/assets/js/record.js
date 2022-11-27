@@ -51,8 +51,21 @@ let formData = new FormData()
 
 //Countdown Timer, starts paused
 const countDownTimer = document.getElementById('countDownTimer');
-const startingMinutes = 10; //set this variable for desired time limit
-let time = startingMinutes * 60; //sets time in seconds
+
+let time = 600; // set default time
+const zeroPad = (num) => String(num).padStart(2, '0')
+
+var queryStr = window.location.search;
+fetch('/prompt' + queryStr, {  method: 'GET' })
+    .then(res => res.json())
+    .then(res => {
+        console.log(res.recording_length);
+        if (res.recording_length) {
+            time = res.recording_length;
+            countDownTimer.innerHTML = Math.floor(time/60) + ':' + zeroPad(time % 60);
+        }
+    });
+
 setInterval(countdown, 1000);
 let startCountDown = false;
 
@@ -125,7 +138,7 @@ function record() {
         mediaRecorder.stop();
         startCountDown = false; // stop countdown
         countDownTimer.innerHTML = ''; //make the counter disappear
-        time = startingMinutes * 60;
+        time = 600;
     }
 }
 
@@ -305,7 +318,7 @@ function checkInfo1() {
         //$('#errorMessage').attr("style", "display:initial")
         //return false;
         formData.append('audio', audioBlob, 'recording.mp3');
-        formData.append('title', "")
+        formData.append('title', $('#title').val().trim())
         formData.append('comments', "")
         formData.append('project', document.getElementById("projectVal").value.trim())
         formData.append('prompt', document.getElementById("prompt").value.trim())

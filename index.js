@@ -171,7 +171,7 @@ function updatePrompt(newPrompt) {
 
 /* get prompt from db */
 app.get('/prompt', (req, res) => {
-    var promptid;
+    var promptid; // TODO: Make it so it doesnt crash when accessing a prompt id that doesn't exist
     if (req.query.promptid) {
         promptid = req.query.promptid;
     } else {

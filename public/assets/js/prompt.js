@@ -1,6 +1,6 @@
 updatePrompt();
 
-function updatePrompt(queryStr) {
+function updatePrompt() {
     var queryStr = window.location.search;
     const showP = document.getElementsByClassName('showPrompt');
     const promptInput = document.getElementById('prompt');
