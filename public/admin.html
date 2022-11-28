@@ -12,61 +12,124 @@
 </head>
 
 <body>
-    <!-- admin form container -->
-    <div class="container">
-        <div class="row">
-            <h1 class="display-4 mb-5">
-                Admin Dashboard
-            </h1>
-        </div>
-    </div>
-
-    <!-- create new project -->
-    <div class="container">
-        <div class="row">
-            <div class="col-lg col-sm-12 mb-3">
-                <h3 class="">Create New Collection</h3>
-                <div class="">
-                    <form method="get" action="/updateCollection" name="admin-data" id="admin" autocomplete="on">
-                        <div class="mb-3">
-
-                            <label for="collection" class="form-label" id="current">Current Collection:</label>
-
-                            <div class="input-group mb-3">
-                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">Previous Collections</button>
-                                <ul class="dropdown-menu" id="collections-dropdown-menu">
-                                </ul>
-                                <input type="text" name="collection" id="collectionsUpdate" class="form-control"
-                                    aria-label="Aim for less than 140 characters."
-                                    placeholder="Aim for less than 140 characters.">
-                            </div>
-                        </div>
-                        <input class="btn btn-primary" type="submit" value="Submit">
-                    </form>
-                </div>
-            </div>
-            <div class="col-lg col-sm-12">
-                <h3 class="">Update Current Prompt</h3>
-                <div class="">
-                    <form method="get" action="/updatePrompt" name="admin-data" id="admin" autocomplete="on">
-                        <label for="prompt" class="form-label">New Prompt Text:</label>
-                        <div class="input-group mb-3">
+    <header>       
+            <h1 class="">Admin Dashboard</h1>
+            <nav>
+                <ul class="nav nav-pills">
+                    <li>
+                        <form method="get" action="/swapCurrentCollection" name="admin-data" id="admin" autocomplete="on">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">Previous prompts</button>
-                            <ul class="dropdown-menu" id="dropdown-menu">
+                                data-bs-toggle="dropdown" aria-expanded="false">Change collection</button>
+                            <ul class="dropdown-menu" id="collections-dropdown-menu">
                             </ul>
-                            <input type="text" name="prompt" id="promptUpdate" class="form-control"
-                                aria-label="Aim for less than 140 characters."
-                                placeholder="Aim for less than 140 characters.">
-                        </div>
-                        <input class="btn btn-primary" type="submit" value="Submit" onsubmit="updatePrompt()">
-                    </form>
+                        </form>
+                    </li>
+                    <li class="btn"><a href="new-collection.html">Create new collection</a></li>
+                    <li class="btn"><a href="#">Account</a></li>
+                </ul>
+            </nav>
+    </header>
+
+    <h2 class="" id="current"></h2> 
+
+    <details>
+        <summary>Rename this collection</summary>
+        <form method="get" action="/updateCollectionTitle">
+            <div class="input-group">
+                <input type="text" name="title" class="form-control"
+                        aria-label="New collection title"
+                        placeholder="New collection title">
+                <span class="input-group-btn">
+                    <button class="btn btn-outline-secondary">Save</button>
+                </span>
+            </div>
+        </form>
+    </details>
+    
+    
+    <details>
+        <summary>Change description</summary>
+        <form method="get" action="/updateCollectionDesc">
+            <div class="input-group">
+                <input type="text" name="desc" class="form-control"
+                        aria-label="New description"
+                        placeholder="New description">
+                <span class="input-group-btn">
+                    <button class="btn btn-outline-secondary">Save</button>
+                </span>
+            </div>
+        </form>
+    </details>
+
+    <details>
+        <summary>Manage this collection</summary>
+        <button name="button">Publish</button>
+        <p><i>Anyone with a link will be able to add stories to this collection</i></p>
+        <!--<form method="get" action="/deleteCollection">-->
+        <button name="button">Delete this collection</button>
+        <p><i>TODO: warning message</i></p>
+    </details>
+
+    <details>
+        <summary>Add/delete metadata fields</summary>
+        <!--<form method="get">-->
+            <label for="metadata-list">Add field:</label>
+            <select name="metadata-list" id="metadata-list">
+                <option value="phone">Phone</option>
+                <option value="email">Email</option>
+                <option value="postal-code">Postal code</option>
+            </select>
+            <div class="col-lg-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" aria-label="Field name">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" 
+                                aria-haspopup="true" aria-expanded="false">Datatype <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    </div>
+            <div class="delete-md">
+                <label for="delete-md-list">Delete field:</label>
+                    <select name="delete-md-list" id="delete-md-list">
+                        <option value="phone">Phone</option>
+                        <option value="email">Email</option>
+                        <option value="postal-code">Postal code</option>
+                    </select>
+            </div>
+            <button name="button">Save</button>
+        <!--</form>-->
+    </details>
+
+    <details>
+        <summary>Add prompt</summary>
+        <form method="get">
+            <div class="input-group">
+                <input type="text" name="prompt" class="form-control"
+                        aria-label="New prompt"
+                        placeholder="New prompt">
+                <input type="text" name="desc" class="form-control"
+                    aria-label="Description"
+                    placeholder="Description">
+                <button class="btn btn-outline-secondary">Save</button>
+            </div>
+        </form>
+    </details>
+
+    <details>
+        <summary>Manage prompts</summary>
+        <form>
+            <ul>
+                
+            </ul>
+        </form>
+    </details>
+    
     <hr>
 
     <!-- select stories to share -->
