@@ -146,31 +146,13 @@
 .search-container input[type="text"] {
   display: block;
   width: calc(100% - 24px);
+  width: 100%;
   font-size: 18px;
   font-weight: 600;
   padding: 10px;
   border: 1px solid #000000;
+  margin-bottom: 20px;
 }
 
-#searchSubmit {
-  color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
-  display: inline-block;
-  font-weight: 400;
-  line-height: 1.5;
-  text-align: center;
-  text-decoration: none;
-  vertical-align: middle;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-  border: 1px solid transparent;
-  padding: .375rem .75rem;
-  font-size: 1rem;
-  border-radius: .25rem;
-  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-  margin-top: 10px;
-}
+
 

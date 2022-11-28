@@ -281,11 +281,11 @@ app.get('/collections', (req, res) => {
 
 /*initial admin query for db data*/
 app.post('/saved', function(req, res) {
-    connection.query('SELECT * FROM t_audio_file JOIN t_user ON t_audio_file.user_id = t_user.user_id JOIN t_prompt ON t_audio_file.prompt_id = t_prompt.prompt_id', function (error, results, fields) {
+    connection.query('SELECT t_audio_file.file_id AS file_id, t_audio_file.title AS title, t_audio_file.timestamp AS timestamp, t_audio_file.remarks AS remarks, t_audio_file.public_flg AS public_flg, t_prompt.prompt AS prompt, t_user.postal_code AS postal_code, t_user.name AS name, t_user.email AS email, t_user.phone_num AS phone_num, t_audio_file.filepath AS filepath FROM t_audio_file JOIN t_user ON t_audio_file.user_id = t_user.user_id JOIN t_prompt ON t_audio_file.prompt_id = t_prompt.prompt_id', function (error, results, fields) {
         if (error) throw error;
         return res.json({ success: true, results});
-    });
-});
+    }); 
+}); 
 
 
 /* get record id from admin page to delete record */
@@ -294,7 +294,7 @@ app.get('/deleteRecord', (req, res) => {
     connection.query('DELETE FROM t_audio_file WHERE file_id = ?', [file_id], function (error, results, fields) {
         if (error) throw error;
         console.log('deleted record ' + file_id);
-        return res.json({ success: true, results});
+        //return res.json({ success: true, results});
     });
     res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
@@ -302,7 +302,7 @@ app.get('/deleteRecord', (req, res) => {
 /* gets record id to update public boolean from admin page to false */
 app.get('/removePublic', (req, res) => {
     var id = req.query.takeOffSite;
-    connection.query('UPDATE t_audio_file SET public_flg = false where file_id = ?', [id], function (error, results, fields) {
+    connection.query('UPDATE t_audio_file SET public_flg = 0 where file_id = ?', [id], function (error, results, fields) {
         if (error) throw error;
     });
     res.sendFile(path.join(__dirname, 'public/admin.html'));
@@ -311,7 +311,7 @@ app.get('/removePublic', (req, res) => {
 /* gets record id to update public boolean from admin page to true */
 app.get('/updatePublic', (req, res) => {
     var id = req.query.updatePublic;
-    connection.query('UPDATE t_audio_file SET public_flg = true where file_id = ?', [id], function (error, results, fields) {
+    connection.query('UPDATE t_audio_file SET public_flg = 1 where file_id = ?', [id], function (error, results, fields) {
         if (error) throw error;
     });
     res.sendFile(path.join(__dirname, 'public/admin.html'));
