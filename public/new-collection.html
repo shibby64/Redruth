@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Dashboard</title>
+    </head>
+
+    <body>
+
+        <header>
+            <div id="top-header">
+                <h1 class="">Admin Dashboard</h1>
+                <nav>
+                    <ul>
+                        <li class="btn"><a href="admin.html">Back</a></li>
+                        <li><a href="#">Account</a></li>                        
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <h2 class="">Create new collection</h2> 
+        <form method="get" action="/createNewCollection">
+            <div class="col-name-form">
+                <h3 class="">Name</h3>
+                <input type="text" name="collectionName" id="collectionsUpdate" class="form-control"
+                        aria-label="Collection name"
+                        placeholder="Collection name">
+            </div>
+            <div class="col-desc-form">
+                <h3 class="">Description</h3>
+                <input type="text" name="collectionDesc" id="collectionsUpdate" class="form-control"
+                        aria-label="Describe this collection"
+                        placeholder="Describe this collection">
+            </div>
+            <input class="btn btn-primary" type="submit" value="Submit">
+        </form>
+    </body>
+</html>
