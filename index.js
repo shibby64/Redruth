@@ -129,8 +129,8 @@ app.get('/createNewCollection', (req, res) => {
                     connection.query('INSERT INTO t_prompt (user_id, collection_id, prompt, description) VALUES (1, (SELECT collection_id FROM t_collection WHERE title = ?), "Placeholder prompt", "Prompt desc")', [newCollectionName], function (error, results, fields) {
                         if (error) throw error;
                         else {
-                            //connection.query('UPDATE t_admin_cache SET collection_id = (SELECT collection_id FROM t_collection WHERE title = ?), prompt_id = (SELECT prompt_id FROM t_prompt WHERE collection_id = (SELECT collection_id FROM t_collection WHERE title = ?)) WHERE user_id = 1', [newCollectionName, newCollectionName], function (error, results, fields) {
-                            connection.query('INSERT INTO t_admin_cache VALUES (1, (SELECT collection_id FROM t_collection WHERE title = ?), (SELECT prompt_id FROM t_prompt WHERE collection_id = (SELECT collection_id FROM t_collection WHERE title = ?)))', [newCollectionName, newCollectionName], function (error, results, fields) {
+                            connection.query('UPDATE t_admin_cache SET collection_id = (SELECT collection_id FROM t_collection WHERE title = ?), prompt_id = (SELECT prompt_id FROM t_prompt WHERE collection_id = (SELECT collection_id FROM t_collection WHERE title = ?)) WHERE user_id = 1', [newCollectionName, newCollectionName], function (error, results, fields) {
+                            //connection.query('DELETE FROM t_admin_cache WHERE user_id = 1 LIMIT 1', [newCollectionName, newCollectionName], function (error, results, fields) {
                                 if (error) throw error;
                             });
                         }
@@ -218,6 +218,21 @@ app.get('/updateCollectionDesc', (req, res) => {
     res.redirect('/admin.html');
 });*/
 
+app.get('/addPrompt', (req, res) => {
+    var p_name = req.query.prompt;
+    var p_desc = req.query.desc;
+    connection.query('INSERT INTO t_prompt (collection_id, user_id, prompt, description) VALUES ((SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1), 1, ?, ?)', [p_name, p_desc], function (error, results, fields) {
+        if (error) throw error;
+        else {
+            connection.query('UPDATE t_admin_cache SET prompt_id = (SELECT MAX(prompt_id) FROM t_prompt WHERE user_id = 1)', function (error, results, fields) {
+                if (error) throw error;
+            });
+        }
+    });
+
+    res.redirect('/admin.html');
+    //res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
 
 
 app.get('/updatePrompt', (req, res) => {
