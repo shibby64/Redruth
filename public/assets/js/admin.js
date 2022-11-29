@@ -113,13 +113,13 @@ function currentPromptUpdate(htmlElement){
  */
 function createListElement(collectionPrompt){
   //update prompt dropdown
-  const dropdownhtmlList = document.createElement("li");
-  const dropdownhtmlA = document.createElement("a");
-  dropdownhtmlA.setAttribute("class", "dropdown-item")
-  dropdownhtmlA.setAttribute("onclick", "currentPromptUpdate(this)")
-  dropdownhtmlA.innerText = collectionPrompt
-  dropdownhtmlList.append(dropdownhtmlA)
-  document.getElementById("dropdown-menu").append(dropdownhtmlList)
+  // const dropdownhtmlList = document.createElement("li");
+  // const dropdownhtmlA = document.createElement("a");
+  // dropdownhtmlA.setAttribute("class", "dropdown-item")
+  // dropdownhtmlA.setAttribute("onclick", "currentPromptUpdate(this)")
+  // dropdownhtmlA.innerText = collectionPrompt
+  // dropdownhtmlList.append(dropdownhtmlA)
+  // document.getElementById("dropdown-menu").append(dropdownhtmlList)
 
   //update filter dropdown
   const htmlNode = document.createElement("option");
