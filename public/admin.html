@@ -120,43 +120,47 @@
         <summary>Manage prompts</summary>
         <form>
             <p id="currentPrompt">Current prompt: <b>Template prompt</b></p>
-            <ul><li>
-                <details>
-                    <summary>Template prompt</summary>
+            <ul id="promptList">
+                <li>
+                <div id="promptTemplate">
                     <details>
-                        <summary>Edit</summary>
+                        <summary>Template prompt</summary>
+                        <details>
+                            <summary>Edit</summary>
+                            <form method="get">
+                                <div class="input-group">
+                                    <input type="text" name="title" class="form-control"
+                                            aria-label="New prompt text"
+                                            placeholder="New prompt text">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-outline-secondary">Save</button>
+                                    </span>
+                                </div>
+                            </form>
+                            <form method="get">
+                                <div class="input-group">
+                                    <input type="text" name="desc" class="form-control"
+                                            aria-label="New description"
+                                            placeholder="New description">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-outline-secondary">Save</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </details>
+                        <div class="input-group">
+                            <form method="get">
+                                <button class="btn btn-outline-secondary">Make current</button>
+                            </form>
+                            <p><i>Make this the prompt that appears on your collection page</i></p>
+                        </div>
                         <form method="get">
-                            <div class="input-group">
-                                <input type="text" name="title" class="form-control"
-                                        aria-label="New prompt text"
-                                        placeholder="New prompt text">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-outline-secondary">Save</button>
-                                </span>
-                            </div>
-                        </form>
-                        <form method="get">
-                            <div class="input-group">
-                                <input type="text" name="desc" class="form-control"
-                                        aria-label="New description"
-                                        placeholder="New description">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-outline-secondary">Save</button>
-                                </span>
-                            </div>
+                            <button class="btn btn-outline-secondary">Delete this prompt</button>
                         </form>
                     </details>
-                    <div class="input-group">
-                        <form method="get">
-                            <button class="btn btn-outline-secondary">Make current</button>
-                        </form>
-                        <p><i>Make this the prompt that appears on your collection page</i></p>
-                    </div>
-                    <form method="get">
-                        <button class="btn btn-outline-secondary">Delete this prompt</button>
-                    </form>
-                </details>
-            </li></ul>
+                </div>
+                </li>
+            </ul>
         </form>
     </details>
     

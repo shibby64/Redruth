@@ -142,6 +142,15 @@ function createCollectionDropdownItem(collectionName){
   document.getElementById("collections-dropdown-menu").append(dropdownhtmlList)
 }
 
+/*function createPromptItem(object) {
+  const htmlListItem = document.createElement("li");
+  const htmlNode = document.createElement("div");
+  htmlNode.setAttribute('id', object.prompt_id)
+  htmlNode.setAttribute('class', "col item")
+  var newPromptItem = $('#promptTemplate').clone().attr("id", object.prompt_id);
+
+}*/
+
 /**
  * Takes the selected value and filters the list of recordings.
  * Called when filter by collection select onchange.
