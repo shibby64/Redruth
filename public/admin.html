@@ -12,8 +12,15 @@
 </head>
 
 <body>
-    <header>       
+
+    <header> 
+        <div style="display: flex;">
             <h1 class="">Admin Dashboard</h1>
+            <button style ="position:absolute; right: 80px;" class="btn btn-outline-secondary">
+            <a href="https://redruth-auth.auth.us-east-1.amazoncognito.com/logout?client_id=3s5a2k1h6011ie84ama0sqqlq3&logout_uri=http://localhost:3000/logged_out.html">Logout</a>
+            </button>
+        </div>
+            
             <nav>
                 <ul class="nav nav-pills">
                     <li>
@@ -25,11 +32,12 @@
                         </form>
                     </li>
                     <li class="btn"><a href="new-collection.html">Create new collection</a></li>
-                    <li class="btn"><a href="#">Account</a></li>
+                    <li class="btn"><a href="logged_in.html">Account</a></li>
                 </ul>
             </nav>
+       
     </header>
-
+    
     <h2 id="current"></h2> 
 
     <details>
