@@ -1,20 +1,20 @@
 updatePrompt();
 
 function updatePrompt() {
+    var queryStr = window.location.search;
     const showP = document.getElementsByClassName('showPrompt');
     const promptInput = document.getElementById('prompt');
-    fetch('/prompt', { method: 'GET' })
+    fetch('/prompt' + queryStr, {  method: 'GET' })
         .then(res => res.json())
         .then(res => {
-            console.log(res);
             try {
                 Array.from(showP).forEach(element => {
-                    element.innerText = res;
+                    element.innerText = res.prompt;
                 });
             } catch (error) {
                 console.error(error);
             }
-            promptInput.value = res;
+            promptInput.value = res.prompt_id;
         });
 }
 

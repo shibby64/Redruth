@@ -28,6 +28,7 @@
 
     gtag('config', 'G-GNBV24KT1T');
   </script>
+  <script onload="updatePrompt()"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -40,6 +41,8 @@
   <!-- header -->
   <header class="mt-3">
     <nav>
+      <div><a href="https://redruth-auth.auth.us-east-1.amazoncognito.com/login?client_id=3s5a2k1h6011ie84ama0sqqlq3&response_type=code&scope=email+openid&redirect_uri=http://localhost:3000/admin.html"
+         id="loginButton">Login</a></div>
       <div class="container">
         <div class="row text-center py-4 justify-content-md-center">
           <div class="col-4 col-md-2  col-lg-1 pt-3 ">
@@ -87,13 +90,14 @@
         </div>
         <div class="col-12 text-center mt-5 mb-5" id="buttonText">
           <h6 class="mb-3" id="recordText">Press to Start Recording</h6>
-          <h5 id="countDownTimer">15:00</h5>
+          <h5 id="countDownTimer"></h5>
         </div>
-
+        
       </div>
     </div>
   </main>
-
+  
+  
   <!-- info page -->
   <main class="flex-shrink-0 info" id="info1" style="display:none;">
     <div class="container">

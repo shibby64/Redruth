@@ -51,10 +51,30 @@ let formData = new FormData()
 
 //Countdown Timer, starts paused
 const countDownTimer = document.getElementById('countDownTimer');
-const startingMinutes = 15; //set this variable for desired time limit
-let time = startingMinutes * 60;
+
+let time = 600; // set default time
+const zeroPad = (num) => String(num).padStart(2, '0')
+
+var queryStr = window.location.search;
+fetch('/prompt' + queryStr, {  method: 'GET' })
+    .then(res => res.json())
+    .then(res => {
+        console.log(res.recording_length);
+        if (res.recording_length) {
+            time = res.recording_length;
+            countDownTimer.innerHTML = Math.floor(time/60) + ':' + zeroPad(time % 60);
+        }
+    });
+
 setInterval(countdown, 1000);
 let startCountDown = false;
+
+/**
+ * Acts as a timer with its sole argument being time in milliseconds.
+ */
+function wait(timeMS) {
+    return new Promise(resolve => setTimeout(resolve, timeMS));
+}
 
 /**
  * Records audio using mediaDevices and mediaRecorder to start and stop. 
@@ -70,42 +90,45 @@ function record() {
         return;
     }
 
-    // begin timer countdown
-    startCountDown = true;
-
-    // change button to a stop button
-    // $("#recordButton").attr("style", "display:none");
-    // $("#stopButton").attr("style", "display:inital");
-    // $("#recordText").text("Press Again to Stop Recording");
-    $("#recordText").fadeOut(200, function() {
-        $(this).text("Press Again to Stop Recording").fadeIn(200);
-    });
-
-    $("#recordButton").fadeOut(200, function () { $("#stopButton").fadeIn(200) });
-    $("#recordButton").fadeOut(200, function () { $("#stopButton").fadeIn(200) });
-
-
-    $("#countDownTimer").addClass("redText");
-
-    $(".backgroundGradientRed").fadeIn(500);
-
     if (!mediaRecorder) {
         // start recording
         navigator.mediaDevices.getUserMedia({
             audio: true,
         })
             .then((stream) => {
+                // begin timer countdown
+                startCountDown = true;
+            
+                // change button to a stop button
+                /* $("#recordButton").attr("style", "display:none");
+                   $("#stopButton").attr("style", "display:inital");
+                   $("#recordText").text("Press Again to Stop Recording"); */
+                $("#recordText").fadeOut(200, function() {
+                    $(this).text("Press Again to Stop Recording").fadeIn(200);
+                });
+
+                $("#recordButton").fadeOut(200, function () { $("#stopButton").fadeIn(200) });
+                $("#recordButton").fadeOut(200, function () { $("#stopButton").fadeIn(200) });
+
+                $("#countDownTimer").addClass("redText");
+
+                $(".backgroundGradientRed").fadeIn(500);
+                
+                // direct audio stream and collect data
                 mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.start();
                 mediaRecorder.ondataavailable = function (e) {
                     chunks.push(e.data);
                 };
+                let recorded = wait(time*1000).then(
+                    () => {
+                        if (mediaRecorder.state === "recording") {
+                            mediaRecorder.stop();
+                            //clearInterval(countdown); this is outdated code but could be useful for reference
+                        }
+                    }
+                )
                 mediaRecorder.onstop = mediaRecorderStop;
-                /* this doesn't seem to be working, need to find way to stop recording when time expires. */
-                if (time < 0) {
-                    clearInterval(countdown);
-                    mediaRecorder.stop();
-                }
             })
             .catch((err) => {
                 alert(`The following error occurred: ${err}`);
@@ -115,7 +138,7 @@ function record() {
         mediaRecorder.stop();
         startCountDown = false; // stop countdown
         countDownTimer.innerHTML = ''; //make the counter disappear
-        time = 15 * 60;
+        time = 600;
     }
 }
 
@@ -295,7 +318,7 @@ function checkInfo1() {
         //$('#errorMessage').attr("style", "display:initial")
         //return false;
         formData.append('audio', audioBlob, 'recording.mp3');
-        formData.append('title', "")
+        formData.append('title', $('#title').val().trim())
         formData.append('comments', "")
         formData.append('project', document.getElementById("projectVal").value.trim())
         formData.append('prompt', document.getElementById("prompt").value.trim())

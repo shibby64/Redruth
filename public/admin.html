@@ -12,62 +12,108 @@
 </head>
 
 <body>
-    <!-- admin form container -->
-    <div class="container">
-        <div class="row">
-            <h1 class="display-4 mb-5">
-                Admin Dashboard
-            </h1>
+
+    <header> 
+        <div style="display: flex;">
+            <h1 class="">Admin Dashboard</h1>
+            <button style ="position:absolute; right: 80px;" class="btn btn-outline-secondary">
+            <a href="https://redruth-auth.auth.us-east-1.amazoncognito.com/logout?client_id=3s5a2k1h6011ie84ama0sqqlq3&logout_uri=http://localhost:3000/logged_out.html">Logout</a>
+            </button>
         </div>
-    </div>
-
-    <!-- create new project -->
-    <div class="container">
-        <h2 class="mb-4">Create and Manage Collections and Prompts</h2>
-        <div class="row">
-            <div class="col-lg col-sm-12 mb-3">
-                <h3 class="">Create New Collection</h3>
-                <div class="">
-                    <form method="get" action="/updateCollection" name="admin-data" id="admin" autocomplete="on">
-                        <div class="mb-3">
-
-                            <label for="collection" class="form-label" id="current">Current Collection:</label>
-
-                            <div class="input-group mb-3">
-                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">Previous Collections</button>
-                                <ul class="dropdown-menu" id="collections-dropdown-menu">
-                                </ul>
-                                <input type="text" name="collection" id="collectionsUpdate" class="form-control"
-                                    aria-label="Aim for less than 140 characters."
-                                    placeholder="Aim for less than 140 characters.">
-                            </div>
-                        </div>
-                        <input class="btn btn-primary" type="submit" value="Submit">
-                    </form>
-                </div>
-            </div>
-            <div class="col-lg col-sm-12">
-                <h3 class="">Update Current Prompt</h3>
-                <div class="">
-                    <form method="get" action="/updatePrompt" name="admin-data" id="admin" autocomplete="on">
-                        <label for="prompt" class="form-label">New Prompt Text:</label>
-                        <div class="input-group mb-3">
+            
+            <nav>
+                <ul class="nav nav-pills">
+                    <li>
+                        <form method="get" action="/swapCurrentCollection" name="admin-data" id="admin" autocomplete="on">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">Previous prompts</button>
-                            <ul class="dropdown-menu" id="dropdown-menu">
+                                data-bs-toggle="dropdown" aria-expanded="false">Change collection</button>
+                            <ul class="dropdown-menu" id="collections-dropdown-menu">
                             </ul>
-                            <input type="text" name="prompt" id="promptUpdate" class="form-control"
-                                aria-label="Aim for less than 140 characters."
-                                placeholder="Aim for less than 140 characters.">
-                        </div>
-                        <input class="btn btn-primary" type="submit" value="Submit" onsubmit="updatePrompt()">
-                    </form>
-                </div>
+                        </form>
+                    </li>
+                    <li class="btn"><a href="new-collection.html">Create new collection</a></li>
+                    <li class="btn"><a href="logged_in.html">Account</a></li>
+                </ul>
+            </nav>
+       
+    </header>
+    
+    <h2 id="current"></h2> 
+            <div class="delete-md">
+                <label for="delete-md-list">Delete field:</label>
+                    <select name="delete-md-list" id="delete-md-list">
+                        <option value="phone">Phone</option>
+                        <option value="email">Email</option>
+                        <option value="postal-code">Postal code</option>
+                    </select>
             </div>
-        </div>
-    </div>
-    </div>
+            <button name="button">Save</button>
+        <!--</form>-->
+    </details>
+
+    <details>
+        <summary>Add prompt</summary>
+        <form method="get" action="/addPrompt">
+            <div class="input-group">
+                <input type="text" name="prompt" class="form-control"
+                        aria-label="New prompt"
+                        placeholder="New prompt">
+                <input type="text" name="desc" class="form-control"
+                    aria-label="Description"
+                    placeholder="Description">
+                <button class="btn btn-outline-secondary">Save</button>
+            </div>
+        </form>
+    </details>
+
+    <details>
+        <summary>Manage prompts</summary>
+        <form>
+            <p id="currentPrompt">Current prompt: <b>Template prompt</b></p>
+            <ul id="promptList">
+                <li>
+                <div id="promptTemplate">
+                    <details>
+                        <summary>Template prompt</summary>
+                        <details>
+                            <summary>Edit</summary>
+                            <form method="get">
+                                <div class="input-group">
+                                    <input type="text" name="title" class="form-control"
+                                            aria-label="New prompt text"
+                                            placeholder="New prompt text">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-outline-secondary">Save</button>
+                                    </span>
+                                </div>
+                            </form>
+                            <form method="get">
+                                <div class="input-group">
+                                    <input type="text" name="desc" class="form-control"
+                                            aria-label="New description"
+                                            placeholder="New description">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-outline-secondary">Save</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </details>
+                        <div class="input-group">
+                            <form method="get">
+                                <button class="btn btn-outline-secondary">Make current</button>
+                            </form>
+                            <p><i>Make this the prompt that appears on your collection page</i></p>
+                        </div>
+                        <form method="get">
+                            <button class="btn btn-outline-secondary">Delete this prompt</button>
+                        </form>
+                    </details>
+                </div>
+                </li>
+            </ul>
+        </form>
+    </details>
+    
     <hr>
 
     <!-- select stories to share -->

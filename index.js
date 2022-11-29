@@ -90,6 +90,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
+app.get('/record', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
 /* listen page route */
 app.get('/listen.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/listen.html'));
@@ -104,6 +108,11 @@ app.get('/saved.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/saved.html'));
 });
 
+
+app.get('/new-collection.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/new-collection.html'));
+});
+
 app.get('/logged_in.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/logged_in.html'));
 });
@@ -113,21 +122,60 @@ app.get('/logged_out.html', (req, res) => {
 });
 
 
-
-
 /**
  * if collection exists, swap to that collection
  * otherwise create new and swap
  */
 /* create new collection and update universal prompt */
-app.get('/updateCollection', (req, res) => {
-    var newCollectionName = req.query.collection;
-    connection.query('SELECT 1 FROM t_collection WHERE nme = ', [newCollectionName], function (error, results, fields) {
+app.get('/createNewCollection', (req, res) => {
+    var newCollectionName = req.query.collectionName;
+    var newCollectionDesc = req.query.collectionDesc;
+    connection.query('SELECT * FROM t_collection WHERE title = ?', [newCollectionName], function (error, results, fields) {
         if (error) throw error;
-        if (results) {
-            alert('Collection already exists!');
+        if (results.length > 0) {
+            //alert('Collection already exists!');
+            console.log(newCollectionName + ' already exists!');
         } else {
-            connection.query('INSERT INTO t_collection (user_id, title, description, public_flg) VALUES (1, "Hello World", "Hello World 2", false)', function (error, results, fields) {
+            connection.query('INSERT INTO t_collection (user_id, title, description, public_flg) VALUES (1, ?, ?, false)', [newCollectionName, newCollectionDesc], function (error, results, fields) {
+                if (error) throw error;
+                else {
+                    connection.query('INSERT INTO t_prompt (user_id, collection_id, prompt, description) VALUES (1, (SELECT collection_id FROM t_collection WHERE title = ?), "Placeholder prompt", "Prompt desc")', [newCollectionName], function (error, results, fields) {
+                        if (error) throw error;
+                        else {
+                            connection.query('UPDATE t_admin_cache SET collection_id = (SELECT collection_id FROM t_collection WHERE title = ?), prompt_id = (SELECT prompt_id FROM t_prompt WHERE collection_id = (SELECT collection_id FROM t_collection WHERE title = ?)) WHERE user_id = 1', [newCollectionName, newCollectionName], function (error, results, fields) {
+                            //connection.query('DELETE FROM t_admin_cache WHERE user_id = 1 LIMIT 1', [newCollectionName, newCollectionName], function (error, results, fields) {
+                                if (error) throw error;
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+    });
+
+    res.redirect('/admin.html');
+    //res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
+app.get('/swapCurrentCollection', (req, res) => {
+    var collectionToSwitch = req.query.newCollection;
+    connection.query('UPDATE t_admin_cache SET collection_id = (SELECT collection_id FROM t_collection WHERE title = ? LIMIT 1)', [collectionToSwitch], function (error, results, fields) {
+        if (error) throw error;
+    });
+
+    res.redirect('/admin.html');
+    //res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
+app.get('/updateCollectionTitle', (req, res) => {
+    var newTitle = req.query.title;
+    connection.query('SELECT 1 FROM t_collection WHERE title = ?', [newTitle], function (error, results, fields) {
+        if (error) throw error;
+        if (results.length > 0) {
+            console.log(newTitle + ' already exists!');
+        } else {
+            connection.query('UPDATE t_collection SET title = ? WHERE collection_id = (SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1)', [newTitle], function (error, results, fields) { 
                 if (error) throw error;
             });
         }
@@ -137,6 +185,68 @@ app.get('/updateCollection', (req, res) => {
     res.redirect('/admin.html');
     // res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
+
+app.get('/updateCollectionDesc', (req, res) => {
+    var newDesc = req.query.desc;
+    connection.query('UPDATE t_collection SET description = ? WHERE collection_id = (SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1)', [newDesc], function (error, results, fields) { 
+        if (error) throw error;
+    });
+    res.redirect('/admin.html');
+    // res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
+/*app.get('/deleteCollection', (req, res) => {
+    connection.query('SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1', function (error, results, fields) {
+        if (error) throw error;
+        else {
+            var old_col_id = results[0].collection_id;
+            console.log(old_col_id);
+            connection.query('UPDATE t_admin_cache SET collection_id = (SELECT collection_id FROM t_collection WHERE user_id = 1 ORDER BY collection_id DESC LIMIT 1) WHERE user_id = 1', function (error, results, fields) {
+                if (error) throw error;
+                else {
+                    connection.query('SELECT * FROM t_admin_cache WHERE user_id = 1', function (error, results, fields) {
+                        if (error) throw error;
+                        else {
+                            var new_col_id = results[0].collection_id;
+                            console.log(new_col_id);
+                            connection.query('UPDATE t_admin_cache SET prompt_id = (SELECT prompt_id FROM t_prompt WHERE collection_id = ? LIMIT 1) WHERE user_id = 1', [new_col_id], function (error, results, fields) {   
+                                if (error) throw error;
+                                else {   
+                                    connection.query('DELETE FROM t_prompt WHERE collection_id = ?', [old_col_id], function (error, results, fields) {
+                                        if (error) throw error;
+                                        else {
+                                            connection.query('DELETE FROM t_collection WHERE user_id = 1 AND collection_id = ?', [old_col_id], function (error, results, fields) {
+                                                if (error) throw error;
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }        
+            });
+        }
+    });
+    res.redirect('/admin.html');
+});*/
+
+app.get('/addPrompt', (req, res) => {
+    var p_name = req.query.prompt;
+    var p_desc = req.query.desc;
+    connection.query('INSERT INTO t_prompt (collection_id, user_id, prompt, description) VALUES ((SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1), 1, ?, ?)', [p_name, p_desc], function (error, results, fields) {
+        if (error) throw error;
+        else {
+            connection.query('UPDATE t_admin_cache SET prompt_id = (SELECT MAX(prompt_id) FROM t_prompt WHERE user_id = 1)', function (error, results, fields) {
+                if (error) throw error;
+            });
+        }
+    });
+
+    res.redirect('/admin.html');
+    //res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+
 
 app.get('/updatePrompt', (req, res) => {
     var prompt = req.query.prompt;
@@ -167,9 +277,15 @@ function updatePrompt(newPrompt) {
 
 /* get prompt from db */
 app.get('/prompt', (req, res) => {
-    connection.query('SELECT * FROM t_prompt LIMIT 1', function (error, results, fields) {
+    let promptid = 1;
+
+    if (req.query.promptid) {
+        promptid = req.query.promptid;
+    }
+
+    connection.query('SELECT * FROM t_prompt WHERE prompt_id = ? OR prompt_id = 1 ORDER BY prompt_id DESC', [promptid], function (error, results, fields) {
         if (error) throw error;
-        res.json(results[0].prompt); // sends a JSON response containing the first prompt.
+        res.json(results[0]);
     });
 });
 
@@ -240,7 +356,7 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
     connection.query('INSERT INTO t_user (email, name, phone_num, postal_code, usertype) VALUES (?, ?, ?, ?, 3)', [audio.email, audio.fullName, audio.phone, audio.postCode], function (error, results, fields) { // TODO create a sproc to do this
         if (error) throw error;
         var insertid = results.insertId
-        connection.query('INSERT INTO t_audio_file (user_id, prompt_id, filepath, timestamp, title, remarks, public_flg) VALUES (?, 1, ?, CURRENT_TIMESTAMP(), ?, ?, ?)', [insertid, audio.link, audio.title, audio.comments, audio.public], function (error, results, fields) { // TODO create a sproc to do this
+        connection.query('INSERT INTO t_audio_file (user_id, prompt_id, filepath, timestamp, title, remarks, public_flg) VALUES (?, ?, ?, CURRENT_TIMESTAMP(), ?, ?, ?)', [insertid, audio.prompt, audio.link, audio.title, audio.comments, audio.public], function (error, results, fields) { // TODO create a sproc to do this
             if (error) throw error;
         });
     });
@@ -274,6 +390,13 @@ app.post('/metaArr', function(req, res) {
  */
 app.get('/collections', (req, res) => {
     connection.query('SELECT * FROM t_collection', function (error, results, fields) {
+        if (error) throw error;
+        return res.json({ success: true, results});
+    });
+});
+
+app.get('/currentCollection', (req, res) => {
+    connection.query('SELECT * FROM t_collection JOIN t_admin_cache ON t_collection.collection_id = t_admin_cache.collection_id WHERE t_collection.user_id = 1 LIMIT 1', function (error, results, fields) {
         if (error) throw error;
         return res.json({ success: true, results});
     });
