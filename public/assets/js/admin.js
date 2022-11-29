@@ -29,11 +29,14 @@ async function getRecordings() {
       if (object.success && object.results) {
         // for all objects set up cards and add to various arrays
         for (i = 0; i < object.results.length; i++) {
+          //alert(object.results[i].email);
           recordings.push(object.results[i]);
           createCard(object.results[i]);
           prompts.add(object.results[i].prompt)
         }
       }
+      // Display number of audio files
+      document.getElementById("fileCount").innerHTML = "Number of files: " + object.results.length;
     })
     .then((object) => {prompts.forEach(createListElement)})
     .catch((err) => console.error(err));
@@ -120,12 +123,92 @@ function createCollectionDropdownItem(collectionName){
  * Takes the selected value and filters the list of recordings.
  * Called when filter by collection select onchange.
  * Default sort recordings in order of timestamp
+ * Set prompt filter global variable
  * 
  * @param selected item  
  */
+
+var promptFilt;
+
 function filterPrompt(selected){
   var name = selected.value;
+  promptFilt = name;
   filter(name); 
+}
+
+/**
+ * Sets global variable for chosen metadata filter
+ * If metadata filter chosen before prompt filter, make prompt filter all prompts
+ * 
+ * @param selected -- selected metadata filter  
+ */
+
+var metaFilt;
+
+function metaFilter(selected) {
+  // If prompt filter hasn't been selected, make it all prompts
+  if (typeof promptFilt === "undefined") {
+    promptFilt = "";
+  }
+  // Set global variable and run filter
+  metaFilt = selected.value;
+  filter(promptFilt)
+}
+
+/**
+ * Uses metadata filter selected to create sorted array
+ * 
+ *   
+ */
+
+function dataFilter() {
+  const array1 = new Array();
+  const array2 = new Array();
+  // If title metadata filter selected
+  if (metaFilt == "title") {
+    // Create array of db objects and array of titles
+    for(var i = 0; i < recordings.length; i++) {
+      array1.push(recordings[i]); 
+      array2.push(recordings[i].title); 
+    }
+    // Sort titles array
+    array2.sort((a, b) => a.localeCompare(b));
+    // Return db objects in sorted order
+    return compare("title", array1, array2);
+  } else if (metaFilt == "time_recent") {
+    // sort by timestamp, displaying oldest first
+    for(var i = 0; i < recordings.length; i++) {
+      array1.push(recordings[i]); 
+      array2.push(recordings[i].timestamp); 
+    }
+    // Sort the timestamps
+    array2.sort();
+    array2.sort(function(a, b){
+        const date1 = new Date(a);
+        const date2 = new Date(b);
+        
+        return date1 - date2;
+    });
+    array2.reverse();
+    // Return db objects in sorted order
+    return compare("time_recent", array1, array2);
+  } else {
+    // Default sort by timestamp
+    for(var i = 0; i < recordings.length; i++) {
+      array1.push(recordings[i]); 
+      array2.push(recordings[i].timestamp); 
+    }
+    // Sort the timestamps
+    array2.sort();
+    array2.sort(function(a, b){
+        const date1 = new Date(a);
+        const date2 = new Date(b);
+        
+        return date1 - date2;
+    });
+    // Return db objects in sorted order
+    return compare("", array1, array2);
+  }
 }
 
 /**
@@ -136,38 +219,27 @@ function filterPrompt(selected){
  */
 
 function filter(name) {
-   // store timestamps in array
-   const times = new Array();
-   const stuff = new Array();
-   for(var i = 0; i < recordings.length; i++) {
-     times.push(recordings[i].timestamp); 
-     stuff.push(recordings[i]); 
-   }
-
-   // Sort the timestamps
-   times.sort();
-   times.sort(function(a, b){
-       const date1 = new Date(a);
-       const date2 = new Date(b);
-       
-       return date1 - date2;
-   });
-   const sorted = compare(stuff, times);
+  // Get array of db objects in desired sorted order
+  const sorted = dataFilter();
+  var count = 0;
  
-   // if no filter show all, default sort by timestamp
+   // if no filter show all, sort by metadata filter
    if (name == "") {
      $(".item").remove();
      sorted.forEach(object => {
        recordings.forEach(recording => {
          if (object.timestamp == recording.timestamp && object.file_id == recording.file_id) {
+           count++;
            createCard(recording);
          }
        });
      });
+     // Display number of audio files
+     document.getElementById("fileCount").innerHTML = "Number of files: " + count;
      return;
    }
  
-   // else sort items by prompt
+   // else sort items by prompt and metadata filter
    filteredRecordings = [];
    recordings.forEach(recording => {
      if (recording.prompt == name) {
@@ -176,32 +248,72 @@ function filter(name) {
    });
    $(".item").remove();
  
-   filteredRecordings.forEach(recording => {
-     createCard(recording)
-   });
+   // Track number of audio files in prompt and display
+   sorted.forEach(object => {
+    filteredRecordings.forEach(recording => {
+      if (object.file_id == recording.file_id) {
+        count++;
+        createCard(recording);
+      }
+    });
+  });
+
+  // Display number of audio files
+  document.getElementById("fileCount").innerHTML = "Number of files: " + count;
 }
 
 /**
  * Helper function for filter
- * Compares array of sorted timestamps to db objects timestamps
+ * Compares array of sorted items to db objects
  *  
+ * @param type -- metadata filter
  * @param stuff -- array of db objects
  * @param times -- array of sorted timestamps
  */
 
-function compare(stuff, times) {
+function compare(type, array1, array2) {
   const sorted = new Array();
-  if (!stuff || !times) return  
-  // Check for matching timestamps to create sorted order
-  stuff.forEach((e1, i)=>times.forEach((e2=> {
-    if (e1.timestamp == e2) {
-      sorted.push(e1);
-    } 
-  })));
+  if (!array1 || !array2) return 
+  // If title filter selected
+  if (type == "title") {
+    var count = 0;
+    // Check for matching titles to create sorted order
+    for (var i = 0; i < array1.length; i++) {
+      array1.forEach(item => {
+        if (item.title == array2[count]) {
+          sorted.push(item);
+          count++;
+        }
+      });
+    }
+  } else if (type == "time_recent") {
+    var count = 0;
+    // Check for matching timestamps to create sorted order
+    for (var i = 0; i < array1.length; i++) {
+      array1.forEach(item => {
+        if (item.timestamp == array2[count]) {
+          sorted.push(item);
+          count++;
+        }
+      });
+    }
+  } else {
+    var count = 0;
+    // Check for matching timestamps to create sorted order
+    for (var i = 0; i < array1.length; i++) {
+      array1.forEach(item => {
+        if (item.timestamp == array2[count]) {
+          sorted.push(item);
+          count++;
+        }
+      });
+    }
+  }
   // Remove item duplicates
   return sorted.filter((item,
     index) => sorted.indexOf(item) === index);
 }
+
 
 /**
  * Receives the title search value and filters the list of recordings.
@@ -212,7 +324,12 @@ function compare(stuff, times) {
 var submit = document.getElementById("searchSubmit");
 submit.addEventListener('click', search);
 
-function search(){
+function search() {
+  // If prompt filter hasn't been selected, make it all prompts
+  if (typeof promptFilt === "undefined") {
+    promptFilt = "";
+  }
+
   document.getElementById("noResult").innerHTML = "";
   let count = 0;
   // get search input
@@ -223,11 +340,26 @@ function search(){
     filter(name);
     return;
   }
+
+  promptRecordings = [];
+  // If there is one, keep prompt filter for search
+  if (promptFilt != "") {
+    recordings.forEach(recording => {
+      if (recording.prompt == promptFilt) {
+        promptRecordings.push(recording)
+      }
+    });
+  } else {
+    recordings.forEach(recording => {
+      promptRecordings.push(recording)
+    });
+  }
+
   filteredRecordings = [];
   // filter recordings with matching title to search input
   // track total incase of no match
-  recordings.forEach(recording => {
-    if (recording.title == input) {
+  promptRecordings.forEach(recording => {
+    if (recording.title.toLowerCase() == input.toLowerCase()) {
       filteredRecordings.push(recording);
       count++;
     }
@@ -237,7 +369,9 @@ function search(){
   filteredRecordings.forEach(recording => {
     createCard(recording)
   });
-  // if no recordings match title value, alert
+  // Display number of audio files
+  document.getElementById("fileCount").innerHTML = "Number of files: " + count;
+  // if no recordings match title value, inform user
   if (count == 0) {
     document.getElementById("noResult").innerHTML = "No file named '" + input + "' found.";
   }
@@ -250,7 +384,7 @@ function search(){
 function createCard(object) {
   //setup some initial card details
   const htmlNode = document.createElement("div");
-  htmlNode.setAttribute('id', object._id)
+  htmlNode.setAttribute('id', object.file_id)
   htmlNode.setAttribute('class', "col item")
   //Clone the hidden template from the html
   var newCard = $('#cardTemplate').clone().attr("id", object.file_id);
@@ -304,7 +438,7 @@ function createCard(object) {
   //wire up buttons, delete and public/unpublic
   //if object is public, then button says unpublic
   var publicButton = newCard.find("#publicButton")
-  if (object.public_flg) {
+  if (object.public_flg == 1) {
     publicButton.attr("class", "btn btn-danger public")
     publicButton.text("Make Private")
     publicButton.attr("onclick", "makePrivate('" + object.file_id + "')")
@@ -361,7 +495,6 @@ function makePublic(id) {
 function makePrivate(id) {
   console.log(id);
   let promise = fetch("/removePublic?takeOffSite=" + id);
-
   promise.then(response => {
     if (response.status !== 200) {
       console.log('Looks like there was a problem. Status Code: ' +
@@ -400,6 +533,7 @@ function deleteRecording(id) {
       console.log("Recording Deleted");
       var card = $('#' + id)
       card.fadeOut(300, function () { $(this).remove(); });
+      document.location.reload();
     }
   }).catch(function (err) {
     throw err;
