@@ -111,13 +111,7 @@ function currentPromptUpdate(htmlElement){
  * @param {String} collectionPrompt 
  */
 function createListElement(collectionPrompt){
-   //update filter dropdown
-   const htmlNode = document.createElement("option");
-   htmlNode.setAttribute('value', collectionPrompt)
-   htmlNode.innerText = collectionPrompt
-   document.getElementById("selectPrompt").append(htmlNode)
-
-  // //update prompt dropdown
+  //update prompt dropdown
   // const dropdownhtmlList = document.createElement("li");
   // const dropdownhtmlA = document.createElement("a");
   // dropdownhtmlA.setAttribute("class", "dropdown-item")
@@ -125,6 +119,12 @@ function createListElement(collectionPrompt){
   // dropdownhtmlA.innerText = collectionPrompt
   // dropdownhtmlList.append(dropdownhtmlA)
   // document.getElementById("dropdown-menu").append(dropdownhtmlList)
+
+  //update filter dropdown
+  const htmlNode = document.createElement("option");
+  htmlNode.setAttribute('value', collectionPrompt)
+  htmlNode.innerText = collectionPrompt
+  document.getElementById("selectPrompt").append(htmlNode)
 }
 
 /**

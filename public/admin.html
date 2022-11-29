@@ -12,9 +12,15 @@
 </head>
 
 <body>
-    <header>       
+
+    <header> 
+        <div style="display: flex;">
             <h1 class="">Admin Dashboard</h1>
-            <h2 class="mb-4">Manage Collections and Prompts</h2>
+            <button style ="position:absolute; right: 80px;" class="btn btn-outline-secondary">
+            <a href="https://redruth-auth.auth.us-east-1.amazoncognito.com/logout?client_id=3s5a2k1h6011ie84ama0sqqlq3&logout_uri=http://localhost:3000/logged_out.html">Logout</a>
+            </button>
+        </div>
+            
             <nav>
                 <ul class="nav nav-pills">
                     <li>
@@ -26,70 +32,13 @@
                         </form>
                     </li>
                     <li class="btn"><a href="new-collection.html">Create new collection</a></li>
-                    <li class="btn"><a href="#">Account</a></li>
+                    <li class="btn"><a href="logged_in.html">Account</a></li>
                 </ul>
             </nav>
+       
     </header>
-
+    
     <h2 id="current"></h2> 
-
-    <details>
-        <summary>Edit this collection</summary>
-        <form method="get" action="/updateCollectionTitle">
-            <div class="input-group">
-                <input type="text" name="title" class="form-control"
-                        aria-label="New collection title"
-                        placeholder="New collection title">
-                <span class="input-group-btn">
-                    <button class="btn btn-outline-secondary">Save</button>
-                </span>
-            </div>
-        </form>
-        <form method="get" action="/updateCollectionDesc">
-            <div class="input-group">
-                <input type="text" name="desc" class="form-control"
-                        aria-label="New description"
-                        placeholder="New description">
-                <span class="input-group-btn">
-                    <button class="btn btn-outline-secondary">Save</button>
-                </span>
-            </div>
-        </form>
-    </details>
-
-    <details>
-        <summary>Manage this collection</summary>
-        <button class="btn btn-outline-secondary" name="button">Publish</button>
-        <p><i>Anyone with a link will be able to add stories to this collection</i></p>
-        <!--<form method="get" action="/deleteCollection">-->
-        <button class="btn btn-outline-secondary" name="button">Delete this collection</button>
-        <p><i>TODO: warning message</i></p>
-    </details>
-
-    <details>
-        <summary>Add/delete metadata fields</summary>
-        <!--<form method="get">-->
-            <label for="metadata-list">Add field:</label>
-            <select name="metadata-list" id="metadata-list">
-                <option value="phone">Phone</option>
-                <option value="email">Email</option>
-                <option value="postal-code">Postal code</option>
-            </select>
-            <div class="col-lg-6">
-                <div class="input-group">
-                    <input type="text" class="form-control" aria-label="Field name">
-                    <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" 
-                                aria-haspopup="true" aria-expanded="false">Datatype <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
             <div class="delete-md">
                 <label for="delete-md-list">Delete field:</label>
                     <select name="delete-md-list" id="delete-md-list">
@@ -170,7 +119,7 @@
     <!-- select stories to share -->
     <div class="mb-5">
         <div id="collections" class="container">
-            <h2 class="mb-4">Filter, Delete, or Share/Private Recordings on Public Site</h2>
+            <h2 class="mb-4">Filter, Delete, Share/Private Recordings on Public Site</h2>
             <label for="selectPrompt" class="col-form-label">Filter by Prompt:</label>
             <select onchange="filterPrompt(this)" class="form-select form-select-lg mb-4" id="selectPrompt"
                 aria-label="selectPrompt">
