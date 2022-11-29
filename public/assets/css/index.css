@@ -138,3 +138,21 @@
   
 } */
 
+.search-container {
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.search-container input[type="text"] {
+  display: block;
+  width: calc(100% - 24px);
+  width: 100%;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 10px;
+  border: 1px solid #000000;
+  margin-bottom: 20px;
+}
+
+
+

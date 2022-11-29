@@ -175,7 +175,22 @@
                 aria-label="selectPrompt">
                 <option value="">All Prompts</option>
             </select>
+            <div class="search-container" id="bar">
+                <form action='' onsubmit="return false">
+                    <label for="metadataFilter" class="col-form-label">Filter by metadata:</label>
+                    <select id="metadataFilter" onchange="metaFilter(this)" class="form-select form-select-lg mb-4">
+                        <option value="">Timestamp (Oldest)</option>
+                        <option value="time_recent">Timestamp (Recent)</option>
+                        <option value="title">Title</option>
+                    </select>
+                    <label for="searchInput" class="col-form-label">Search a title:</label>
+                    <input type="text" placeholder="Search a title..." name="search" id="searchInput" value="">
+                    <input type="submit" value="Submit" id="searchSubmit" class="btn btn-primary">
+                </form>
+            </div>
+            <div id="fileCount" class="mb-5"></div>
             <div class="row row-cols-auto g-4 justify-content-between" id="collectionContainer">
+                <div id="noResult"></div>
                 <div class="col" style="display:none" id="cardTemplate">
                     <div class="card h-100" style="width: 18rem;">
                         <div class="card-body">
