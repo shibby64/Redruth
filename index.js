@@ -277,15 +277,15 @@ function updatePrompt(newPrompt) {
 
 /* get prompt from db */
 app.get('/prompt', (req, res) => {
-    var promptid; // TODO: Make it so it doesnt crash when accessing a prompt id that doesn't exist
+    let promptid = 1;
+
     if (req.query.promptid) {
         promptid = req.query.promptid;
-    } else {
-        promptid = 1;
     }
-    connection.query('SELECT * FROM t_prompt WHERE prompt_id = ?', [promptid], function (error, results, fields) {
+
+    connection.query('SELECT * FROM t_prompt WHERE prompt_id = ? OR prompt_id = 1 ORDER BY prompt_id DESC', [promptid], function (error, results, fields) {
         if (error) throw error;
-        res.json(results[0]); // sends a JSON response containing the first prompt.
+        res.json(results[0]);
     });
 });
 

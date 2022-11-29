@@ -7,7 +7,6 @@ function updatePrompt() {
     fetch('/prompt' + queryStr, {  method: 'GET' })
         .then(res => res.json())
         .then(res => {
-            console.log(res.prompt);
             try {
                 Array.from(showP).forEach(element => {
                     element.innerText = res.prompt;
