@@ -16,6 +16,7 @@ let collections = [];
 
 getRecordings();
 getCollections();
+getCurrentCollection();
 
 
 /**
@@ -47,14 +48,19 @@ async function getRecordings() {
  *  
  */
 async function getCollections() {
+  //console.log("here");
+  //const curColID = await fetch('/currentCollection', {method: 'GET'})
+  //  .then(response => response.json())
+  //  .then(response => response[0].collection_id);
+  //console.log(curColID);
   fetch('/collections', { method: 'GET' })
     .then((object) => object.json())
     .then((object) => {
       if (object.success && object.results) {
         object.results.forEach(collection => {
-          if (collection) { // TODO currently uses the last created prompt as the default. will eventually need to query t_admin_cache with the user_id 
-            document.getElementById("current").innerHTML = "Current Collection: <i>" +  collection.title + "</i>";
-          }
+          //if (collection) {//.collection_id === curColID) { // TODO currently uses the last created prompt as the default. will eventually need to query t_admin_cache with the user_id 
+          //  document.getElementById("current").innerHTML = "Current Collection: <i>" +  collection.title + "</i>";
+          //}
           collections.push(collection.title)
         });
       }
@@ -63,13 +69,32 @@ async function getCollections() {
     .catch((err) => console.error(err));
 };
 
+async function getCurrentCollection() {
+  fetch('/currentCollection', { method: 'GET' })
+    .then((object) => object.json())
+    .then((collection) => {
+      if (collection.success && collection.results) {
+        document.getElementById("current").innerHTML = collection.results[0].title;
+      }
+    });
+    //.then(updatePageView());
+}
+
 
 /**
  * Updates the input#collectionsUpdate's value to whatever the user clicked on in the dropdown
  * @param htmlElement the onclick passes the html element clicked
  */
 function currentCollectionUpdate(htmlElement){
-  document.getElementById("collectionsUpdate").value = htmlElement.innerText
+  //document.getElementById("current").value = htmlElement.innerText
+  fetch('/swapCurrentCollection', { method: 'GET' })
+    .then((object) => object.json())
+    .then((collection) => {
+      if (collection.success && collection.results) {
+        document.getElementById("current").innerHTML = collection.results[0].title;
+      }
+    });
+  updatePageView();
 }
 
 /**
@@ -111,13 +136,23 @@ function createListElement(collectionPrompt){
 function createCollectionDropdownItem(collectionName){
   //update collection dropdown
   const dropdownhtmlList = document.createElement("li");
-  const dropdownhtmlA = document.createElement("a");
-  dropdownhtmlA.setAttribute("class", "dropdown-item")
-  dropdownhtmlA.setAttribute("onclick", "currentCollectionUpdate(this)")
-  dropdownhtmlA.innerText = collectionName
-  dropdownhtmlList.append(dropdownhtmlA)
+  const dropdownhtmlB = document.createElement("button");
+  dropdownhtmlB.setAttribute("class", "dropdown-item")
+  dropdownhtmlB.setAttribute("name", "newCollection")
+  dropdownhtmlB.setAttribute("value", collectionName)
+  dropdownhtmlB.innerText = collectionName
+  dropdownhtmlList.append(dropdownhtmlB)
   document.getElementById("collections-dropdown-menu").append(dropdownhtmlList)
 }
+
+/*function createPromptItem(object) {
+  const htmlListItem = document.createElement("li");
+  const htmlNode = document.createElement("div");
+  htmlNode.setAttribute('id', object.prompt_id)
+  htmlNode.setAttribute('class', "col item")
+  var newPromptItem = $('#promptTemplate').clone().attr("id", object.prompt_id);
+
+}*/
 
 /**
  * Takes the selected value and filters the list of recordings.
