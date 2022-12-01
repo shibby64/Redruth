@@ -57,27 +57,30 @@ let wavesurfer = WaveSurfer.create({
  * Used for setting up html for display on the listen page
  */
 function metaData(publicStories) {
-    const project = document.createElement('h4');
-    project.classList.add('metaDataStyle', 'project');
-    const projectNode = document.createTextNode("Project: " + publicStories[0].collection_name);
-    project.appendChild(projectNode);
-    recordingsContainer.append(project);
-    /*-----------------------------------------------------------*/
-    const prompt = document.createElement('h6');
-    prompt.classList.add('metaDataStyle', 'prompt');
-    const promptNode = document.createTextNode("Prompt: " + publicStories[0].prompt);
-    prompt.appendChild(promptNode);
-    recordingsContainer.append(prompt);
-
     for (let m = 0; m < publicStories.length; m++) {
         const recordingElement = document.createElement('div');
+
         if (m === 0) {
             recordingElement.classList.add("slider-item", 'slide-indicator', 'active');
         } else {
             recordingElement.classList.add("slider-item", 'slide-indicator');
         }
+        
         recordingElement.setAttribute('id', 'cont' + m)
-            /*-----------------------------------------------------------*/
+        
+        const project = document.createElement('h4');
+        project.classList.add('metaDataStyle', 'project');
+        const projectNode = document.createTextNode("Project: " + publicStories[m].collection_name);
+        project.appendChild(projectNode);
+        recordingElement.append(project);
+        /*-----------------------------------------------------------*/
+        const prompt = document.createElement('h6');
+        prompt.classList.add('metaDataStyle', 'prompt');
+        const promptNode = document.createTextNode("Prompt: " + publicStories[m].prompt);
+        prompt.appendChild(promptNode);
+        recordingElement.append(prompt);
+
+        /*-----------------------------------------------------------*/
         const title = document.createElement('p');
         title.classList.add('metaDataStyle');
         const titleNode = document.createTextNode("* Title: " + publicStories[m].audio_name);
