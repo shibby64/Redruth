@@ -38,81 +38,147 @@
        
     </header>
     
-    <h2 id="current"></h2> 
-            <div class="delete-md">
-                <label for="delete-md-list">Delete field:</label>
-                    <select name="delete-md-list" id="delete-md-list">
-                        <option value="phone">Phone</option>
-                        <option value="email">Email</option>
-                        <option value="postal-code">Postal code</option>
-                    </select>
-            </div>
-            <button name="button">Save</button>
-        <!--</form>-->
-    </details>
-
-    <details>
-        <summary>Add prompt</summary>
-        <form method="get" action="/addPrompt">
-            <div class="input-group">
-                <input type="text" name="prompt" class="form-control"
-                        aria-label="New prompt"
-                        placeholder="New prompt">
-                <input type="text" name="desc" class="form-control"
-                    aria-label="Description"
-                    placeholder="Description">
-                <button class="btn btn-outline-secondary">Save</button>
-            </div>
-        </form>
-    </details>
-
-    <details>
-        <summary>Manage prompts</summary>
-        <form>
-            <p id="currentPrompt">Current prompt: <b>Template prompt</b></p>
-            <ul id="promptList">
-                <li>
-                <div id="promptTemplate">
-                    <details>
-                        <summary>Template prompt</summary>
-                        <details>
-                            <summary>Edit</summary>
-                            <form method="get">
-                                <div class="input-group">
-                                    <input type="text" name="title" class="form-control"
-                                            aria-label="New prompt text"
-                                            placeholder="New prompt text">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-outline-secondary">Save</button>
-                                    </span>
-                                </div>
-                            </form>
-                            <form method="get">
-                                <div class="input-group">
-                                    <input type="text" name="desc" class="form-control"
-                                            aria-label="New description"
-                                            placeholder="New description">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-outline-secondary">Save</button>
-                                    </span>
-                                </div>
-                            </form>
-                        </details>
-                        <div class="input-group">
-                            <form method="get">
-                                <button class="btn btn-outline-secondary">Make current</button>
-                            </form>
-                            <p><i>Make this the prompt that appears on your collection page</i></p>
-                        </div>
-                        <form method="get">
-                            <button class="btn btn-outline-secondary">Delete this prompt</button>
+    <div class="mb-5">
+        <div class="container">        
+            <h2 id="current"></h2> 
+            <div class="row">
+                <div class="col-md-6">
+                    <details class="form-control input-lg">
+                        <summary>Edit this collection</summary>
+                        <form method="get" action="/updateCollectionTitle">
+                            <div class="input-group">
+                                <input type="text" name="title" class="form-control"
+                                        aria-label="New collection title"
+                                        placeholder="New collection title">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-outline-secondary">Save</button>
+                                </span>
+                            </div>
+                        </form>
+                        <form method="get" action="/updateCollectionDesc">
+                            <div class="input-group">
+                                <input type="text" name="desc" class="form-control"
+                                        aria-label="New description"
+                                        placeholder="New description">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-outline-secondary">Save</button>
+                                </span>
+                            </div>
                         </form>
                     </details>
                 </div>
-                </li>
-            </ul>
-        </form>
-    </details>
+                <div class="col-md-6">
+                    <details class="form-control input-lg">
+                        <summary>Add prompt</summary>
+                        <form method="get" action="/addPrompt">
+                            <div class="input-group">
+                                <input type="text" name="prompt" class="form-control"
+                                        aria-label="New prompt"
+                                        placeholder="New prompt">
+                                <input type="text" name="desc" class="form-control"
+                                    aria-label="Description"
+                                    placeholder="Description">
+                                <button class="btn btn-outline-secondary">Save</button>
+                            </div>
+                        </form>
+                    </details>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <details class="form-control input-lg">
+                        <summary>Manage this collection</summary>
+                        <button class="btn btn-outline-secondary" name="button">Publish</button>
+                        <p><i>Anyone with a link will be able to add stories to this collection</i></p>
+                        <!--<form method="get" action="/deleteCollection">-->
+                        <button class="btn btn-outline-secondary" name="button">Delete this collection</button>
+                        <p><i>TODO: warning message</i></p>
+                    </details>
+                </div>
+                <div class="col-md-6">
+                    <details class="form-control input-lg">
+                        <summary>Manage prompts</summary>
+                        <p id="currentPrompt">Current prompt: <b>Template prompt</b></p>
+                        <ul id="promptList">
+                            <li id="promptTemplate">
+                                <details>
+                                    <summary class="promptTitle">Template prompt</summary>
+                                    <details>
+                                        <summary>Edit</summary>
+                                        <form method="get">
+                                            <div class="input-group">
+                                                <input type="text" name="title" class="form-control"
+                                                        aria-label="New prompt text"
+                                                        placeholder="New prompt text">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-outline-secondary">Save</button>
+                                                </span>
+                                            </div>
+                                        </form>
+                                        <form method="get">
+                                            <div class="input-group">
+                                                <input type="text" name="desc" class="form-control"
+                                                        aria-label="New description"
+                                                        placeholder="New description">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-outline-secondary">Save</button>
+                                                </span>
+                                            </div>
+                                        </form>
+                                    </details>
+                                    <details>
+                                        <summary>Add/delete metadata fields</summary>
+                                        
+                                            <label for="metadata-list">Add field:</label>
+                                            <select name="metadata-list" id="metadata-list">
+                                                <option value="phone">Phone</option>
+                                                <option value="email">Email</option>
+                                                <option value="postal-code">Postal code</option>
+                                            </select>
+                                            <div class="col-lg-6">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" aria-label="Field name">
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" 
+                                                                aria-haspopup="true" aria-expanded="false">Datatype <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right">
+                                                            <li><a href="#">Action</a></li>
+                                                            <li><a href="#">Another action</a></li>
+                                                            <li><a href="#">Something else here</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="delete-md">
+                                                <label for="delete-md-list">Delete field:</label>
+                                                    <select name="delete-md-list" id="delete-md-list">
+                                                        <option value="phone">Phone</option>
+                                                        <option value="email">Email</option>
+                                                        <option value="postal-code">Postal code</option>
+                                                    </select>
+                                            </div>
+                                            <button name="button">Save</button>
+                                        
+                                    </details>
+                                    <div class="input-group">
+                                        <form method="get">
+                                            <button class="btn btn-outline-secondary promptToPublish" name="promptToPublish">Make current</button>
+                                        </form>
+                                        <p><i>Make this the prompt that appears on your collection page</i></p>
+                                    </div>
+                                    <form method="get">
+                                        <button class="btn btn-outline-secondary">Delete this prompt</button>
+                                    </form>
+                                </details>
+                            </li>
+                        </ul>                        
+                    </details>
+                </div>
+            </div>  
+        </div>
+    </div>
     
     <hr>
 
