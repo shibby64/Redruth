@@ -57,6 +57,10 @@ let wavesurfer = WaveSurfer.create({
  * Used for setting up html for display on the listen page
  */
 function metaData(publicStories) {
+    if (publicStories.length == 0) {
+        return;
+    }
+
     for (let m = 0; m < publicStories.length; m++) {
         const recordingElement = document.createElement('div');
 
@@ -120,7 +124,6 @@ function metaData(publicStories) {
         recordingsContainer.appendChild(nxt);
     }
     
-    // console.log(publicStories[0].Audio.url);
     wavesurfer.load(""+ publicStories[0].filepath);
     //Set up play button when ready
     wavesurfer.on('ready', function () {

@@ -10,7 +10,6 @@ class Slider {
         this.prevItemIndex = this.sliderItems.length - 1;
         this.nextItemIndex = 1;
         this.isSliding = false;
-        
         // Set Item Indexs if active class is specified on an element other than the first.
         for (let i = 0; i < this.sliderItems.length; i++) {
             if (this.sliderItems[i].classList.contains("active")){
@@ -25,9 +24,10 @@ class Slider {
                 break;
             }
         }
+        
         this.setEventListeners();
-        console.log(this.indicators[this.currentIndex]);
-        this.indicators[this.currentIndex].classList.add("active");
+        //console.log("slider " + this.indicators[this.currentIndex]);
+        //this.indicators[this.currentIndex].classList.add("active");
     }
     setEventListeners() {
         this.prevBtn.addEventListener("click", () => {
