@@ -151,13 +151,14 @@ function createCollectionDropdownItem(collectionName){
   document.getElementById("collections-dropdown-menu").append(dropdownhtmlList)
 }
 
-/* Creates list item in Manage Prompts section for each prompt */
+/* Creates list item in Manage Prompts section for one prompt */
 function createPromptItem(object) {
   var newPromptItem = document.getElementById("promptTemplate").cloneNode(true);
   newPromptItem.setAttribute("id", object.prompt_id);
   newPromptItem.setAttribute("style", "");
   newPromptItem.getElementsByClassName("promptTitle")[0].innerText = object.prompt;
   newPromptItem.getElementsByClassName("promptToSwitch")[0].setAttribute("value", object.prompt_id);
+  newPromptItem.getElementsByClassName("promptToEdit")[0].setAttribute("value", object.prompt_id);
   document.getElementById("promptList").appendChild(newPromptItem);
 }
 
