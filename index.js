@@ -232,6 +232,24 @@ app.get('/swapCurrentPrompt', (req, res) => {
     res.redirect('/admin.html');
 });
 
+app.get('/updatePromptText', (req, res) => {
+    var promptID = req.query.promptToEdit;
+    var newText = req.query.newText;
+    connection.query('SELECT prompt FROM t_prompt WHERE prompt = ? AND user_id = 1', [newText], function (error, results, fields) {
+        if (error) throw error;
+        if (results.length > 0) {
+            console.log('You already have a prompt with this text!');
+        } else {
+            connection.query('UPDATE t_prompt SET prompt = ? WHERE prompt_id = ?', [newText, promptID], function (error, results, fields) { 
+                if (error) throw error;
+            });
+        }
+
+    });
+
+    res.redirect('/admin.html');
+});
+
 app.get('/updatePrompt', (req, res) => {
     var prompt = req.query.prompt;
     updatePrompt(prompt);
