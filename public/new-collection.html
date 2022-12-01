@@ -6,37 +6,50 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin Dashboard</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+        <link href="\css\index.css" rel="stylesheet" />
     </head>
 
     <body>
 
-        <header>
-            <div id="top-header">
+        <header> 
+            <div style="display: flex;">
                 <h1 class="">Admin Dashboard</h1>
-                <nav>
-                    <ul>
-                        <li class="btn"><a href="admin.html">Back</a></li>
-                        <li><a href="#">Account</a></li>                        
-                    </ul>
-                </nav>
+                <button style ="position:absolute; right: 260px;" class="btn btn-outline-secondary"><a href="admin.html">Back</a></button>
+                <button style ="position:absolute; right: 165px;" class="btn btn-outline-secondary"><a href="logged_in.html">Account</a></button>
+                <button style ="position:absolute; right: 80px;" class="btn btn-outline-secondary">
+                    <a href="https://redruth-auth.auth.us-east-1.amazoncognito.com/logout?client_id=3s5a2k1h6011ie84ama0sqqlq3&logout_uri=http://localhost:3000/logged_out.html">Logout</a>
+                </button>
             </div>
         </header>
 
-        <h2 class="">Create new collection</h2> 
-        <form method="get" action="/createNewCollection">
-            <div class="col-name-form">
-                <h3 class="">Name</h3>
-                <input type="text" name="collectionName" id="collectionsUpdate" class="form-control"
-                        aria-label="Collection name"
-                        placeholder="Collection name">
+        <div class="mb-5">
+            <div class="container">
+                <h2 class="">Create new collection</h2> 
+                <form method="get" action="/createNewCollection">
+                    <div class="col-name-form">
+                        <h3 class="">Name</h3>
+                        <input type="text" name="collectionName" id="collectionsUpdate" class="form-control"
+                                aria-label="Collection name"
+                                placeholder="Collection name">
+                    </div>
+                    <div class="col-desc-form">
+                        <h3 class="">Description</h3>
+                        <input type="text" name="collectionDesc" id="collectionsUpdate" class="form-control"
+                                aria-label="Describe this collection"
+                                placeholder="Describe this collection">
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Submit">
+                </form>
             </div>
-            <div class="col-desc-form">
-                <h3 class="">Description</h3>
-                <input type="text" name="collectionDesc" id="collectionsUpdate" class="form-control"
-                        aria-label="Describe this collection"
-                        placeholder="Describe this collection">
-            </div>
-            <input class="btn btn-primary" type="submit" value="Submit">
-        </form>
+        </div>
+
+        <script src="/js/checkbox.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="/js/admin.js"></script>
+        <script src="/js/prompt.js"></script>
     </body>
 </html>

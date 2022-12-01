@@ -10,13 +10,15 @@
 
 
 const prompts = new Set();
+let allPrompts = [];
 let recordings = [];
 let filteredRecordings = [];
 let collections = [];
 
 getRecordings();
+getPrompts();
 getCollections();
-getCurrentCollection();
+getCurrentCollectionPrompt();
 
 
 /**
@@ -42,24 +44,13 @@ async function getRecordings() {
     .catch((err) => console.error(err));
 };
 
-/**
- * Grab collection names 
- *  
- */
+/* Grab collection names */
 async function getCollections() {
-  //console.log("here");
-  //const curColID = await fetch('/currentCollection', {method: 'GET'})
-  //  .then(response => response.json())
-  //  .then(response => response[0].collection_id);
-  //console.log(curColID);
   fetch('/collections', { method: 'GET' })
     .then((object) => object.json())
     .then((object) => {
       if (object.success && object.results) {
         object.results.forEach(collection => {
-          //if (collection) {//.collection_id === curColID) { // TODO currently uses the last created prompt as the default. will eventually need to query t_admin_cache with the user_id 
-          //  document.getElementById("current").innerHTML = "Current Collection: <i>" +  collection.title + "</i>";
-          //}
           collections.push(collection.title)
         });
       }
@@ -68,22 +59,24 @@ async function getCollections() {
     .catch((err) => console.error(err));
 };
 
-async function getCurrentCollection() {
-  fetch('/currentCollection', { method: 'GET' })
+async function getCurrentCollectionPrompt() {
+  fetch('/currentCollectionPrompt', { method: 'GET' })
     .then((object) => object.json())
     .then((collection) => {
       if (collection.success && collection.results) {
-        document.getElementById("current").innerHTML = collection.results[0].title;
+        document.getElementById("currentCollection").innerHTML = collection.results[0].title;
+        document.getElementById("currentPrompt").innerHTML = "Current prompt: <b>" + collection.results[0].prompt + "</b>";
+        if (collection.results[0].isPublic) {
+          document.getElementById("promptLink").innerHTML = "Use this link to share your collection: <b>localhost:3000/?promptid=" + collection.results[0].promptID + "</b>";
+        } else {
+          document.getElementById("promptLink").innerHTML = "Anyone with a link will be able to add stories to this collection";
+        }
       }
     });
-    //.then(updatePageView());
 }
 
 
-/**
- * Updates the input#collectionsUpdate's value to whatever the user clicked on in the dropdown
- * @param htmlElement the onclick passes the html element clicked
- */
+/* Updates current collection to collection user clicked on in dropdown */
 function currentCollectionUpdate(htmlElement){
   //document.getElementById("current").value = htmlElement.innerText
   fetch('/swapCurrentCollection', { method: 'GET' })
@@ -95,6 +88,20 @@ function currentCollectionUpdate(htmlElement){
     });
   updatePageView();
 }
+
+async function getPrompts() {
+  fetch('/prompts', { method: 'POST' })
+    .then((object) => object.json())
+    .then((object) => {
+      if (object.success && object.results.length > 0) {
+        for (i = 0; i < object.results.length; i++) {
+          createPromptItem(object.results[i]);
+        }
+      }
+    })
+    .catch((err) => console.error(err));
+};
+
 
 /**
  * Updates the input#promptUpdate's value to whatever the user clicked on in the dropdown
@@ -144,14 +151,16 @@ function createCollectionDropdownItem(collectionName){
   document.getElementById("collections-dropdown-menu").append(dropdownhtmlList)
 }
 
-/*function createPromptItem(object) {
-  const htmlListItem = document.createElement("li");
-  const htmlNode = document.createElement("div");
-  htmlNode.setAttribute('id', object.prompt_id)
-  htmlNode.setAttribute('class', "col item")
-  var newPromptItem = $('#promptTemplate').clone().attr("id", object.prompt_id);
-
-}*/
+/* Creates list item in Manage Prompts section for one prompt */
+function createPromptItem(object) {
+  var newPromptItem = document.getElementById("promptTemplate").cloneNode(true);
+  newPromptItem.setAttribute("id", object.prompt_id);
+  newPromptItem.setAttribute("style", "");
+  newPromptItem.getElementsByClassName("promptTitle")[0].innerText = object.prompt;
+  newPromptItem.getElementsByClassName("promptToSwitch")[0].setAttribute("value", object.prompt_id);
+  newPromptItem.getElementsByClassName("promptToEdit")[0].setAttribute("value", object.prompt_id);
+  document.getElementById("promptList").appendChild(newPromptItem);
+}
 
 /**
  * Takes the selected value and filters the list of recordings.
