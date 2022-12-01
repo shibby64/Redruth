@@ -31,16 +31,15 @@
                             </ul>
                         </form>
                     </li>
-                    <li class="btn"><a href="new-collection.html">Create new collection</a></li>
-                    <li class="btn"><a href="logged_in.html">Account</a></li>
+                    <li class="btn btn-outline-secondary"><a href="new-collection.html">Create new collection</a></li>
+                    <li class="btn btn-outline-secondary"><a href="logged_in.html">Account</a></li>
                 </ul>
             </nav>
-       
     </header>
-    
+
     <div class="mb-5">
         <div class="container">        
-            <h2 id="current"></h2> 
+            <h2 id="currentCollection"></h2> 
             <div class="row">
                 <div class="col-md-6">
                     <details class="form-control input-lg">
@@ -89,19 +88,21 @@
                 <div class="col-md-6">
                     <details class="form-control input-lg">
                         <summary>Manage this collection</summary>
-                        <button class="btn btn-outline-secondary" name="button">Publish</button>
-                        <p><i>Anyone with a link will be able to add stories to this collection</i></p>
-                        <!--<form method="get" action="/deleteCollection">-->
+                        <form method="get" action="/updatePublicCollection">
+                            <button class="btn btn-outline-secondary" name="button">Publish</button>
+                        </form>
+                        <p id="promptLink"></p>
+                        <!--<form method="get" action="/deleteCollection">
                         <button class="btn btn-outline-secondary" name="button">Delete this collection</button>
-                        <p><i>TODO: warning message</i></p>
+                        <p><i>Under construction!</i></p>-->
                     </details>
                 </div>
                 <div class="col-md-6">
                     <details class="form-control input-lg">
                         <summary>Manage prompts</summary>
-                        <p id="currentPrompt">Current prompt: <b>Template prompt</b></p>
-                        <ul id="promptList">
-                            <li id="promptTemplate">
+                        <p id="currentPrompt"></p>
+                        <ul class="list-group" id="promptList">
+                            <li class="list-group-item" id="promptTemplate" style="display:none">
                                 <details>
                                     <summary class="promptTitle">Template prompt</summary>
                                     <details>
@@ -163,8 +164,8 @@
                                         
                                     </details>
                                     <div class="input-group">
-                                        <form method="get">
-                                            <button class="btn btn-outline-secondary promptToPublish" name="promptToPublish">Make current</button>
+                                        <form method="get" action="/swapCurrentPrompt">
+                                            <button class="btn btn-outline-secondary promptToSwitch" name="promptToSwitch">Make current</button>
                                         </form>
                                         <p><i>Make this the prompt that appears on your collection page</i></p>
                                     </div>
