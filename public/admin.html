@@ -98,11 +98,12 @@
                             <li class="list-group-item" id="promptTemplate" style="display:none">
                                 <details>
                                     <summary class="promptTitle">Template prompt</summary>
-                                    <details>
+                                    <details class="list-group-item">
                                         <summary>Edit</summary>
-                                        <form method="get">
+                                        <form method="get" action="/updatePromptText">
                                             <div class="input-group">
-                                                <input type="text" name="title" class="form-control"
+                                                <input style="display:none" class="promptToEdit" name="promptToEdit" value="template"></input>
+                                                <input type="text" name="newText" class="form-control"
                                                         aria-label="New prompt text"
                                                         placeholder="New prompt text">
                                                 <span class="input-group-btn">
@@ -121,7 +122,7 @@
                                             </div>
                                         </form>
                                     </details>
-                                    <details>
+                                    <!--<details>
                                         <summary>Add/delete metadata fields</summary>
                                         
                                             <label for="metadata-list">Add field:</label>
@@ -155,16 +156,16 @@
                                             </div>
                                             <button name="button">Save</button>
                                         
-                                    </details>
+                                    </details>-->
                                     <div class="input-group">
                                         <form method="get" action="/swapCurrentPrompt">
                                             <button class="btn btn-outline-secondary promptToSwitch" name="promptToSwitch">Make current</button>
                                         </form>
-                                        <p><i>Make this the prompt that appears on your collection page</i></p>
+                                        <span><p><small><i>Make this the prompt that appears on your collection page</i></small></p></span>
                                     </div>
-                                    <form method="get">
+                                    <!--<form method="get">
                                         <button class="btn btn-outline-secondary">Delete this prompt</button>
-                                    </form>
+                                    </form>-->
                                 </details>
                             </li>
                         </ul>                        
