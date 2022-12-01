@@ -30,7 +30,6 @@ async function getRecordings() {
       if (object.success && object.results) {
         // for all objects set up cards and add to various arrays
         for (i = 0; i < object.results.length; i++) {
-          //alert(object.results[i].email);
           recordings.push(object.results[i]);
           createCard(object.results[i]);
           prompts.add(object.results[i].prompt)
@@ -113,13 +112,13 @@ function currentPromptUpdate(htmlElement){
  */
 function createListElement(collectionPrompt){
   //update prompt dropdown
-  const dropdownhtmlList = document.createElement("li");
-  const dropdownhtmlA = document.createElement("a");
-  dropdownhtmlA.setAttribute("class", "dropdown-item")
-  dropdownhtmlA.setAttribute("onclick", "currentPromptUpdate(this)")
-  dropdownhtmlA.innerText = collectionPrompt
-  dropdownhtmlList.append(dropdownhtmlA)
-  document.getElementById("dropdown-menu").append(dropdownhtmlList)
+  // const dropdownhtmlList = document.createElement("li");
+  // const dropdownhtmlA = document.createElement("a");
+  // dropdownhtmlA.setAttribute("class", "dropdown-item")
+  // dropdownhtmlA.setAttribute("onclick", "currentPromptUpdate(this)")
+  // dropdownhtmlA.innerText = collectionPrompt
+  // dropdownhtmlList.append(dropdownhtmlA)
+  // document.getElementById("dropdown-menu").append(dropdownhtmlList)
 
   //update filter dropdown
   const htmlNode = document.createElement("option");
