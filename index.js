@@ -352,13 +352,8 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
       return;
     }
 
-    //send to database
-    connection.query('INSERT INTO t_user (email, name, phone_num, postal_code, usertype) VALUES (?, ?, ?, ?, 3)', [audio.email, audio.fullName, audio.phone, audio.postCode], function (error, results, fields) { // TODO create a sproc to do this
-        if (error) throw error;
-        var insertid = results.insertId
-        connection.query('INSERT INTO t_audio_file (user_id, prompt_id, filepath, timestamp, title, remarks, public_flg) VALUES (?, ?, ?, CURRENT_TIMESTAMP(), ?, ?, ?)', [insertid, audio.prompt, audio.link, audio.title, audio.comments, audio.public], function (error, results, fields) { // TODO create a sproc to do this
+    connection.query('INSERT INTO t_audio_file (prompt_id, filepath, timestamp, title, remarks, public_flg, email, name, phone_num, postal_code) VALUES (?, ?, CURRENT_TIMESTAMP(), ?, ?, ?, ?, ?, ?, ?)', [audio.prompt, audio.link, audio.title, audio.comments, audio.public, audio.email, audio.fullName, audio.phone, audio.postCode ], function (error, results, fields) { // TODO create a sproc to do this
             if (error) throw error;
-        });
     });
 
 
@@ -367,7 +362,7 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
 
 /*initial listen query for db data*/
 app.post('/metaArr', function(req, res) {
-    connection.query('SELECT t_collection.title AS collection_name, t_audio_file.title AS audio_name, t_audio_file.public_flg AS public_flg, t_prompt.prompt AS prompt, t_audio_file.remarks AS remarks, t_audio_file.timestamp AS timestamp, t_user.postal_code AS postal_code, t_audio_file.filepath AS filepath FROM t_audio_file JOIN t_user on t_audio_file.user_id = t_user.user_id JOIN t_prompt ON t_audio_file.prompt_id = t_prompt.prompt_id JOIN t_collection ON t_prompt.collection_id = t_collection.collection_id', function (error, results, fields) {
+    connection.query('SELECT t_collection.title AS collection_name, t_audio_file.title AS audio_name, t_audio_file.public_flg AS public_flg, t_prompt.prompt AS prompt, t_audio_file.remarks AS remarks, t_audio_file.timestamp AS timestamp, t_audio_file.postal_code AS postal_code, t_audio_file.filepath AS filepath FROM t_audio_file JOIN t_prompt ON t_audio_file.prompt_id = t_prompt.prompt_id JOIN t_collection ON t_prompt.collection_id = t_collection.collection_id', function (error, results, fields) {
         if (error) throw error;
         return res.json({ success: true, results});
     });
@@ -404,7 +399,7 @@ app.get('/currentCollection', (req, res) => {
 
 /*initial admin query for db data*/
 app.post('/saved', function(req, res) {
-    connection.query('SELECT t_audio_file.file_id AS file_id, t_audio_file.title AS title, t_audio_file.timestamp AS timestamp, t_audio_file.remarks AS remarks, t_audio_file.public_flg AS public_flg, t_prompt.prompt AS prompt, t_user.postal_code AS postal_code, t_user.name AS name, t_user.email AS email, t_user.phone_num AS phone_num, t_audio_file.filepath AS filepath FROM t_audio_file JOIN t_user ON t_audio_file.user_id = t_user.user_id JOIN t_prompt ON t_audio_file.prompt_id = t_prompt.prompt_id', function (error, results, fields) {
+    connection.query('SELECT t_audio_file.file_id AS file_id, t_audio_file.title AS title, t_audio_file.timestamp AS timestamp, t_audio_file.remarks AS remarks, t_audio_file.public_flg AS public_flg, t_prompt.prompt AS prompt, t_audio_file.postal_code AS postal_code, t_audio_file.name AS name, t_audio_file.email AS email, t_audio_file.phone_num AS phone_num, t_audio_file.filepath AS filepath FROM t_audio_file JOIN t_prompt ON t_audio_file.prompt_id = t_prompt.prompt_id', function (error, results, fields) {
         if (error) throw error;
         return res.json({ success: true, results});
     }); 
