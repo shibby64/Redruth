@@ -13,15 +13,14 @@
 
     <body>
 
-        <header>
-            <div id="top-header">
+        <header> 
+            <div style="display: flex;">
                 <h1 class="">Admin Dashboard</h1>
-                <nav>
-                    <ul class="nav nav-pills">
-                        <li class="btn btn-outline-secondary"><a href="admin.html">Back</a></li>
-                        <li class="btn btn-outline-secondary"><a href="logged_in.html">Account</a></li>                        
-                    </ul>
-                </nav>
+                <button style ="position:absolute; right: 260px;" class="btn btn-outline-secondary"><a href="admin.html">Back</a></button>
+                <button style ="position:absolute; right: 165px;" class="btn btn-outline-secondary"><a href="logged_in.html">Account</a></button>
+                <button style ="position:absolute; right: 80px;" class="btn btn-outline-secondary">
+                    <a href="https://redruth-auth.auth.us-east-1.amazoncognito.com/logout?client_id=3s5a2k1h6011ie84ama0sqqlq3&logout_uri=http://localhost:3000/logged_out.html">Logout</a>
+                </button>
             </div>
         </header>
 
