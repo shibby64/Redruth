@@ -16,25 +16,18 @@
     <header> 
         <div style="display: flex;">
             <h1 class="">Admin Dashboard</h1>
+            <form method="get" action="/swapCurrentCollection" name="admin-data" id="admin" autocomplete="on">
+                <button style ="position:absolute; right: 450px;" class="btn btn-outline-secondary dropdown-toggle" 
+                        type="button" data-bs-toggle="dropdown" aria-expanded="false">Change collection</button>
+                <ul class="dropdown-menu" id="collections-dropdown-menu">
+                </ul>
+            </form>
+            <button style ="position:absolute; right: 260px;" class="btn btn-outline-secondary"><a href="new-collection.html">Create new collection</a></button>
+            <button style ="position:absolute; right: 165px;" class="btn btn-outline-secondary"><a href="logged_in.html">Account</a></button>
             <button style ="position:absolute; right: 80px;" class="btn btn-outline-secondary">
-            <a href="https://redruth-auth.auth.us-east-1.amazoncognito.com/logout?client_id=3s5a2k1h6011ie84ama0sqqlq3&logout_uri=http://localhost:3000/logged_out.html">Logout</a>
+                <a href="https://redruth-auth.auth.us-east-1.amazoncognito.com/logout?client_id=3s5a2k1h6011ie84ama0sqqlq3&logout_uri=http://localhost:3000/logged_out.html">Logout</a>
             </button>
         </div>
-            
-            <nav>
-                <ul class="nav nav-pills">
-                    <li>
-                        <form method="get" action="/swapCurrentCollection" name="admin-data" id="admin" autocomplete="on">
-                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">Change collection</button>
-                            <ul class="dropdown-menu" id="collections-dropdown-menu">
-                            </ul>
-                        </form>
-                    </li>
-                    <li class="btn btn-outline-secondary"><a href="new-collection.html">Create new collection</a></li>
-                    <li class="btn btn-outline-secondary"><a href="logged_in.html">Account</a></li>
-                </ul>
-            </nav>
     </header>
 
     <div class="mb-5">
