@@ -64,7 +64,7 @@ class Slider {
         if(placeHolder === publicStories.length){
             placeHolder = 0;
         }
-        wavesurfer.load(""+ publicStories[placeHolder].Audio.url);
+        wavesurfer.load(""+ publicStories[placeHolder].filepath);
         console.log(publicStories[placeHolder])
         if (this.isSliding) return;
         this.isSliding = !this.isSliding;
@@ -88,7 +88,7 @@ class Slider {
         if(placeHolder < 0){
             placeHolder = publicStories.length -1;
         }
-        wavesurfer.load(""+ publicStories[placeHolder].Audio.url);
+        wavesurfer.load(""+ publicStories[placeHolder].filepath);
         console.log(publicStories[placeHolder])
         if (this.isSliding) return;
         this.isSliding = !this.isSliding;
