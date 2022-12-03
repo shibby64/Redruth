@@ -1,11 +1,11 @@
 # Redruth Reading Room Project
 
-> This website is for recording audio that will be added to a repository of stories documenting the history of the town of Redruth and it's residents. We want any story big or small. These stories will be exhibited as part of a library in Redruth Reading Room, a small space in the old Library building which we will install and respond to the stories of the town. 
+> This website is for researchers looking to collect audio responses.
 
 
-The Redruth Reading Room Project is an oral history project meant to refill the center with stories. Any data
+The Redruth Reading Room Project is an audio collection project for researchers to be able to collect and categorize audio recordings in response to prompts. Any data
 you provide will only be used to add additional context to your audio recording, and contact information will
-only be used by project adminstrators for requests to participate in future projects.
+only be used by project researchers and administrators for requests to participate in future projects.
 
 ![Redruth](Redruth.jpg)
 
@@ -21,7 +21,7 @@ only be used by project adminstrators for requests to participate in future proj
 
 #### Troubleshooting tips:
 - I am running `npm@8.5.5`
-- MongoDB Compass is useful for debugging the database  
+- NySQL Workbench is useful for debugging the database  
 
 
 ## Release History
