@@ -408,7 +408,7 @@ app.post('/prompts', (req, res) => {
 
 /*initial admin query for db data*/
 app.post('/saved', function(req, res) {
-    connection.query('SELECT t_audio_file.file_id AS file_id, t_audio_file.title AS title, t_audio_file.timestamp AS timestamp, t_audio_file.remarks AS remarks, t_audio_file.public_flg AS public_flg, t_prompt.prompt AS prompt, t_audio_file.postal_code AS postal_code, t_audio_file.name AS name, t_audio_file.email AS email, t_audio_file.phone_num AS phone_num, t_audio_file.filepath AS filepath FROM t_audio_file JOIN t_prompt ON t_audio_file.prompt_id = t_prompt.prompt_id', function (error, results, fields) {
+    connection.query('SELECT t_audio_file.file_id AS file_id, t_audio_file.title AS title, t_audio_file.timestamp AS timestamp, t_audio_file.remarks AS remarks, t_audio_file.public_flg AS public_flg, t_prompt.prompt AS prompt, t_audio_file.postal_code AS postal_code, t_audio_file.name AS name, t_audio_file.email AS email, t_audio_file.phone_num AS phone_num, t_audio_file.filepath AS filepath FROM t_audio_file JOIN t_prompt ON t_audio_file.prompt_id = t_prompt.prompt_id JOIN t_admin_cache ON t_prompt.collection_id = t_admin_cache.collection_id', function (error, results, fields) {
         if (error) throw error;
         return res.json({ success: true, results});
     }); 
