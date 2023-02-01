@@ -100,6 +100,17 @@ async function getPrompts() {
       }
     })
     .catch((err) => console.error(err));
+
+    fetch('/promptMetadata', { method: 'POST' })
+    .then((object) => object.json())
+    .then((object) => {
+      if (object.success && object.results.length > 0) {
+        for (i = 0; i < object.results.length; i++) {
+          createMetadataOption(object.results[i]);
+        }
+      }
+    })
+    .catch((err) => console.error(err));
 };
 
 
@@ -153,13 +164,24 @@ function createCollectionDropdownItem(collectionName){
 
 /* Creates list item in Manage Prompts section for one prompt */
 function createPromptItem(object) {
-  var newPromptItem = document.getElementById("promptTemplate").cloneNode(true);
+  let newPromptItem = document.getElementById("promptTemplate").cloneNode(true);
   newPromptItem.setAttribute("id", object.prompt_id);
   newPromptItem.setAttribute("style", "");
   newPromptItem.getElementsByClassName("promptTitle")[0].innerText = object.prompt;
   newPromptItem.getElementsByClassName("promptToSwitch")[0].setAttribute("value", object.prompt_id);
   newPromptItem.getElementsByClassName("promptToEdit")[0].setAttribute("value", object.prompt_id);
+  newPromptItem.getElementsByClassName("promptToAddMeta")[0].setAttribute("value", object.prompt_id);
+  newPromptItem.getElementsByClassName("promptToDeleteMeta")[0].setAttribute("value", object.prompt_id);   
   document.getElementById("promptList").appendChild(newPromptItem);
+}
+
+function createMetadataOption(mdItem) {  
+  let promptItem = document.getElementById(mdItem.promptID);
+  let metaName = mdItem.metadata_name;
+  let metaOption = document.createElement("option");
+  metaOption.setAttribute("value", metaName);
+  metaOption.innerHTML = metaName;
+  promptItem.getElementsByClassName("delete-md-list")[0].appendChild(metaOption);
 }
 
 /**

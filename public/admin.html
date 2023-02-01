@@ -122,41 +122,49 @@
                                             </div>
                                         </form>
                                     </details>
-                                    <!--<details>
+                                    <details class="list-group-item">
                                         <summary>Add/delete metadata fields</summary>
-                                        
-                                            <label for="metadata-list">Add field:</label>
-                                            <select name="metadata-list" id="metadata-list">
-                                                <option value="phone">Phone</option>
-                                                <option value="email">Email</option>
-                                                <option value="postal-code">Postal code</option>
-                                            </select>
-                                            <div class="col-lg-6">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" aria-label="Field name">
-                                                    <div class="input-group-btn">
-                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" 
-                                                                aria-haspopup="true" aria-expanded="false">Datatype <span class="caret"></span>
-                                                        </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right">
-                                                            <li><a href="#">Action</a></li>
-                                                            <li><a href="#">Another action</a></li>
-                                                            <li><a href="#">Something else here</a></li>
-                                                        </ul>
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <form method="get" action="/addPromptMeta">
+                                                    <div class="input-group">
+                                                        <label for="newFieldName">Add field:</label>
+                                                        <input style="display:none" class="promptToAddMeta" name="promptToAddMeta" value="template"/>
+                                                        <input id="newFieldName" type="text" name="newMeta" class="form-control"
+                                                                aria-label="Field name" placeholder="Field name"/>
+                                                        <select class="list-group-item" name="datatype">
+                                                            <option value="text">Text</option>
+                                                            <option value="number">Number</option>
+                                                            <option value="checkbox">Checkbox</option>
+                                                        </select>
+                                                        <select class="list-group-item" name="requiredFlg">
+                                                            <option value="true">Required</option>
+                                                            <option name="false" value="number">Not required</option>
+                                                        </select>
+                                                        <span class="input-group-btn">
+                                                            <button class="btn btn-outline-secondary">Save</button>
+                                                        </span>
                                                     </div>
-                                                </div>
+                                                </form>
                                             </div>
-                                            <div class="delete-md">
-                                                <label for="delete-md-list">Delete field:</label>
-                                                    <select name="delete-md-list" id="delete-md-list">
-                                                        <option value="phone">Phone</option>
-                                                        <option value="email">Email</option>
-                                                        <option value="postal-code">Postal code</option>
-                                                    </select>
-                                            </div>
-                                            <button name="button">Save</button>
+                                        </div>
                                         
-                                    </details>-->
+                                        <div class="row">   
+                                            <div class="input-group">                                        
+                                            <form method="get" action="/deletePromptMeta">    
+                                                <div class="input-group">
+                                                    <input style="display:none" class="promptToDeleteMeta" name="promptToDeleteMeta" value="template">
+                                                    <label>Delete field:</label>
+                                                    <select class="delete-md-list list-group-item" name="metaName"></select>
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-outline-secondary">Delete</button>
+                                                    </span>
+                                                </div>
+                                            </form>  
+                                            </div>                                          
+                                        </div>   
+                                                                             
+                                    </details>
                                     <div class="input-group">
                                         <form method="get" action="/swapCurrentPrompt">
                                             <button class="btn btn-outline-secondary promptToSwitch" name="promptToSwitch">Make current</button>

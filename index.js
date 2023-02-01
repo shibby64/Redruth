@@ -250,6 +250,36 @@ app.get('/updatePromptText', (req, res) => {
     res.redirect('/admin.html');
 });
 
+app.get('/addPromptMeta', (req, res) => {
+    var promptID = req.query.promptToAddMeta;
+    var newMeta = req.query.newMeta;
+    var metaDtype = req.query.datatype;
+    var requiredFlg = req.query.requiredFlg == "true" ? 1 : 0;
+    connection.query('SELECT metadata_name FROM t_prompt_metadata WHERE metadata_name = ? AND prompt_id = ?', [newMeta, promptID], function (error, results, fields) {
+        if (error) throw error;        
+        if (results.length > 0) {
+            console.log('You already have this field for this prompt!');
+        } else {
+            connection.query('INSERT INTO t_prompt_metadata (prompt_id, metadata_name, datatype, required_flg) VALUES (?, ?, ?, ?)', [promptID, newMeta, metaDtype, requiredFlg], function (error, results, fields) { 
+                if (error) throw error;
+            });
+        }
+
+    });
+
+    res.redirect('/admin.html');
+});
+
+app.get('/deletePromptMeta', (req, res) => {
+    var promptID = req.query.promptToDeleteMeta;
+    var metaName = req.query.metaName;
+    connection.query('DELETE FROM t_prompt_metadata WHERE metadata_name = ? AND prompt_id = ?', [metaName, promptID], function (error, results, fields) {
+        if (error) throw error;
+    });
+
+    res.redirect('/admin.html');
+});
+
 app.get('/updatePrompt', (req, res) => {
     var prompt = req.query.prompt;
     updatePrompt(prompt);
@@ -401,6 +431,13 @@ app.get('/currentCollectionPrompt', (req, res) => {
 
 app.post('/prompts', (req, res) => {
     connection.query('SELECT * FROM t_prompt WHERE collection_id = (SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1)', function (error, results, fields) {
+        if (error) throw error;
+        return res.json({ success: true, results});
+    });
+});
+
+app.post('/promptMetadata', (req, res) => {
+    connection.query('SELECT metadata_name, t_prompt_metadata.prompt_id AS promptID FROM t_prompt_metadata JOIN t_prompt ON t_prompt_metadata.prompt_id = t_prompt.prompt_id WHERE collection_id = (SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1)', function (error, results, fields) {
         if (error) throw error;
         return res.json({ success: true, results});
     });
