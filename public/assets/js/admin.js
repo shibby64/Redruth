@@ -75,6 +75,68 @@ async function getCurrentCollectionPrompt() {
     });
 }
 
+/* Update user's current page display */
+function displayHome(event) {
+  localStorage.setItem('home', 'true');
+  localStorage.setItem('inbox', 'false');
+  localStorage.setItem('publish', 'false');
+  localStorage.setItem('edit', 'false');
+  updatePageView();
+}
+
+function displayInbox(event) {
+  localStorage.setItem('home', 'false');
+  localStorage.setItem('inbox', 'true');
+  localStorage.setItem('publish', 'false');
+  localStorage.setItem('edit', 'false');
+  updatePageView();
+}
+
+function displayPublish(event) {
+  localStorage.setItem('home', 'false');
+  localStorage.setItem('inbox', 'false');
+  localStorage.setItem('publish', 'true');
+  localStorage.setItem('edit', 'false');
+  updatePageView();
+}
+
+function displayEdit(event) {
+  localStorage.setItem('home', 'false');
+  localStorage.setItem('inbox', 'false');
+  localStorage.setItem('publish', 'false');
+  localStorage.setItem('edit', 'true');
+  updatePageView();
+}
+
+/* Store user's current page display */
+window.onload = function() {
+  var home = localStorage.getItem('home');
+  var inbox = localStorage.getItem('inbox');
+  var publish = localStorage.getItem('publish');
+  var edit = localStorage.getItem('edit');
+
+  if (home === 'true') {
+    document.getElementById("home").style.display = "";
+    document.getElementById("inbox").style.display = "none";
+    document.getElementById("publish").style.display = "none";
+    document.getElementById("edit").style.display = "none";
+  } else if (inbox === 'true') {
+    document.getElementById("home").style.display = "none";
+    document.getElementById("inbox").style.display = "";
+    document.getElementById("publish").style.display = "none";
+    document.getElementById("edit").style.display = "none";
+  } else if (publish === 'true') {
+    document.getElementById("home").style.display = "none";
+    document.getElementById("inbox").style.display = "none";
+    document.getElementById("publish").style.display = "";
+    document.getElementById("edit").style.display = "none";
+  } else {
+    document.getElementById("home").style.display = "none";
+    document.getElementById("inbox").style.display = "none";
+    document.getElementById("publish").style.display = "none";
+    document.getElementById("edit").style.display = "";
+  }
+}
 
 /* Updates current collection to collection user clicked on in dropdown */
 function currentCollectionUpdate(htmlElement){
@@ -100,8 +162,28 @@ async function getPrompts() {
       }
     })
     .catch((err) => console.error(err));
+
+    fetch('/promptMetadata', { method: 'POST' })
+    .then((object) => object.json())
+    .then((object) => {
+      if (object.success && object.results.length > 0) {
+        for (i = 0; i < object.results.length; i++) {
+          createMetadataOption(object.results[i]);
+        }
+      }
+    })
+    .catch((err) => console.error(err));
 };
 
+async function getmdtest(htmlElement){
+  //document.getElementById("current").value = htmlElement.innerText
+  fetch('/promptMetadata', { method: 'POST' })
+    .then((object) => object.json())
+    .then((mdObject) => {
+      console.log(mdObject);
+    });
+  updatePageView();
+}
 
 /**
  * Updates the input#promptUpdate's value to whatever the user clicked on in the dropdown
@@ -153,13 +235,24 @@ function createCollectionDropdownItem(collectionName){
 
 /* Creates list item in Manage Prompts section for one prompt */
 function createPromptItem(object) {
-  var newPromptItem = document.getElementById("promptTemplate").cloneNode(true);
+  let newPromptItem = document.getElementById("promptTemplate").cloneNode(true);
   newPromptItem.setAttribute("id", object.prompt_id);
   newPromptItem.setAttribute("style", "");
   newPromptItem.getElementsByClassName("promptTitle")[0].innerText = object.prompt;
   newPromptItem.getElementsByClassName("promptToSwitch")[0].setAttribute("value", object.prompt_id);
   newPromptItem.getElementsByClassName("promptToEdit")[0].setAttribute("value", object.prompt_id);
+  newPromptItem.getElementsByClassName("promptToAddMeta")[0].setAttribute("value", object.prompt_id);
+  newPromptItem.getElementsByClassName("promptToDeleteMeta")[0].setAttribute("value", object.prompt_id);   
   document.getElementById("promptList").appendChild(newPromptItem);
+}
+
+function createMetadataOption(mdItem) {  
+  let promptItem = document.getElementById(mdItem.promptID);
+  let metaName = mdItem.metadata_name;
+  let metaOption = document.createElement("option");
+  metaOption.setAttribute("value", metaName);
+  metaOption.innerHTML = metaName;
+  promptItem.getElementsByClassName("delete-md-list")[0].appendChild(metaOption);
 }
 
 /**

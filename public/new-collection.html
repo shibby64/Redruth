@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<!--<html lang="en">
 
     <head>
         <meta charset="UTF-8">
@@ -52,4 +52,123 @@
         <script src="/js/admin.js"></script>
         <script src="/js/prompt.js"></script>
     </body>
+</html>-->
+<html>
+  <head>
+    <!--<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>-->
+    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link href="\css\index.css" rel="stylesheet" />-->
+
+    <!--<script src="/js/checkbox.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"></script>
+    <script src="/js/admin.js"></script>
+    <script src="/js/prompt.js"></script>-->
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+    
+    <!-- Add Collection -->
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#new-collection-modal">
+      Add Collection
+    </button>
+
+    <div class="modal fade" id="new-collection-modal" tabindex="-1" role="dialog" aria-labelledby="new-collection">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h4 class="modal-title" id="new-collection-header">Add Collection</h4>
+              </div>
+              <div class="modal-body">
+                  <form>
+                      <div class="form-group">
+                          <label for="new-collection-title" class="control-label">Title</label>
+                          <input type="text" class="form-control" id="new-collection-title">
+                      </div>
+                      <div class="form-group">
+                          <label for="new-collection-desc" class="control-label">Description</label>
+                          <textarea class="form-control" id="new-collection-desc"></textarea>
+                      </div>
+                  </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- Add Prompt -->
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#new-prompt-modal">
+      Add Prompt
+    </button>
+
+    <div class="modal fade" id="new-prompt-modal" tabindex="-1" role="dialog" aria-labelledby="new-prompt">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h4 class="modal-title" id="new-prompt-header">Add Prompt</h4>
+              </div>
+              <form action="/addPromptNew">
+                  <div class="modal-body">
+                      <div class="form-group">
+                          <label for="new-prompt-desc" class="control-label">Prompt Description</label>
+                          <textarea class="form-control" id="new-prompt-desc" name="newPromptDesc"></textarea>
+                      </div>
+                      <div class="form-group">
+                          <label for="add-metadata-list" class="control-label">Add Metadata</label>
+                          <div>
+                            <input type="checkbox" id="first-name" name="metadata[0][name]" value="First Name" checked>
+                            <input style="display:none" name="metadata[0][datatype]" value="text">
+                            <input style="display:none" name="metadata[0][requiredFlg]" value="true">
+                            <label for="first-name">First Name</label>
+                          </div>                      
+                          <div>
+                            <input type="checkbox" id="last-name" name="last-name" checked>
+                            <input style="display:none" name="metadata[1][datatype]" value="text">
+                            <input style="display:none" name="metadata[1][requiredFlg]" value="true">
+                            <label for="last-name">Last Name</label>
+                          </div>  
+                          <div>
+                            <input type="checkbox" id="email" name="email">
+                            <input style="display:none" name="metadata[2][datatype]" value="text">
+                            <input style="display:none" name="metadata[2][requiredFlg]" value="false">
+                            <label for="email">Email</label>
+                          </div>  
+                          <div>
+                            <input type="checkbox" id="phone" name="phone">
+                            <input style="display:none" name="metadata[3][datatype]" value="text">
+                            <input style="display:none" name="metadata[3][requiredFlg]" value="false">
+                            <label for="phone">Phone</label>
+                          </div>  
+
+                      </div>  
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button class="btn btn-primary">Save</button>
+                  </div>  
+              </form>
+          </div>
+      </div>
+    </div>
+
+  </body>
 </html>

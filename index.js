@@ -100,8 +100,8 @@ app.get('/listen.html', (req, res) => {
 });
 
 /* admin page route */
-app.get('/admin.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/admin.html'));
+app.get('/admin-new.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/admin-new.html'));
 });
 
 app.get('/saved.html', (req, res) => {
@@ -150,8 +150,8 @@ app.get('/createNewCollection', (req, res) => {
 
     });
 
-    res.redirect('/admin.html');
-    //res.sendFile(path.join(__dirname, 'public/admin.html'));
+    res.redirect('/admin-new.html');
+    //res.sendFile(path.join(__dirname, 'public/admin-new.html'));
 });
 
 /* Switch to selected collection */
@@ -161,8 +161,8 @@ app.get('/swapCurrentCollection', (req, res) => {
         if (error) throw error;
     });
 
-    res.redirect('/admin.html');
-    //res.sendFile(path.join(__dirname, 'public/admin.html'));
+    res.redirect('/admin-new.html');
+    //res.sendFile(path.join(__dirname, 'public/admin-new.html'));
 });
 
 /* Change current collection title */
@@ -180,8 +180,8 @@ app.get('/updateCollectionTitle', (req, res) => {
 
     });
 
-    res.redirect('/admin.html');
-    // res.sendFile(path.join(__dirname, 'public/admin.html'));
+    res.redirect('/admin-new.html');
+    // res.sendFile(path.join(__dirname, 'public/admin-new.html'));
 });
 
 /* Change current collection description */
@@ -190,8 +190,8 @@ app.get('/updateCollectionDesc', (req, res) => {
     connection.query('UPDATE t_collection SET description = ? WHERE collection_id = (SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1)', [newDesc], function (error, results, fields) { 
         if (error) throw error;
     });
-    res.redirect('/admin.html');
-    // res.sendFile(path.join(__dirname, 'public/admin.html'));
+    res.redirect('/admin-new.html');
+    // res.sendFile(path.join(__dirname, 'public/admin-new.html'));
 });
 
 /* Change public status of current collection */
@@ -219,8 +219,35 @@ app.get('/addPrompt', (req, res) => {
         }
     });
 
-    res.redirect('/admin.html');
-    //res.sendFile(path.join(__dirname, 'public/admin.html'));
+    res.redirect('/admin-new.html');
+    //res.sendFile(path.join(__dirname, 'public/admin-new.html'));
+});
+
+app.get('/addPromptNew', (req, res) => {
+    var p_name = "pName";
+    var p_desc = req.query.newPromptDesc;
+    var p_metadata = req.query.metadata;
+    connection.query('INSERT INTO t_prompt (collection_id, user_id, prompt, description) VALUES ((SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1), 1, ?, ?)', [p_name, p_desc], function (error, results, fields) {
+        if (error) throw error;        
+    }); 
+
+    connection.query('SELECT prompt_id FROM t_prompt WHERE description = ?', [p_desc], function (error, results, fields) {
+        if (error) throw error;
+        else {
+            var promptID = results[0];
+            for (var i = 0; i < p_metadata.length; i++) {
+                connection.query('INSERT INTO t_prompt_metadata (prompt_id, metadata_name, datatype, required_flg) VALUES (?, ?, ?, ?)', [promptID, p_metadata[i].name, p_metadata[i].datatype, p_metadata[i].requiredFlg], function (error, results, fields) {
+                    if (error) throw error;
+                });
+            }
+            connection.query('UPDATE t_admin_cache SET prompt_id = ?', [promptID], function (error, results, fields) {
+                if (error) throw error;
+            });
+        }
+    }); 
+
+    res.redirect('/admin-new.html');
+    //res.sendFile(path.join(__dirname, 'public/admin-new.html'));
 });
 
 app.get('/swapCurrentPrompt', (req, res) => {
@@ -229,7 +256,7 @@ app.get('/swapCurrentPrompt', (req, res) => {
         if (error) throw error;
     });
 
-    res.redirect('/admin.html');
+    res.redirect('/admin-new.html');
 });
 
 app.get('/updatePromptText', (req, res) => {
@@ -247,7 +274,37 @@ app.get('/updatePromptText', (req, res) => {
 
     });
 
-    res.redirect('/admin.html');
+    res.redirect('/admin-new.html');
+});
+
+app.get('/addPromptMeta', (req, res) => {
+    var promptID = req.query.promptToAddMeta;
+    var newMeta = req.query.newMeta;
+    var metaDtype = req.query.datatype;
+    var requiredFlg = req.query.requiredFlg == "true" ? 1 : 0;
+    connection.query('SELECT metadata_name FROM t_prompt_metadata WHERE metadata_name = ? AND prompt_id = ?', [newMeta, promptID], function (error, results, fields) {
+        if (error) throw error;        
+        if (results.length > 0) {
+            console.log('You already have this field for this prompt!');
+        } else {
+            connection.query('INSERT INTO t_prompt_metadata (prompt_id, metadata_name, datatype, required_flg) VALUES (?, ?, ?, ?)', [promptID, newMeta, metaDtype, requiredFlg], function (error, results, fields) { 
+                if (error) throw error;
+            });
+        }
+
+    });
+
+    res.redirect('/admin-new.html');
+});
+
+app.get('/deletePromptMeta', (req, res) => {
+    var promptID = req.query.promptToDeleteMeta;
+    var metaName = req.query.metaName;
+    connection.query('DELETE FROM t_prompt_metadata WHERE metadata_name = ? AND prompt_id = ?', [metaName, promptID], function (error, results, fields) {
+        if (error) throw error;
+    });
+
+    res.redirect('/admin-new.html');
 });
 
 app.get('/updatePrompt', (req, res) => {
@@ -406,9 +463,16 @@ app.post('/prompts', (req, res) => {
     });
 });
 
+app.post('/promptMetadata', (req, res) => {
+    connection.query('SELECT metadata_name, t_prompt_metadata.prompt_id AS promptID FROM t_prompt_metadata JOIN t_prompt ON t_prompt_metadata.prompt_id = t_prompt.prompt_id WHERE collection_id = (SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1)', function (error, results, fields) {
+        if (error) throw error;
+        return res.json({ success: true, results});
+    });
+});
+
 /*initial admin query for db data*/
 app.post('/saved', function(req, res) {
-    connection.query('SELECT t_audio_file.file_id AS file_id, t_audio_file.title AS title, t_audio_file.timestamp AS timestamp, t_audio_file.remarks AS remarks, t_audio_file.public_flg AS public_flg, t_prompt.prompt AS prompt, t_audio_file.postal_code AS postal_code, t_audio_file.name AS name, t_audio_file.email AS email, t_audio_file.phone_num AS phone_num, t_audio_file.filepath AS filepath FROM t_audio_file JOIN t_prompt ON t_audio_file.prompt_id = t_prompt.prompt_id', function (error, results, fields) {
+    connection.query('SELECT t_audio_file.file_id AS file_id, t_audio_file.title AS title, t_audio_file.timestamp AS timestamp, t_audio_file.remarks AS remarks, t_audio_file.public_flg AS public_flg, t_prompt.prompt AS prompt, t_audio_file.postal_code AS postal_code, t_audio_file.name AS name, t_audio_file.email AS email, t_audio_file.phone_num AS phone_num, t_audio_file.filepath AS filepath FROM t_audio_file JOIN t_prompt ON t_audio_file.prompt_id = t_prompt.prompt_id JOIN t_admin_cache ON t_prompt.collection_id = t_admin_cache.collection_id', function (error, results, fields) {
         if (error) throw error;
         return res.json({ success: true, results});
     }); 
@@ -423,7 +487,7 @@ app.get('/deleteRecord', (req, res) => {
         console.log('deleted record ' + file_id);
         //return res.json({ success: true, results});
     });
-    res.sendFile(path.join(__dirname, 'public/admin.html'));
+    res.sendFile(path.join(__dirname, 'public/admin-new.html'));
 });
 
 /* gets record id to update public boolean from admin page to false */
@@ -432,7 +496,7 @@ app.get('/removePublic', (req, res) => {
     connection.query('UPDATE t_audio_file SET public_flg = 0 where file_id = ?', [id], function (error, results, fields) {
         if (error) throw error;
     });
-    res.sendFile(path.join(__dirname, 'public/admin.html'));
+    res.sendFile(path.join(__dirname, 'public/admin-new.html'));
 })
 
 /* gets record id to update public boolean from admin page to true */
@@ -441,7 +505,7 @@ app.get('/updatePublic', (req, res) => {
     connection.query('UPDATE t_audio_file SET public_flg = 1 where file_id = ?', [id], function (error, results, fields) {
         if (error) throw error;
     });
-    res.sendFile(path.join(__dirname, 'public/admin.html'));
+    res.sendFile(path.join(__dirname, 'public/admin-new.html'));
 });
 
 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link href="\css\index.css" rel="stylesheet" />
+
+    <script src="/js/checkbox.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"></script>
+    <script src="/js/admin.js"></script>
+    <script src="/js/prompt.js"></script>
+
+</head>
+
+<body>
+    <div id="sidebar">
+        <button id="home-btn" onclick=displayHome()>Home</button>
+        <button id="inbox-btn" onclick=displayInbox()>Inbox</button>
+        <button id="publish-btn" onclick=displayPublish()>Publish</button>
+        <button id="edit-btn" onclick=displayEdit()>Edit</button>
+    </div>
+    <div id="home">
+        Home stuff
+    </div>
+    <div id="inbox" style="display: none">
+        Youve got mail
+    </div>
+    <div id="publish" style="display: none">
+        Pubpubpubpub
+    </div>
+    <div id="edit" style="display: none">
+        editttttt
+    </div>
+</body>
+
+</html>
+
+
+
