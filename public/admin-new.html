@@ -27,7 +27,12 @@
         <button id="edit-btn" onclick=displayEdit()>Edit</button>
     </div>
     <div id="home">
-        Home stuff
+        <div>
+            <h2 id="currentCollection"></h2>
+            <form action="/swapCurrentCollection">
+                <ul id="collections-dropdown-menu"></ul>
+            </form>
+        </div>
     </div>
     <div id="inbox" style="display: none">
         Youve got mail
