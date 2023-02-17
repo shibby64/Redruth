@@ -157,7 +157,8 @@ async function getPrompts() {
     .then((object) => {
       if (object.success && object.results.length > 0) {
         for (i = 0; i < object.results.length; i++) {
-          createPromptItem(object.results[i]);
+          if (!object.results[i].deleted_flg)
+            createPromptItem(object.results[i]);
         }
       }
     })
@@ -223,14 +224,14 @@ function createListElement(collectionPrompt){
  */
 function createCollectionDropdownItem(collectionName){
   //update collection dropdown
-  const dropdownhtmlList = document.createElement("li");
-  const dropdownhtmlB = document.createElement("button");
-  dropdownhtmlB.setAttribute("class", "dropdown-item")
-  dropdownhtmlB.setAttribute("name", "newCollection")
-  dropdownhtmlB.setAttribute("value", collectionName)
-  dropdownhtmlB.innerText = collectionName
-  dropdownhtmlList.append(dropdownhtmlB)
-  document.getElementById("collections-dropdown-menu").append(dropdownhtmlList)
+  const collectionItem = document.createElement("tr");
+  //const dropdownhtmlB = document.createElement("button");
+  //dropdownhtmlB.setAttribute("class", "dropdown-item")
+  collectionItem.setAttribute("name", "newCollection")
+  collectionItem.setAttribute("value", collectionName)
+  collectionItem.innerText = collectionName
+  //dropdownhtmlList.append(collectionItem)
+  document.getElementById("collections-dropdown-menu").append(collectionItem)
 }
 
 /* Creates list item in Manage Prompts section for one prompt */
@@ -243,6 +244,7 @@ function createPromptItem(object) {
   newPromptItem.getElementsByClassName("promptToEdit")[0].setAttribute("value", object.prompt_id);
   newPromptItem.getElementsByClassName("promptToAddMeta")[0].setAttribute("value", object.prompt_id);
   newPromptItem.getElementsByClassName("promptToDeleteMeta")[0].setAttribute("value", object.prompt_id);   
+  newPromptItem.getElementsByClassName("promptToDelete")[0].setAttribute("value", object.prompt_id); 
   document.getElementById("promptList").appendChild(newPromptItem);
 }
 

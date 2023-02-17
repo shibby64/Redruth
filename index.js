@@ -277,6 +277,15 @@ app.get('/updatePromptText', (req, res) => {
     res.redirect('/admin-new.html');
 });
 
+app.get('/deletePrompt', (req, res) => {
+    var promptID = req.query.promptToDelete;
+    connection.query('UPDATE t_prompt SET deleted_flg = 1 WHERE prompt_id = ?', [promptID], function (error, results, fields) {
+        if (error) throw error;
+    });
+
+    res.redirect('/admin-new.html');
+});
+
 app.get('/addPromptMeta', (req, res) => {
     var promptID = req.query.promptToAddMeta;
     var newMeta = req.query.newMeta;
