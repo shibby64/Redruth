@@ -154,5 +154,70 @@
   margin-bottom: 20px;
 }
 
+.banner {
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+  color: #fff;
+  background-color: #2F4050;
+  height: 60px;
+}
 
+.banner h1 {
+  padding: 10px;
+  font-family: 'Inter';
+  font-style: italic;
+  display: flex;
+  text-transform: uppercase;
+  font-weight: 665;
+  font-size: 24px;
+  line-height: 29px;
+}
 
+#sidebar {
+  position: absolute;
+  background-color: #2F4050;
+  height: 100%;
+  width: 80px;
+}
+
+#sidebar li:hover {
+  background-color: #fff;
+}
+
+#sidebar li:hover button {
+  background-color: #fff;
+  color: #2F4050;
+}
+
+#sidebar button {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  background-color: #2F4050;
+  color: #fff;
+  border: none;
+  font-size: large;
+}
+
+#currentCollection {
+  text-align: center;
+}
+
+#inbox {
+  margin-left: 10%;
+  height: 100%;
+}
+
+.left {
+  width: 50%;
+  float: left;
+}
+
+.right {
+  width: 50%;
+  height: 700px;
+  float: right;
+  background-color: #f3f3f3;
+  padding: 10px;
+}

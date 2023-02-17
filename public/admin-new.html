@@ -22,19 +22,25 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"></script>
     <script src="/js/admin.js"></script>
     <script src="/js/prompt.js"></script>
+    <script src="https://kit.fontawesome.com/001c9d5ea7.js" crossorigin="anonymous"></script>
 
 </head>
 
 <body>
-    <div id="sidebar">
-        <button id="home-btn" onclick=displayHome()>Home</button>
-        <button id="inbox-btn" onclick=displayInbox()>Inbox</button>
-        <button id="publish-btn" onclick=displayPublish()>Publish</button>
-        <button id="edit-btn" onclick=displayEdit()>Edit</button>
+    <div class="banner">
+        <h1>Reading Room</h1>
+    </div>
+    <div id="sidebar" style="width: 4.5rem;">
+        <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+            <li><button id="home-btn" onclick=displayHome()><i class="fa-sharp fa-solid fa-house"></i></button></li>
+            <li><button id="inbox-btn" onclick=displayInbox()><i class="fa-solid fa-envelope"></i></button></li>
+            <li><button id="publish-btn" onclick=displayPublish()><i class="fa-solid fa-arrow-up-from-bracket"></i></button></li>
+            <li><button id="edit-btn" onclick=displayEdit()><i class="fa-solid fa-pen"></i></button></li>
+        </ul>
     </div>
     <h2 id="currentCollection"></h2>
-    <div id="home">
-        <div>
+    <div id="home" style="display: none;">
+        <div> 
             <form action="/swapCurrentCollection">
                 <table class="table" id="collections-dropdown-menu">
                     <tr>
@@ -81,79 +87,87 @@
     </div>
     <div id="inbox" style="display: none">
         <!-- select stories to share -->
-        <div class="mb-5">
-            <div id="collections" class="container">
-                <h2 class="mb-4">Filter, Delete, Share/Private Recordings on Public Site</h2>
-                <label for="selectPrompt" class="col-form-label">Filter by Prompt:</label>
-                <select onchange="filterPrompt(this)" class="form-select form-select-lg mb-4" id="selectPrompt"
-                    aria-label="selectPrompt">
-                    <option value="">All Prompts</option>
-                </select>
-                <div class="search-container" id="bar">
-                    <form action='' onsubmit="return false">
-                        <label for="metadataFilter" class="col-form-label">Filter by metadata:</label>
-                        <select id="metadataFilter" onchange="metaFilter(this)" class="form-select form-select-lg mb-4">
-                            <option value="">Timestamp (Oldest)</option>
-                            <option value="time_recent">Timestamp (Recent)</option>
-                            <option value="title">Title</option>
-                        </select>
-                        <label for="searchInput" class="col-form-label">Search a title:</label>
-                        <input type="text" placeholder="Search a title..." name="search" id="searchInput" value="">
-                        <input type="submit" value="Submit" id="searchSubmit" class="btn btn-primary">
-                    </form>
+        <div class="left">
+            <div class="mb-5">
+                <div id="collections" class="container">
+                    <h2 class="mb-4">Inbox</h2>
+                    <h3>Prompts</h3>
+                    <label for="selectPrompt" class="col-form-label">Filter by Prompt:</label>
+                    <select onchange="filterPrompt(this)" class="form-select form-select-lg mb-4" id="selectPrompt" aria-label="selectPrompt">
+                        <option value="">All Prompts</option>
+                    </select>
+                    <div class="search-container" id="bar">
+                        <form action='' onsubmit="return false">
+                            <label for="metadataFilter" class="col-form-label">Filter by metadata:</label>
+                            <select id="metadataFilter" onchange="metaFilter(this)" class="form-select form-select-lg mb-4">
+                                <option value="">Timestamp (Oldest)</option>
+                                <option value="time_recent">Timestamp (Recent)</option>
+                                <option value="title">Title</option>
+                            </select>
+                            <label for="searchInput" class="col-form-label">Search a title:</label>
+                            <input type="text" placeholder="Search a title..." name="search" id="searchInput" value="">
+                            <input type="submit" value="Submit" id="searchSubmit" class="btn btn-primary">
+                        </form>
+                    </div>
+                    <h3>Recordings</h3>
+                    <div id="fileCount" class="mb-5"></div>
+                    <div class="recordingDisplay">
+                        <ul id="recordings-list"></ul>
+                    </div>
                 </div>
-                <div id="fileCount" class="mb-5"></div>
-                <div class="row row-cols-auto g-4 justify-content-between" id="collectionContainer">
-                    <div id="noResult"></div>
-                    <div class="col" style="display:none" id="cardTemplate">
-                        <div class="card h-100" style="width: 18rem;">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center ">
-                                    <h5 class="card-title text-truncate pb-3">Title</h5>
-                                    <h5 style=" margin-left: auto !important;"> <button class="btn btn-outline-danger"
-                                            id="trashButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                                <path fill-rule="evenodd"
-                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                                            </svg></a></h5>
-                                </div>
-
-                                <p style="color:#ccc" class="mb-3 timestamp">0:50 Jul 12, 2022</p>
-                                <audio id="audio-player" style="border-radius:.25rem;width: 100%;" controls="controls"
-                                    src="https://redruthrecords.s3.eu-west-2.amazonaws.com/1657825157704.mp3"
-                                    type="audio/mpeg"></audio>
-                                <p class="card-text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                                    do
-                                    eiusmod tempor
-                                    incididunt
-                                    ut labore et dolore magna aliqua.</p>
-
-                                <div class="btn-group mb-3" role="group" aria-label="Basic example">
-                                    <button class="btn btn-primary" id="publicButton">Make Public</button>
-                                    <button type="button" id="collapseButton" class="btn btn-outline-dark"
-                                        data-bs-toggle="collapse" href="#collapse" role="button" aria-expanded="false"
-                                        aria-controls="collapse">
-                                        More Data <span class="badge bg-secondary">5</span>
-                                    </button>
-                                </div>
-
-                                <div class="collapse" id="collapse">
-                                    <div class="card card-body">
-                                        <p id="postal">PostalCode:</p>
-                                        <p id="name">Name:</p>
-                                        <p id="email">Email:</p>
-                                        <p id="phone">Phone:</p>
-                                        <p id="prompt">Prompt:</p>
-                                        <a id="url" href="#">Audio Link</a>
-                                    </div>
-                                </div>
-
+            </div>
+        </div>
+        <div class="right">
+            <div class="row row-cols-auto g-4 justify-content-between" id="collectionContainer">
+                <div id="noResult"></div>
+                <div class="col" style="display:none" id="cardTemplate">
+                    <div class="card h-100" style="width: 18rem;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center ">
+                                <h5 class="card-title text-truncate pb-3">Title</h5>
+                                <h5 style=" margin-left: auto !important;"> <button class="btn btn-outline-danger"
+                                        id="trashButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                            <path
+                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                            <path fill-rule="evenodd"
+                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                        </svg></a></h5>
                             </div>
-                            <div class="card-footer">
-                                <small class="text-muted cardID">_id: </small>
+
+                            <p style="color:#ccc" class="mb-3 timestamp">0:50 Jul 12, 2022</p>
+                            <audio id="audio-player" style="border-radius:.25rem;width: 100%;" controls="controls"
+                                src="https://redruthrecords.s3.eu-west-2.amazonaws.com/1657825157704.mp3"
+                                type="audio/mpeg"></audio>
+                            <p class="card-text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                                do
+                                eiusmod tempor
+                                incididunt
+                                ut labore et dolore magna aliqua.</p>
+
+                            <div class="btn-group mb-3" role="group" aria-label="Basic example">
+                                <button class="btn btn-primary" id="publicButton">Make Public</button>
+                                <button type="button" id="collapseButton" class="btn btn-outline-dark"
+                                    data-bs-toggle="collapse" href="#collapse" role="button" aria-expanded="false"
+                                    aria-controls="collapse">
+                                    More Data <span class="badge bg-secondary">5</span>
+                                </button>
                             </div>
+
+                            <div class="collapse" id="collapse">
+                                <div class="card card-body">
+                                    <p id="postal">PostalCode:</p>
+                                    <p id="name">Name:</p>
+                                    <p id="email">Email:</p>
+                                    <p id="phone">Phone:</p>
+                                    <p id="prompt">Prompt:</p>
+                                    <a id="url" href="#">Audio Link</a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted cardID">_id: </small>
                         </div>
                     </div>
                 </div>

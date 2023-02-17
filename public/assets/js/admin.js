@@ -34,6 +34,7 @@ async function getRecordings() {
         for (i = 0; i < object.results.length; i++) {
           recordings.push(object.results[i]);
           createCard(object.results[i]);
+          createRecordingDropdown(object.results[i].title);
           prompts.add(object.results[i].prompt)
         }
       }
@@ -116,20 +117,20 @@ window.onload = function() {
   var edit = localStorage.getItem('edit');
 
   if (home === 'true') {
-    document.getElementById("home").style.display = "";
     document.getElementById("inbox").style.display = "none";
     document.getElementById("publish").style.display = "none";
     document.getElementById("edit").style.display = "none";
+    document.getElementById("home").style.display = "";
   } else if (inbox === 'true') {
     document.getElementById("home").style.display = "none";
-    document.getElementById("inbox").style.display = "";
     document.getElementById("publish").style.display = "none";
     document.getElementById("edit").style.display = "none";
+    document.getElementById("inbox").style.display = "";
   } else if (publish === 'true') {
     document.getElementById("home").style.display = "none";
     document.getElementById("inbox").style.display = "none";
-    document.getElementById("publish").style.display = "";
     document.getElementById("edit").style.display = "none";
+    document.getElementById("publish").style.display = "";
   } else {
     document.getElementById("home").style.display = "none";
     document.getElementById("inbox").style.display = "none";
@@ -232,6 +233,24 @@ function createCollectionDropdownItem(collectionName){
   collectionItem.innerText = collectionName
   //dropdownhtmlList.append(collectionItem)
   document.getElementById("collections-dropdown-menu").append(collectionItem)
+}
+
+function createRecordingDropdown(recordingName) {
+  const dropdownhtmlList = document.createElement("li");
+  const dropdownhtmlB = document.createElement("button");
+  dropdownhtmlB.setAttribute("class", "dropdown-item")
+  dropdownhtmlB.setAttribute("id", "recording-item")
+  dropdownhtmlB.setAttribute("value", recordingName)
+  dropdownhtmlB.innerText = recordingName
+  dropdownhtmlList.append(dropdownhtmlB)
+  document.getElementById("recordings-list").append(dropdownhtmlList)
+}
+
+var newRecording = document.getElementsById("recording-item");
+newRecording.addEventListener('click', updateCard, false);
+
+function updateCard(event) {
+  alert("hi");
 }
 
 /* Creates list item in Manage Prompts section for one prompt */
@@ -364,11 +383,13 @@ function filter(name) {
    // if no filter show all, sort by metadata filter
    if (name == "") {
      $(".item").remove();
+     document.getElementById("recordings-list").innerHTML = "";
      sorted.forEach(object => {
        recordings.forEach(recording => {
          if (object.timestamp == recording.timestamp && object.file_id == recording.file_id) {
            count++;
            createCard(recording);
+           createRecordingDropdown(recording.title);
          }
        });
      });
@@ -385,6 +406,7 @@ function filter(name) {
      }
    });
    $(".item").remove();
+   document.getElementById("recordings-list").innerHTML = "";
  
    // Track number of audio files in prompt and display
    sorted.forEach(object => {
@@ -392,6 +414,7 @@ function filter(name) {
       if (object.file_id == recording.file_id) {
         count++;
         createCard(recording);
+        createRecordingDropdown(recording.title);
       }
     });
   });
