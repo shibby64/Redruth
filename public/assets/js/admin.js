@@ -51,12 +51,13 @@ async function getCollections() {
     .then((object) => object.json())
     .then((object) => {
       if (object.success && object.results) {
-        object.results.forEach(collection => {
-          collections.push(collection.title)
-        });
+        object.results.forEach(
+          //collections.push(collection.title)
+          createCollectionDropdownItem
+        );
       }
     })
-    .then((object) => {collections.forEach(createCollectionDropdownItem)})
+    //.then((object) => {collections.forEach(createCollectionDropdownItem)})
     .catch((err) => console.error(err));
 };
 
@@ -223,16 +224,44 @@ function createListElement(collectionPrompt){
  * called multiple times for each item in the lists
  * @param {String} collectionName 
  */
-function createCollectionDropdownItem(collectionName){
-  //update collection dropdown
+function createCollectionDropdownItem(collectionObject){
+  
   const collectionItem = document.createElement("tr");
-  //const dropdownhtmlB = document.createElement("button");
-  //dropdownhtmlB.setAttribute("class", "dropdown-item")
-  collectionItem.setAttribute("name", "newCollection")
-  collectionItem.setAttribute("value", collectionName)
-  collectionItem.innerText = collectionName
-  //dropdownhtmlList.append(collectionItem)
-  document.getElementById("collections-dropdown-menu").append(collectionItem)
+  collectionItem.style.cursor = "pointer";
+
+  collectionItem.addEventListener("click", function(event){
+    document.getElementById("swap-collection-title").setAttribute("value", collectionObject.title);
+    document.getElementById("swap-current-collection").submit();
+    event.preventDefault();
+  });
+  
+  const colDataName = document.createElement("td");
+  colDataName.innerText = collectionObject.title;
+  collectionItem.append(colDataName);
+
+  const colDataRecordings = document.createElement("td");
+  colDataRecordings.innerText = collectionObject.num_recordings;
+  collectionItem.append(colDataRecordings);
+
+  const colDataRecordStatus = document.createElement("td");
+  const colDataRecordB = document.createElement("button");
+  colDataRecordB.setAttribute("type", "button");
+  colDataRecordB.setAttribute("class", "col-4 btn " + (collectionObject.is_public ? "btn-outline-success" : "btn-outline-secondary"));
+  //colDataRecordB.setAttribute("disabled");
+  colDataRecordB.innerText = collectionObject.is_public ? "Open" : "Closed";
+  colDataRecordStatus.append(colDataRecordB);
+  collectionItem.append(colDataRecordStatus);
+
+  const colDataListenStatus = document.createElement("td");
+  const colDataListenB = document.createElement("button");
+  colDataListenB.setAttribute("type", "button");
+  colDataListenB.setAttribute("class", "col-5 btn " + (collectionObject.has_public_recordings ? "btn-outline-primary" : "btn-outline-secondary"));
+  //colDataListenB.setAttribute("disabled");
+  colDataListenB.innerText = collectionObject.has_public_recordings ? "Published" : "Draft";
+  colDataListenStatus.append(colDataListenB);
+  collectionItem.append(colDataListenStatus);
+
+  document.getElementById("collections-dropdown-menu").append(collectionItem);
 }
 
 function createRecordingDropdown(recordingName) {

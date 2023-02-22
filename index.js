@@ -156,7 +156,7 @@ app.get('/createNewCollection', (req, res) => {
 
 /* Switch to selected collection */
 app.get('/swapCurrentCollection', (req, res) => {
-    var collectionToSwitch = req.query.newCollection;
+    var collectionToSwitch = req.query.swapCollection;
     connection.query('UPDATE t_admin_cache SET collection_id = (SELECT collection_id FROM t_collection WHERE title = ? AND user_id = 1 LIMIT 1), prompt_id = (SELECT t_prompt.prompt_id FROM t_prompt JOIN t_collection ON t_prompt.collection_id = t_collection.collection_id WHERE t_collection.title = ? AND t_prompt.user_id = 1 LIMIT 1)', [collectionToSwitch, collectionToSwitch], function (error, results, fields) {
         if (error) throw error;
     });
@@ -452,7 +452,7 @@ app.post('/metaArr', function(req, res) {
  * Does not list promptData
  */
 app.get('/collections', (req, res) => {
-    connection.query('SELECT * FROM t_collection', function (error, results, fields) {
+    connection.query('SELECT t_collection.title, COUNT(t_audio_file.file_id) AS num_recordings, t_collection.public_flg AS is_public, SUM(t_audio_file.public_flg) AS has_public_recordings FROM t_collection JOIN t_prompt ON t_collection.collection_id = t_prompt.collection_id LEFT JOIN t_audio_file ON t_audio_file.prompt_id = t_prompt.prompt_id GROUP BY t_collection.collection_id', function (error, results, fields) {
         if (error) throw error;
         return res.json({ success: true, results});
     });
