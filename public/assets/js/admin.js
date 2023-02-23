@@ -226,7 +226,7 @@ function createListElement(collectionPrompt){
  */
 function createCollectionDropdownItem(collectionObject){
   
-  const collectionItem = document.createElement("tr");
+  /*const collectionItem = document.createElement("tr");
   collectionItem.style.cursor = "pointer";
 
   collectionItem.addEventListener("click", function(event){
@@ -261,6 +261,29 @@ function createCollectionDropdownItem(collectionObject){
   colDataListenStatus.append(colDataListenB);
   collectionItem.append(colDataListenStatus);
 
+  document.getElementById("collections-dropdown-menu").append(collectionItem);*/
+
+  let collectionItem = document.getElementById("collectionItem").cloneNode(true);
+  collectionItem.setAttribute("id", collectionObject.title);
+  collectionItem.setAttribute("style", "cursor: pointer");
+
+  collectionItem.addEventListener("click", function(event){
+    document.getElementById("swap-collection-title").setAttribute("value", collectionObject.title);
+    document.getElementById("swap-current-collection").submit();
+    event.preventDefault();
+  });
+
+  let colItemAttrs = collectionItem.getElementsByClassName("collection-item");
+  
+  colItemAttrs[0].innerText = collectionObject.title;
+  colItemAttrs[1].innerText = collectionObject.num_recordings;
+
+  colItemAttrs[2].setAttribute("class", "collection-item col-4 btn " + (collectionObject.is_public ? "btn-outline-success" : "btn-outline-secondary"));
+  colItemAttrs[2].innerText = collectionObject.is_public ? "Open" : "Closed";
+
+  colItemAttrs[3].setAttribute("class", "collection-item col-5 btn " + (collectionObject.has_public_recordings ? "btn-outline-primary" : "btn-outline-secondary"));
+  colItemAttrs[3].innerText = collectionObject.has_public_recordings ? "Published" : "Draft";
+
   document.getElementById("collections-dropdown-menu").append(collectionItem);
 }
 
@@ -285,6 +308,7 @@ function updateCard(event) {
 /* Creates list item in Manage Prompts section for one prompt */
 function createPromptItem(object) {
   let newPromptItem = document.getElementById("promptTemplate").cloneNode(true);
+  //console.log("hmm " + newPromptItem);
   newPromptItem.setAttribute("id", object.prompt_id);
   newPromptItem.setAttribute("style", "");
   newPromptItem.getElementsByClassName("promptTitle")[0].innerText = object.prompt;

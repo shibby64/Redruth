@@ -43,16 +43,32 @@
         <div class="container">            
             <form id="swap-current-collection" action="/swapCurrentCollection">
                 <input style="display:none" id="swap-collection-title" name="swapCollection"/>
-                <table class="table table-hover">
+                <table class="table table-hover align-middle caption-top">
                     <thead>
+                        <caption>Choose a collection</caption>
                         <tr>
-                            <th>Name</th>
+                            <th>Title</th>
                             <th>Recordings</th>
                             <th>Record Status</th>
                             <th>Listen Status</th>
                         </tr>
                     </thead>
-                    <tbody id="collections-dropdown-menu"></tbody>    
+                    <tbody id="collections-dropdown-menu">
+                        <tr id="collectionItem" style="display: none">
+                            <td class="collection-item">Template</td>
+                            <td class="collection-item">#</td>
+                            <td>
+                                <button type="button" class="collection-item" disabled>
+                                    Record status
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="collection-item" disabled>
+                                    Listen status
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>    
                 </table>
             </form>
             
@@ -90,38 +106,6 @@
                 </div>
                 </div>
             </div>
-            <!--<div class="d-grid gap-2">
-                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#new-collection-modal">+</button>
-            </div>-->
-
-            <!--<div class="modal fade" id="new-collection-modal" tabindex="-1" role="dialog" aria-labelledby="new-collection">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h4 class="modal-title" id="new-collection-header">Add Collection</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="form-group">
-                                    <label for="new-collection-title" class="control-label">Title</label>
-                                    <input type="text" class="form-control" id="new-collection-title">
-                                </div>
-                                <div class="form-group">
-                                    <label for="new-collection-desc" class="control-label">Description</label>
-                                    <textarea class="form-control" id="new-collection-desc"></textarea>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
         </div>
     </div>
     <div id="inbox" style="display: none">
