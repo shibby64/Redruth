@@ -138,20 +138,27 @@
   
 } */
 
-.search-container {
-  max-width: 600px;
-  margin-bottom: 20px;
+.search-container form {
+  /* max-width: 600px; */
+  /* margin-bottom: 20px; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
 
 .search-container input[type="text"] {
   display: block;
-  width: calc(100% - 24px);
-  width: 100%;
+  /* width: calc(100% - 24px); */
+  /* width: 100%; */
   font-size: 18px;
   font-weight: 600;
   padding: 10px;
   border: 1px solid #000000;
   margin-bottom: 20px;
+}
+
+.label-display {
+  display: block;
 }
 
 .banner {
@@ -220,4 +227,24 @@
   float: right;
   background-color: #f3f3f3;
   padding: 10px;
+}
+
+#recordings-list {
+  list-style: none;
+  padding-left: 0;
+  width: 100%;
+}
+
+h3 {
+  font-size: medium;
+  font-weight: bold;
+}
+
+#fileCount {
+  text-align: center;
+}
+
+.info-bar {
+  padding-left: 15px;
+  color: #888;
 }

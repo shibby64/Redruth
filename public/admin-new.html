@@ -31,10 +31,10 @@
     </div>
     <div id="sidebar" style="width: 4.5rem;">
         <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
-            <li><button id="home-btn" onclick=displayHome()><i class="fa-sharp fa-solid fa-house"></i></button></li>
-            <li><button id="inbox-btn" onclick=displayInbox()><i class="fa-solid fa-envelope"></i></button></li>
-            <li><button id="publish-btn" onclick=displayPublish()><i class="fa-solid fa-arrow-up-from-bracket"></i></button></li>
-            <li><button id="edit-btn" onclick=displayEdit()><i class="fa-solid fa-pen"></i></button></li>
+            <li id="h-element"><button id="home-btn" onclick=displayHome()><i class="fa-sharp fa-solid fa-house"></i></button></li>
+            <li id="i-element"><button id="inbox-btn" onclick=displayInbox()><i class="fa-solid fa-envelope"></i></button></li>
+            <li id="p-element"><button id="publish-btn" onclick=displayPublish()><i class="fa-solid fa-arrow-up-from-bracket"></i></button></li>
+            <li id="e-element"><button id="edit-btn" onclick=displayEdit()><i class="fa-solid fa-pen"></i></button></li>
         </ul>
     </div>
     <h2 id="currentCollection"></h2>
@@ -91,28 +91,34 @@
                     </select>
                     <div class="search-container" id="bar">
                         <form action='' onsubmit="return false">
-                            <label for="metadataFilter" class="col-form-label">Filter by metadata:</label>
-                            <select id="metadataFilter" onchange="metaFilter(this)" class="form-select form-select-lg mb-4">
-                                <option value="">Timestamp (Oldest)</option>
-                                <option value="time_recent">Timestamp (Recent)</option>
-                                <option value="title">Title</option>
-                            </select>
-                            <label for="searchInput" class="col-form-label">Search a title:</label>
-                            <input type="text" placeholder="Search a title..." name="search" id="searchInput" value="">
-                            <input type="submit" value="Submit" id="searchSubmit" class="btn btn-primary">
+                            <div class="label-display">
+                                <label for="metadataFilter" class="col-form-label">Filter by metadata:</label>
+                                <select id="metadataFilter" onchange="metaFilter(this)" class="form-select form-select-lg mb-4">
+                                    <option value="">Timestamp (Oldest)</option>
+                                    <option value="time_recent">Timestamp (Recent)</option>
+                                    <option value="title">Title</option>
+                                </select>
+                            </div>
+                            <div class="label-display">
+                                <label for="searchInput" class="col-form-label">Search a title:</label>
+                                <input type="text" placeholder="Search a title..." name="search" id="searchInput" value="">
+                                <input type="submit" value="Submit" onclick="searchTitle()" class="btn btn-primary">
+                            </div>
                         </form>
                     </div>
                     <h3>Recordings</h3>
-                    <div id="fileCount" class="mb-5"></div>
+                    <p class="info-bar">Title</p>
+                    <hr>
                     <div class="recordingDisplay">
                         <ul id="recordings-list"></ul>
                     </div>
+                    <div id="noResult"></div>
                 </div>
             </div>
         </div>
         <div class="right">
+            <div id="fileCount" class="mb-5"></div>
             <div class="row row-cols-auto g-4 justify-content-between" id="collectionContainer">
-                <div id="noResult"></div>
                 <div class="col" style="display:none" id="cardTemplate">
                     <div class="card h-100" style="width: 18rem;">
                         <div class="card-body">

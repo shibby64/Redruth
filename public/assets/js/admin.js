@@ -33,13 +33,13 @@ async function getRecordings() {
         // for all objects set up cards and add to various arrays
         for (i = 0; i < object.results.length; i++) {
           recordings.push(object.results[i]);
-          createCard(object.results[i]);
+          // createCard(object.results[i]);
           createRecordingDropdown(object.results[i].title);
           prompts.add(object.results[i].prompt)
         }
       }
       // Display number of audio files
-      document.getElementById("fileCount").innerHTML = "Number of files: " + object.results.length;
+      document.getElementById("fileCount").innerHTML = "Number of files in this prompt: " + object.results.length;
     })
     .then((object) => {prompts.forEach(createListElement)})
     .catch((err) => console.error(err));
@@ -121,21 +121,33 @@ window.onload = function() {
     document.getElementById("publish").style.display = "none";
     document.getElementById("edit").style.display = "none";
     document.getElementById("home").style.display = "";
+    document.getElementById("home-btn").style.backgroundColor = "#fff";
+    document.getElementById("home-btn").style.color = "#2F4050";
+    document.getElementById("h-element").style.backgroundColor = "#fff";
   } else if (inbox === 'true') {
     document.getElementById("home").style.display = "none";
     document.getElementById("publish").style.display = "none";
     document.getElementById("edit").style.display = "none";
     document.getElementById("inbox").style.display = "";
+    document.getElementById("inbox-btn").style.backgroundColor = "#fff";
+    document.getElementById("inbox-btn").style.color = "#2F4050";
+    document.getElementById("i-element").style.backgroundColor = "#fff";
   } else if (publish === 'true') {
     document.getElementById("home").style.display = "none";
     document.getElementById("inbox").style.display = "none";
     document.getElementById("edit").style.display = "none";
     document.getElementById("publish").style.display = "";
+    document.getElementById("publish-btn").style.backgroundColor = "#fff";
+    document.getElementById("publish-btn").style.color = "#2F4050";
+    document.getElementById("p-element").style.backgroundColor = "#fff";
   } else {
     document.getElementById("home").style.display = "none";
     document.getElementById("inbox").style.display = "none";
     document.getElementById("publish").style.display = "none";
     document.getElementById("edit").style.display = "";
+    document.getElementById("edit-btn").style.backgroundColor = "#fff";
+    document.getElementById("edit-btn").style.color = "#2F4050";
+    document.getElementById("e-element").style.backgroundColor = "#fff";
   }
 }
 
@@ -243,13 +255,14 @@ function createRecordingDropdown(recordingName) {
   dropdownhtmlB.innerText = recordingName
   dropdownhtmlList.append(dropdownhtmlB)
   document.getElementById("recordings-list").append(dropdownhtmlList)
-}
-
-var newRecording = document.getElementsById("recording-item");
-newRecording.addEventListener('click', updateCard, false);
-
-function updateCard(event) {
-  alert("hi");
+  dropdownhtmlB.addEventListener('click', function(event) {
+    $(".item").remove();
+    for (var i = 0; i < recordings.length; i++) {
+      if (recordings[i].title === recordingName) {
+        createCard(recordings[i]);
+      }
+    }
+  })
 }
 
 /* Creates list item in Manage Prompts section for one prompt */
@@ -386,13 +399,13 @@ function filter(name) {
        recordings.forEach(recording => {
          if (object.timestamp == recording.timestamp && object.file_id == recording.file_id) {
            count++;
-           createCard(recording);
+           // createCard(recording);
            createRecordingDropdown(recording.title);
          }
        });
      });
      // Display number of audio files
-     document.getElementById("fileCount").innerHTML = "Number of files: " + count;
+     document.getElementById("fileCount").innerHTML = "Number of files in this prompt: " + count;
      return;
    }
  
@@ -411,14 +424,14 @@ function filter(name) {
     filteredRecordings.forEach(recording => {
       if (object.file_id == recording.file_id) {
         count++;
-        createCard(recording);
+        // createCard(recording);
         createRecordingDropdown(recording.title);
       }
     });
   });
 
   // Display number of audio files
-  document.getElementById("fileCount").innerHTML = "Number of files: " + count;
+  document.getElementById("fileCount").innerHTML = "Number of files in this prompt: " + count;
 }
 
 /**
@@ -480,10 +493,10 @@ function compare(type, array1, array2) {
  * 
  */ 
 
-var submit = document.getElementById("searchSubmit");
-submit.addEventListener('click', search);
+// var submit = document.getElementById("searchSubmit");
+// submit.addEventListener('click', search);
 
-function search() {
+function searchTitle() {
   // If prompt filter hasn't been selected, make it all prompts
   if (typeof promptFilt === "undefined") {
     promptFilt = "";
@@ -526,12 +539,15 @@ function search() {
   $(".item").remove();
   // create a card for each recording
   filteredRecordings.forEach(recording => {
-    createCard(recording)
+    // createCard(recording)
+    document.getElementById("recordings-list").innerHTML = "";
+    createRecordingDropdown(recording.title);
   });
   // Display number of audio files
-  document.getElementById("fileCount").innerHTML = "Number of files: " + count;
+  document.getElementById("fileCount").innerHTML = "Number of files in this prompt: " + count;
   // if no recordings match title value, inform user
   if (count == 0) {
+    document.getElementById("recordings-list").innerHTML = "";
     document.getElementById("noResult").innerHTML = "No file named '" + input + "' found.";
   }
 }
