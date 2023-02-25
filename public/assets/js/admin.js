@@ -67,6 +67,8 @@ async function getCurrentCollectionPrompt() {
     .then((collection) => {
       if (collection.success && collection.results) {
         document.getElementById("currentCollection").innerHTML = collection.results[0].title;
+        document.getElementById("update-collection-name").setAttribute("value", collection.results[0].title);
+        document.getElementById("update-collection-desc").innerHTML = collection.results[0].description;
         document.getElementById("currentPrompt").innerHTML = "Current prompt: <b>" + collection.results[0].prompt + "</b>";
         if (collection.results[0].isPublic) {
           document.getElementById("promptLink").innerHTML = "Use this link to share your collection: <b>localhost:3000/?promptid=" + collection.results[0].promptID + "</b>";
@@ -225,43 +227,6 @@ function createListElement(collectionPrompt){
  * @param {String} collectionName 
  */
 function createCollectionDropdownItem(collectionObject){
-  
-  /*const collectionItem = document.createElement("tr");
-  collectionItem.style.cursor = "pointer";
-
-  collectionItem.addEventListener("click", function(event){
-    document.getElementById("swap-collection-title").setAttribute("value", collectionObject.title);
-    document.getElementById("swap-current-collection").submit();
-    event.preventDefault();
-  });
-  
-  const colDataName = document.createElement("td");
-  colDataName.innerText = collectionObject.title;
-  collectionItem.append(colDataName);
-
-  const colDataRecordings = document.createElement("td");
-  colDataRecordings.innerText = collectionObject.num_recordings;
-  collectionItem.append(colDataRecordings);
-
-  const colDataRecordStatus = document.createElement("td");
-  const colDataRecordB = document.createElement("button");
-  colDataRecordB.setAttribute("type", "button");
-  colDataRecordB.setAttribute("class", "col-4 btn " + (collectionObject.is_public ? "btn-outline-success" : "btn-outline-secondary"));
-  //colDataRecordB.setAttribute("disabled");
-  colDataRecordB.innerText = collectionObject.is_public ? "Open" : "Closed";
-  colDataRecordStatus.append(colDataRecordB);
-  collectionItem.append(colDataRecordStatus);
-
-  const colDataListenStatus = document.createElement("td");
-  const colDataListenB = document.createElement("button");
-  colDataListenB.setAttribute("type", "button");
-  colDataListenB.setAttribute("class", "col-5 btn " + (collectionObject.has_public_recordings ? "btn-outline-primary" : "btn-outline-secondary"));
-  //colDataListenB.setAttribute("disabled");
-  colDataListenB.innerText = collectionObject.has_public_recordings ? "Published" : "Draft";
-  colDataListenStatus.append(colDataListenB);
-  collectionItem.append(colDataListenStatus);
-
-  document.getElementById("collections-dropdown-menu").append(collectionItem);*/
 
   let collectionItem = document.getElementById("collectionItem").cloneNode(true);
   collectionItem.setAttribute("id", collectionObject.title);
@@ -278,10 +243,10 @@ function createCollectionDropdownItem(collectionObject){
   colItemAttrs[0].innerText = collectionObject.title;
   colItemAttrs[1].innerText = collectionObject.num_recordings;
 
-  colItemAttrs[2].setAttribute("class", "collection-item col-4 btn " + (collectionObject.is_public ? "btn-outline-success" : "btn-outline-secondary"));
+  colItemAttrs[2].setAttribute("class", "collection-item col-5 btn " + (collectionObject.is_public ? "btn-outline-success" : "btn-outline-secondary"));
   colItemAttrs[2].innerText = collectionObject.is_public ? "Open" : "Closed";
 
-  colItemAttrs[3].setAttribute("class", "collection-item col-5 btn " + (collectionObject.has_public_recordings ? "btn-outline-primary" : "btn-outline-secondary"));
+  colItemAttrs[3].setAttribute("class", "collection-item col-6 btn " + (collectionObject.has_public_recordings ? "btn-outline-primary" : "btn-outline-secondary"));
   colItemAttrs[3].innerText = collectionObject.has_public_recordings ? "Published" : "Draft";
 
   document.getElementById("collections-dropdown-menu").append(collectionItem);
@@ -306,18 +271,29 @@ function updateCard(event) {
 }
 
 /* Creates list item in Manage Prompts section for one prompt */
-function createPromptItem(object) {
-  let newPromptItem = document.getElementById("promptTemplate").cloneNode(true);
-  //console.log("hmm " + newPromptItem);
-  newPromptItem.setAttribute("id", object.prompt_id);
-  newPromptItem.setAttribute("style", "");
-  newPromptItem.getElementsByClassName("promptTitle")[0].innerText = object.prompt;
-  newPromptItem.getElementsByClassName("promptToSwitch")[0].setAttribute("value", object.prompt_id);
-  newPromptItem.getElementsByClassName("promptToEdit")[0].setAttribute("value", object.prompt_id);
-  newPromptItem.getElementsByClassName("promptToAddMeta")[0].setAttribute("value", object.prompt_id);
-  newPromptItem.getElementsByClassName("promptToDeleteMeta")[0].setAttribute("value", object.prompt_id);   
-  newPromptItem.getElementsByClassName("promptToDelete")[0].setAttribute("value", object.prompt_id); 
-  document.getElementById("promptList").appendChild(newPromptItem);
+function createPromptItem(promptObject) {
+  
+  // menu item
+  let promptItem = document.getElementById("prompt-list-item").cloneNode(true);
+  promptItem.setAttribute("id", "prompt-list-item-" + promptObject.prompt_id);
+  promptItem.setAttribute("style", "cursor: pointer");
+  let promptItemAttrs = promptItem.getElementsByClassName("prompt-list-item");
+  promptItemAttrs[0].innerText = promptObject.prompt;
+  promptItemAttrs[1].setAttribute("class", "prompt-list-item col-5 btn " + (promptObject.public_flg ? "btn-outline-success" : "btn-outline-secondary"));
+  promptItemAttrs[1].innerText = promptObject.public_flg ? "Open" : "Closed";
+  document.getElementById("prompts-list").append(promptItem);
+
+  // prompt card
+  let promptCard = document.getElementById("promptTemplate").cloneNode(true);
+  promptCard.setAttribute("id", promptObject.prompt_id);
+  promptCard.setAttribute("style", "");
+  promptCard.getElementsByClassName("promptTitle")[0].innerText = promptObject.prompt;
+  promptCard.getElementsByClassName("promptToSwitch")[0].setAttribute("value", promptObject.prompt_id);
+  promptCard.getElementsByClassName("promptToEdit")[0].setAttribute("value", promptObject.prompt_id);
+  promptCard.getElementsByClassName("promptToAddMeta")[0].setAttribute("value", promptObject.prompt_id);
+  promptCard.getElementsByClassName("promptToDeleteMeta")[0].setAttribute("value", promptObject.prompt_id);   
+  promptCard.getElementsByClassName("promptToDelete")[0].setAttribute("value", promptObject.prompt_id); 
+  document.getElementById("promptList").appendChild(promptCard);
 }
 
 function createMetadataOption(mdItem) {  

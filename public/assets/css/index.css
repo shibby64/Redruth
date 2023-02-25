@@ -209,6 +209,11 @@
   height: 100%;
 }
 
+#edit {
+  margin-left: 10%;
+  height: 100%;
+}
+
 .left {
   width: 50%;
   float: left;

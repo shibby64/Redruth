@@ -459,7 +459,7 @@ app.get('/collections', (req, res) => {
 });
 
 app.get('/currentCollectionPrompt', (req, res) => {
-    connection.query('SELECT t_collection.title AS title, t_collection.public_flg AS isPublic, t_prompt.prompt AS prompt, t_prompt.prompt_id AS promptID FROM t_collection JOIN t_prompt ON t_collection.collection_id = t_prompt.collection_id JOIN t_admin_cache ON t_prompt.prompt_id = t_admin_cache.prompt_id WHERE t_collection.user_id = 1 LIMIT 1', function (error, results, fields) {
+    connection.query('SELECT t_collection.title AS title, t_collection.description AS description, t_collection.public_flg AS isPublic, t_prompt.prompt AS prompt, t_prompt.prompt_id AS promptID FROM t_collection JOIN t_prompt ON t_collection.collection_id = t_prompt.collection_id JOIN t_admin_cache ON t_prompt.prompt_id = t_admin_cache.prompt_id WHERE t_collection.user_id = 1 LIMIT 1', function (error, results, fields) {
         if (error) throw error;
         return res.json({ success: true, results});
     });
