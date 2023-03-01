@@ -224,19 +224,24 @@ app.get('/addPrompt', (req, res) => {
 });
 
 app.get('/addPromptNew', (req, res) => {
-    var p_name = "pName";
-    var p_desc = req.query.newPromptDesc;
-    var p_metadata = req.query.metadata;
-    connection.query('INSERT INTO t_prompt (collection_id, user_id, prompt, description) VALUES ((SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1), 1, ?, ?)', [p_name, p_desc], function (error, results, fields) {
+    var pName = req.query.newPrompt;
+    var metadataNames = ["First Name", "Last Name", "Email", "Phone"];
+    var reqMetadata = [
+        req.query.firstName ? 1 : 0, 
+        req.query.lastName ? 1 : 0,
+        req.query.email ? 1 : 0,
+        req.query.phone ? 1 : 0
+    ];
+    connection.query('INSERT INTO t_prompt (collection_id, user_id, prompt) VALUES ((SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1), 1, ?)', [pName], function (error, results, fields) {
         if (error) throw error;        
     }); 
 
-    connection.query('SELECT prompt_id FROM t_prompt WHERE description = ?', [p_desc], function (error, results, fields) {
+    connection.query('SELECT prompt_id FROM t_prompt WHERE prompt = ?', [pName], function (error, results, fields) {
         if (error) throw error;
         else {
-            var promptID = results[0];
-            for (var i = 0; i < p_metadata.length; i++) {
-                connection.query('INSERT INTO t_prompt_metadata (prompt_id, metadata_name, datatype, required_flg) VALUES (?, ?, ?, ?)', [promptID, p_metadata[i].name, p_metadata[i].datatype, p_metadata[i].requiredFlg], function (error, results, fields) {
+            var promptID = results[0].prompt_id;
+            for (var i = 0; i < 4; i++) {
+                connection.query('INSERT INTO t_prompt_metadata (prompt_id, metadata_name, datatype, required_flg) VALUES (?, ?, ?, ?)', [promptID, metadataNames[i], "text", reqMetadata[i]], function (error, results, fields) {
                     if (error) throw error;
                 });
             }
@@ -252,10 +257,15 @@ app.get('/addPromptNew', (req, res) => {
 
 app.get('/swapCurrentPrompt', (req, res) => {
     var newPromptID = req.query.promptToSwitch;
+    connection.query('UPDATE t_prompt SET public_flg = 0 WHERE public_flg = 1 AND user_id = 1', function (error, results, fields) {
+        if (error) throw error;
+    });
+    connection.query('UPDATE t_prompt SET public_flg = 1 WHERE prompt_id = ? AND user_id = 1', [newPromptID], function (error, results, fields) {
+        if (error) throw error;
+    });
     connection.query('UPDATE t_admin_cache SET prompt_id = ? WHERE user_id = 1', [newPromptID], function (error, results, fields) {
         if (error) throw error;
     });
-
     res.redirect('/admin-new.html');
 });
 

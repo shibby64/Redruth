@@ -10,7 +10,7 @@
 
 
 const prompts = new Set();
-let allPrompts = [];
+let currentPrompts = [];
 let recordings = [];
 let filteredRecordings = [];
 let collections = [];
@@ -156,14 +156,18 @@ function currentCollectionUpdate(htmlElement){
 }
 
 async function getPrompts() {
+  currentPrompts = [];
   fetch('/prompts', { method: 'POST' })
     .then((object) => object.json())
     .then((object) => {
       if (object.success && object.results.length > 0) {
         for (i = 0; i < object.results.length; i++) {
-          if (!object.results[i].deleted_flg)
-            createPromptItem(object.results[i]);
+          if (!object.results[i].deleted_flg) {
+            currentPrompts.push(object.results[i]);
+            createPromptRow(object.results[i]);
+          }
         }
+        createPromptCard(object.results[0]);
       }
     })
     .catch((err) => console.error(err));
@@ -271,7 +275,7 @@ function updateCard(event) {
 }
 
 /* Creates list item in Manage Prompts section for one prompt */
-function createPromptItem(promptObject) {
+function createPromptRow(promptObject) {
   
   // menu item
   let promptItem = document.getElementById("prompt-list-item").cloneNode(true);
@@ -281,18 +285,29 @@ function createPromptItem(promptObject) {
   promptItemAttrs[0].innerText = promptObject.prompt;
   promptItemAttrs[1].setAttribute("class", "prompt-list-item col-5 btn " + (promptObject.public_flg ? "btn-outline-success" : "btn-outline-secondary"));
   promptItemAttrs[1].innerText = promptObject.public_flg ? "Open" : "Closed";
-  document.getElementById("prompts-list").append(promptItem);
+  promptItemAttrs[2].setAttribute("value", promptObject.prompt_id); 
+  
+  promptItem.addEventListener("click", function(event){
+    document.getElementById("promptCard").remove();
+    //console.log(currentPrompt);
+    //currentPrompt.remove();
+    createPromptCard(currentPrompts.find( 
+      promptOption => promptOption.prompt_id == promptObject.prompt_id
+    ));
+  });
 
-  // prompt card
+  document.getElementById("prompts-list").append(promptItem);
+}
+
+function createPromptCard(promptObject) {
   let promptCard = document.getElementById("promptTemplate").cloneNode(true);
-  promptCard.setAttribute("id", promptObject.prompt_id);
+  promptCard.setAttribute("id", "promptCard");
   promptCard.setAttribute("style", "");
-  promptCard.getElementsByClassName("promptTitle")[0].innerText = promptObject.prompt;
+  promptCard.getElementsByClassName("promptText")[0].innerText = promptObject.prompt;
   promptCard.getElementsByClassName("promptToSwitch")[0].setAttribute("value", promptObject.prompt_id);
   promptCard.getElementsByClassName("promptToEdit")[0].setAttribute("value", promptObject.prompt_id);
   promptCard.getElementsByClassName("promptToAddMeta")[0].setAttribute("value", promptObject.prompt_id);
   promptCard.getElementsByClassName("promptToDeleteMeta")[0].setAttribute("value", promptObject.prompt_id);   
-  promptCard.getElementsByClassName("promptToDelete")[0].setAttribute("value", promptObject.prompt_id); 
   document.getElementById("promptList").appendChild(promptCard);
 }
 
