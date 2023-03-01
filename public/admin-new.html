@@ -8,13 +8,14 @@
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <link href="\css\index.css" rel="stylesheet" />
+    
 
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>-->
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    -->
+    <link href="\css\index.css" rel="stylesheet" />
     <script src="/js/checkbox.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -39,41 +40,70 @@
     </div>
     <h2 id="currentCollection"></h2>
     <div id="home" style="display: none;">
-        <div> 
-            <form action="/swapCurrentCollection">
-                <ul id="collections-dropdown-menu"></ul>
+        <div class="container">            
+            <form id="swap-current-collection" action="/swapCurrentCollection">
+                <input style="display:none" id="swap-collection-title" name="swapCollection"/>
+                <table class="table table-hover align-middle caption-top">
+                    <thead>
+                        <caption>Choose a collection</caption>
+                        <tr>
+                            <th class="w-50">Title</th>
+                            <th>Recordings</th>
+                            <th>Record Status</th>
+                            <th>Listen Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="collections-dropdown-menu">
+                        <tr id="collectionItem" style="display: none">
+                            <td class="collection-item">Template</td>
+                            <td class="collection-item">#</td>
+                            <td>
+                                <button type="button" class="collection-item" disabled>
+                                    Record status
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="collection-item" disabled>
+                                    Listen status
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>    
+                </table>
             </form>
-        </div>
-
-        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#new-collection-modal">
-            Add Collection
-        </button>
-      
-        <div class="modal fade" id="new-collection-modal" tabindex="-1" role="dialog" aria-labelledby="new-collection">
-            <div class="modal-dialog" role="document">
+            
+            <!-- Button trigger modal -->
+            <div class="d-grid gap-2"> 
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newCollectionModal">
+                    <i class="fa-sharp fa-solid fa-plus"></i>
+                </button>
+            </div>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="newCollectionModal" tabindex="-1" aria-labelledby="newCollectionModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title" id="new-collection-header">Add Collection</h4>
+                    <h1 class="modal-title fs-5" id="newCollectionModalLabel">Add Collection</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form>
+                    <form method="get" action="/createNewCollection">
+                        <div class="modal-body">                            
                             <div class="form-group">
                                 <label for="new-collection-title" class="control-label">Title</label>
-                                <input type="text" class="form-control" id="new-collection-title">
+                                <input type="text" class="form-control" id="new-collection-title" name="collectionName">
                             </div>
                             <div class="form-group">
                                 <label for="new-collection-desc" class="control-label">Description</label>
-                                <textarea class="form-control" id="new-collection-desc"></textarea>
+                                <textarea class="form-control" id="new-collection-desc" name="collectionDesc"></textarea>
                             </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
                 </div>
             </div>
         </div>
@@ -177,134 +207,176 @@
         Pubpubpubpub
     </div>
     <div id="edit" style="display: none">
-        <div class="col-md-6">
-            <details class="form-control input-lg">
-                <summary>Edit this collection</summary>
-                <form method="get" action="/updateCollectionTitle">
-                    <div class="input-group">
-                        <input type="text" name="title" class="form-control"
-                                aria-label="New collection title"
-                                placeholder="New collection title">
-                        <span class="input-group-btn">
-                            <button class="btn btn-outline-secondary">Save</button>
-                        </span>
-                    </div>
-                </form>
-                <form method="get" action="/updateCollectionDesc">
-                    <div class="input-group">
-                        <input type="text" name="desc" class="form-control"
-                                aria-label="New description"
-                                placeholder="New description">
-                        <span class="input-group-btn">
-                            <button class="btn btn-outline-secondary">Save</button>
-                        </span>
-                    </div>
-                </form>
-            </details>
-        </div>
-        <div class="col-md-6">
-            <details class="form-control input-lg">
-                <summary>Manage prompts</summary>
-                <p id="currentPrompt"></p>
-                <ul class="list-group" id="promptList">
-                    <li class="list-group-item" id="promptTemplate" style="display:none">
-                        <details>
-                            <summary class="promptTitle">Template prompt</summary>
-                            <details class="list-group-item">
-                                <summary>Edit</summary>
-                                <form method="get" action="/updatePromptText">
-                                    <div class="input-group">
-                                        <input style="display:none" class="promptToEdit" name="promptToEdit" value="template"></input>
-                                        <input type="text" name="newText" class="form-control"
-                                                aria-label="New prompt text"
-                                                placeholder="New prompt text">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-outline-secondary">Save</button>
-                                        </span>
-                                    </div>
-                                </form>
-                                <form method="get">
-                                    <div class="input-group">
-                                        <input type="text" name="desc" class="form-control"
-                                                aria-label="New description"
-                                                placeholder="New description">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-outline-secondary">Save</button>
-                                        </span>
-                                    </div>
-                                </form>
-                            </details>
-                            <details class="list-group-item">
-                                <summary>Add/delete metadata fields</summary>
-                                <div class="row">
-                                    <div class="input-group">
-                                        <form method="get" action="/addPromptMeta">
-                                            <div class="input-group">
-                                                <label for="newFieldName">Add field:</label>
-                                                <input style="display:none" class="promptToAddMeta" name="promptToAddMeta" value="template"/>
-                                                <input id="newFieldName" type="text" name="newMeta" class="form-control"
-                                                        aria-label="Field name" placeholder="Field name"/>
-                                                <select class="list-group-item" name="datatype">
-                                                    <option value="text">Text</option>
-                                                    <option value="number">Number</option>
-                                                    <option value="checkbox">Checkbox</option>
-                                                </select>
-                                                <select class="list-group-item" name="requiredFlg">
-                                                    <option value="true">Required</option>
-                                                    <option name="false" value="number">Not required</option>
-                                                </select>
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-outline-secondary">Save</button>
-                                                </span>
-                                            </div>
-                                        </form>
-                                    </div>
+        <div class="left">
+            <div class="mb-5">
+                <div class="container">
+                    <h2 class="mb-4">Edit</h2>
+                    <h3>Collection</h3>
+                    <form method="get" action="/updateCollectionTitle">
+                        <div class="form-group">
+                            <label for="update-collection-name" class="control-label">Collection Name</label>
+                            <input type="text" class="form-control" id="update-collection-name" name="collectionName">
+                        </div>
+                        <button class="btn btn-primary">Save</button>
+                    </form>
+                    <form method="get" action="/updateCollectionDesc">
+                        <div class="form-group">
+                            <label for="update-collection-desc" class="control-label">Collection Description</label>
+                            <textarea class="form-control" id="update-collection-desc" name="desc"></textarea>
+                        </div>
+                        <button class="btn btn-primary">Save</button>
+                    </form>
+                    <h3>Prompts</h3>
+                    <!-- <p id="currentPrompt"></p>   -->
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th class="w-50">Title</th>
+                                <th>Record Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="prompts-list">
+                            <tr id="prompt-list-item" style="display: none">
+                                <td class="prompt-list-item">Template</td>
+                                <td>
+                                    <button type="button" class="prompt-list-item" disabled>
+                                        Record status
+                                    </button>
+                                </td>
+                                <td>
+                                    <form method="get" action="/deletePrompt">
+                                        <input style="display:none" class="prompt-list-item" name="promptToDelete" value="template">
+                                        <button class="btn btn-outline-danger">
+                                            <i class="fa fa-trash-o"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>    
+                    </table>  
+                </div>
+
+                <!-- Add Prompt -->
+                <div class="d-grid gap-2"> 
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newPromptModal">
+                        <i class="fa-sharp fa-solid fa-plus"></i>
+                    </button>
+                </div>
+                
+                <div class="modal fade" id="newPromptModal" tabindex="-1" aria-labelledby="newPromptModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="newPromptModalLabel">Add Prompt</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="get" action="/addPromptNew">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="new-prompt" class="control-label">Prompt Description</label>
+                                    <textarea class="form-control" id="new-prompt" name="newPrompt"></textarea>
                                 </div>
-                                
-                                <div class="row">   
-                                    <div class="input-group">                                        
-                                    <form method="get" action="/deletePromptMeta">    
+                                <div class="form-group">
+                                    <label for="add-metadata-list" class="control-label">Add Metadata</label>
+                                    <div>
+                                        <input type="checkbox" id="first-name" name="firstName" checked>
+                                        <!-- <input style="display:none" name="metadata[0][datatype]" value="text">
+                                        <input style="display:none" name="metadata[0][requiredFlg]" value="true"> -->
+                                        <label for="first-name">First Name</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="last-name" name="lastName" checked>
+                                        <label for="last-name">Last Name</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="email" name="email">
+                                        <label for="email">Email</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="phone" name="phone">
+                                        <label for="phone">Phone</label>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                                <button class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="row row-cols-auto g-4 justify-content-between">
+                <div class="list-group" id="promptList">
+                    <div class="list-group-item" id="promptTemplate" style="display:none">              
+                        <form method="get" action="/updatePromptText">
+                            <div class="input-group">
+                                <input style="display:none" class="promptToEdit" name="promptToEdit"
+                                    value="template"></input>
+                                <textarea name="newText" class="form-control promptText"></textarea>         
+                            </div>
+                            <button class="btn btn-primary">Save</button>
+                        </form>
+                        <details class="list-group-item">
+                            <summary>Add/delete metadata fields</summary>
+                            <div class="row">
+                                <div class="input-group">
+                                    <form method="get" action="/addPromptMeta">
                                         <div class="input-group">
-                                            <input style="display:none" class="promptToDeleteMeta" name="promptToDeleteMeta" value="template">
+                                            <label for="newFieldName">Add field:</label>
+                                            <input style="display:none" class="promptToAddMeta" name="promptToAddMeta"
+                                                value="template" />
+                                            <input id="newFieldName" type="text" name="newMeta" class="form-control"
+                                                aria-label="Field name" placeholder="Field name" />
+                                            <select class="list-group-item" name="datatype">
+                                                <option value="text">Text</option>
+                                                <option value="number">Number</option>
+                                                <option value="checkbox">Checkbox</option>
+                                            </select>
+                                            <select class="list-group-item" name="requiredFlg">
+                                                <option value="true">Required</option>
+                                                <option name="false" value="number">Not required</option>
+                                            </select>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-outline-secondary">Save</button>
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+    
+                            <div class="row">
+                                <div class="input-group">
+                                    <form method="get" action="/deletePromptMeta">
+                                        <div class="input-group">
+                                            <input style="display:none" class="promptToDeleteMeta" name="promptToDeleteMeta"
+                                                value="template">
                                             <label>Delete field:</label>
                                             <select class="delete-md-list list-group-item" name="metaName"></select>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-outline-secondary">Delete</button>
                                             </span>
                                         </div>
-                                    </form>  
-                                    </div>                                          
-                                </div>   
-                                                                     
-                            </details>
-                            <div class="input-group">
-                                <form method="get" action="/swapCurrentPrompt">
-                                    <button class="btn btn-outline-secondary promptToSwitch" name="promptToSwitch">Make current</button>
-                                </form>
-                                <span><p><small><i>Make this the prompt that appears on your collection page</i></small></p></span>
+                                    </form>
+                                </div>
                             </div>
-                            <!--<form method="get">
-                                <button class="btn btn-outline-secondary">Delete this prompt</button>
-                            </form>-->
+    
                         </details>
-                    </li>
-                </ul>                        
-            </details>
-            <div class="col-md-6">
-                <details class="form-control input-lg">
-                    <summary>Add prompt</summary>
-                    <form method="get" action="/addPrompt">
                         <div class="input-group">
-                            <input type="text" name="prompt" class="form-control"
-                                    aria-label="New prompt"
-                                    placeholder="New prompt">
-                            <input type="text" name="desc" class="form-control"
-                                aria-label="Description"
-                                placeholder="Description">
-                            <button class="btn btn-outline-secondary">Save</button>
+                            <form method="get" action="/swapCurrentPrompt">
+                                <button class="btn btn-outline-secondary promptToSwitch" name="promptToSwitch">Make
+                                    current</button>
+                            </form>
                         </div>
-                    </form>
-                </details>
+                        
+    
+                    </div>
+                </div>
             </div>
         </div>
     </div>

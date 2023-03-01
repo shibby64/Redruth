@@ -10,7 +10,7 @@
 
 
 const prompts = new Set();
-let allPrompts = [];
+let currentPrompts = [];
 let recordings = [];
 let filteredRecordings = [];
 let collections = [];
@@ -51,12 +51,13 @@ async function getCollections() {
     .then((object) => object.json())
     .then((object) => {
       if (object.success && object.results) {
-        object.results.forEach(collection => {
-          collections.push(collection.title)
-        });
+        object.results.forEach(
+          //collections.push(collection.title)
+          createCollectionDropdownItem
+        );
       }
     })
-    .then((object) => {collections.forEach(createCollectionDropdownItem)})
+    //.then((object) => {collections.forEach(createCollectionDropdownItem)})
     .catch((err) => console.error(err));
 };
 
@@ -66,6 +67,8 @@ async function getCurrentCollectionPrompt() {
     .then((collection) => {
       if (collection.success && collection.results) {
         document.getElementById("currentCollection").innerHTML = collection.results[0].title;
+        document.getElementById("update-collection-name").setAttribute("value", collection.results[0].title);
+        document.getElementById("update-collection-desc").innerHTML = collection.results[0].description;
         document.getElementById("currentPrompt").innerHTML = "Current prompt: <b>" + collection.results[0].prompt + "</b>";
         if (collection.results[0].isPublic) {
           document.getElementById("promptLink").innerHTML = "Use this link to share your collection: <b>localhost:3000/?promptid=" + collection.results[0].promptID + "</b>";
@@ -165,13 +168,18 @@ function currentCollectionUpdate(htmlElement){
 }
 
 async function getPrompts() {
+  currentPrompts = [];
   fetch('/prompts', { method: 'POST' })
     .then((object) => object.json())
     .then((object) => {
       if (object.success && object.results.length > 0) {
         for (i = 0; i < object.results.length; i++) {
-          createPromptItem(object.results[i]);
+          if (!object.results[i].deleted_flg) {
+            currentPrompts.push(object.results[i]);
+            createPromptRow(object.results[i]);
+          }
         }
+        createPromptCard(object.results[0]);
       }
     })
     .catch((err) => console.error(err));
@@ -234,16 +242,30 @@ function createListElement(collectionPrompt){
  * called multiple times for each item in the lists
  * @param {String} collectionName 
  */
-function createCollectionDropdownItem(collectionName){
-  //update collection dropdown
-  const dropdownhtmlList = document.createElement("li");
-  const dropdownhtmlB = document.createElement("button");
-  dropdownhtmlB.setAttribute("class", "dropdown-item")
-  dropdownhtmlB.setAttribute("name", "newCollection")
-  dropdownhtmlB.setAttribute("value", collectionName)
-  dropdownhtmlB.innerText = collectionName
-  dropdownhtmlList.append(dropdownhtmlB)
-  document.getElementById("collections-dropdown-menu").append(dropdownhtmlList)
+function createCollectionDropdownItem(collectionObject){
+
+  let collectionItem = document.getElementById("collectionItem").cloneNode(true);
+  collectionItem.setAttribute("id", collectionObject.title);
+  collectionItem.setAttribute("style", "cursor: pointer");
+
+  collectionItem.addEventListener("click", function(event){
+    document.getElementById("swap-collection-title").setAttribute("value", collectionObject.title);
+    document.getElementById("swap-current-collection").submit();
+    event.preventDefault();
+  });
+
+  let colItemAttrs = collectionItem.getElementsByClassName("collection-item");
+  
+  colItemAttrs[0].innerText = collectionObject.title;
+  colItemAttrs[1].innerText = collectionObject.num_recordings;
+
+  colItemAttrs[2].setAttribute("class", "collection-item col-5 btn " + (collectionObject.is_public ? "btn-outline-success" : "btn-outline-secondary"));
+  colItemAttrs[2].innerText = collectionObject.is_public ? "Open" : "Closed";
+
+  colItemAttrs[3].setAttribute("class", "collection-item col-6 btn " + (collectionObject.has_public_recordings ? "btn-outline-primary" : "btn-outline-secondary"));
+  colItemAttrs[3].innerText = collectionObject.has_public_recordings ? "Published" : "Draft";
+
+  document.getElementById("collections-dropdown-menu").append(collectionItem);
 }
 
 function createRecordingDropdown(recordingName, recordingPrompt) {
@@ -266,16 +288,40 @@ function createRecordingDropdown(recordingName, recordingPrompt) {
 }
 
 /* Creates list item in Manage Prompts section for one prompt */
-function createPromptItem(object) {
-  let newPromptItem = document.getElementById("promptTemplate").cloneNode(true);
-  newPromptItem.setAttribute("id", object.prompt_id);
-  newPromptItem.setAttribute("style", "");
-  newPromptItem.getElementsByClassName("promptTitle")[0].innerText = object.prompt;
-  newPromptItem.getElementsByClassName("promptToSwitch")[0].setAttribute("value", object.prompt_id);
-  newPromptItem.getElementsByClassName("promptToEdit")[0].setAttribute("value", object.prompt_id);
-  newPromptItem.getElementsByClassName("promptToAddMeta")[0].setAttribute("value", object.prompt_id);
-  newPromptItem.getElementsByClassName("promptToDeleteMeta")[0].setAttribute("value", object.prompt_id);   
-  document.getElementById("promptList").appendChild(newPromptItem);
+function createPromptRow(promptObject) {
+  
+  // menu item
+  let promptItem = document.getElementById("prompt-list-item").cloneNode(true);
+  promptItem.setAttribute("id", "prompt-list-item-" + promptObject.prompt_id);
+  promptItem.setAttribute("style", "cursor: pointer");
+  let promptItemAttrs = promptItem.getElementsByClassName("prompt-list-item");
+  promptItemAttrs[0].innerText = promptObject.prompt;
+  promptItemAttrs[1].setAttribute("class", "prompt-list-item col-5 btn " + (promptObject.public_flg ? "btn-outline-success" : "btn-outline-secondary"));
+  promptItemAttrs[1].innerText = promptObject.public_flg ? "Open" : "Closed";
+  promptItemAttrs[2].setAttribute("value", promptObject.prompt_id); 
+  
+  promptItem.addEventListener("click", function(event){
+    document.getElementById("promptCard").remove();
+    //console.log(currentPrompt);
+    //currentPrompt.remove();
+    createPromptCard(currentPrompts.find( 
+      promptOption => promptOption.prompt_id == promptObject.prompt_id
+    ));
+  });
+
+  document.getElementById("prompts-list").append(promptItem);
+}
+
+function createPromptCard(promptObject) {
+  let promptCard = document.getElementById("promptTemplate").cloneNode(true);
+  promptCard.setAttribute("id", "promptCard");
+  promptCard.setAttribute("style", "");
+  promptCard.getElementsByClassName("promptText")[0].innerText = promptObject.prompt;
+  promptCard.getElementsByClassName("promptToSwitch")[0].setAttribute("value", promptObject.prompt_id);
+  promptCard.getElementsByClassName("promptToEdit")[0].setAttribute("value", promptObject.prompt_id);
+  promptCard.getElementsByClassName("promptToAddMeta")[0].setAttribute("value", promptObject.prompt_id);
+  promptCard.getElementsByClassName("promptToDeleteMeta")[0].setAttribute("value", promptObject.prompt_id);   
+  document.getElementById("promptList").appendChild(promptCard);
 }
 
 function createMetadataOption(mdItem) {  
