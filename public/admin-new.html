@@ -102,12 +102,12 @@
                             <div class="label-display">
                                 <label for="searchInput" class="col-form-label">Search a title:</label>
                                 <input type="text" placeholder="Search a title..." name="search" id="searchInput" value="">
-                                <input type="submit" value="Submit" onclick="searchTitle()" class="btn btn-primary">
+                                <input type="submit" value="Submit" onclick="searchTitle()" class="btn btn-primary" id="filterBtn">
                             </div>
                         </form>
                     </div>
                     <h3>Recordings</h3>
-                    <p class="info-bar">Title</p>
+                    <p class="info-bar">Title &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; Prompt</p>
                     <hr>
                     <div class="recordingDisplay">
                         <ul id="recordings-list"></ul>
@@ -146,14 +146,14 @@
 
                             <div class="btn-group mb-3" role="group" aria-label="Basic example">
                                 <button class="btn btn-primary" id="publicButton">Make Public</button>
-                                <button type="button" id="collapseButton" class="btn btn-outline-dark"
+                                <!-- <button type="button" id="collapseButton" class="btn btn-outline-dark"
                                     data-bs-toggle="collapse" href="#collapse" role="button" aria-expanded="false"
                                     aria-controls="collapse">
                                     More Data <span class="badge bg-secondary">5</span>
-                                </button>
+                                </button> -->
                             </div>
-
-                            <div class="collapse" id="collapse">
+                            <!-- <div class="collapse" id="collapse"></div> -->
+                            <div>
                                 <div class="card card-body">
                                     <p id="postal">PostalCode:</p>
                                     <p id="name">Name:</p>

@@ -34,7 +34,7 @@ async function getRecordings() {
         for (i = 0; i < object.results.length; i++) {
           recordings.push(object.results[i]);
           // createCard(object.results[i]);
-          createRecordingDropdown(object.results[i].title);
+          createRecordingDropdown(object.results[i].title, object.results[i].prompt);
           prompts.add(object.results[i].prompt)
         }
       }
@@ -246,13 +246,13 @@ function createCollectionDropdownItem(collectionName){
   document.getElementById("collections-dropdown-menu").append(dropdownhtmlList)
 }
 
-function createRecordingDropdown(recordingName) {
+function createRecordingDropdown(recordingName, recordingPrompt) {
   const dropdownhtmlList = document.createElement("li");
   const dropdownhtmlB = document.createElement("button");
   dropdownhtmlB.setAttribute("class", "dropdown-item")
   dropdownhtmlB.setAttribute("id", "recording-item")
   dropdownhtmlB.setAttribute("value", recordingName)
-  dropdownhtmlB.innerText = recordingName
+  dropdownhtmlB.innerText = recordingName + recordingPrompt
   dropdownhtmlList.append(dropdownhtmlB)
   document.getElementById("recordings-list").append(dropdownhtmlList)
   dropdownhtmlB.addEventListener('click', function(event) {
@@ -400,7 +400,7 @@ function filter(name) {
          if (object.timestamp == recording.timestamp && object.file_id == recording.file_id) {
            count++;
            // createCard(recording);
-           createRecordingDropdown(recording.title);
+           createRecordingDropdown(recording.title, recording.prompt);
          }
        });
      });
@@ -425,7 +425,7 @@ function filter(name) {
       if (object.file_id == recording.file_id) {
         count++;
         // createCard(recording);
-        createRecordingDropdown(recording.title);
+        createRecordingDropdown(recording.title, recording.prompt);
       }
     });
   });
@@ -541,7 +541,7 @@ function searchTitle() {
   filteredRecordings.forEach(recording => {
     // createCard(recording)
     document.getElementById("recordings-list").innerHTML = "";
-    createRecordingDropdown(recording.title);
+    createRecordingDropdown(recording.title, recording.prompt);
   });
   // Display number of audio files
   document.getElementById("fileCount").innerHTML = "Number of files in this prompt: " + count;
@@ -561,6 +561,7 @@ function createCard(object) {
   const htmlNode = document.createElement("div");
   htmlNode.setAttribute('id', object.file_id)
   htmlNode.setAttribute('class', "col item")
+  htmlNode.style.marginLeft = "25%";
   //Clone the hidden template from the html
   var newCard = $('#cardTemplate').clone().attr("id", object.file_id);
 
