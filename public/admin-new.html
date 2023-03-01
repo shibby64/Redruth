@@ -124,6 +124,7 @@
                             <div class="label-display">
                                 <label for="metadataFilter" class="col-form-label">Filter by metadata:</label>
                                 <select id="metadataFilter" onchange="metaFilter(this)" class="form-select form-select-lg mb-4">
+                                    <option value="none" id="noFilt">No Filter</option>
                                     <option value="">Timestamp (Oldest)</option>
                                     <option value="time_recent">Timestamp (Recent)</option>
                                     <option value="title">Title</option>
@@ -137,7 +138,16 @@
                         </form>
                     </div>
                     <h3>Recordings</h3>
-                    <p class="info-bar">Title &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; Prompt</p>
+                    <table>
+                        <div class="info-bar">
+                            <thead>
+                                <tr>
+                                    <th class="w-85" id="thColor">Title</th>
+                                    <th id="thColor">Prompt</th>
+                                </tr>
+                            </thead>
+                        </div>
+                    </table>
                     <hr>
                     <div class="recordingDisplay">
                         <ul id="recordings-list"></ul>

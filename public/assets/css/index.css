@@ -265,7 +265,10 @@ h3 {
   text-align: center;
 }
 
-.info-bar {
-  padding-left: 15px;
+#thColor {
   color: #888;
+}
+
+.w-85 {
+  width: 85% !important;
 }

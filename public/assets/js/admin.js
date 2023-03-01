@@ -34,7 +34,7 @@ async function getRecordings() {
         for (i = 0; i < object.results.length; i++) {
           recordings.push(object.results[i]);
           // createCard(object.results[i]);
-          createRecordingDropdown(object.results[i].title, object.results[i].prompt);
+          createRecordingDropdown(object.results[i].title, object.results[i].prompt, object.results[i].file_id);
           prompts.add(object.results[i].prompt)
         }
       }
@@ -268,19 +268,27 @@ function createCollectionDropdownItem(collectionObject){
   document.getElementById("collections-dropdown-menu").append(collectionItem);
 }
 
-function createRecordingDropdown(recordingName, recordingPrompt) {
+function createRecordingDropdown(recordingName, recordingPrompt, file_id) {
   const dropdownhtmlList = document.createElement("li");
   const dropdownhtmlB = document.createElement("button");
+  const prompt = document.createElement("span");
+  const title = document.createElement("span");
   dropdownhtmlB.setAttribute("class", "dropdown-item")
   dropdownhtmlB.setAttribute("id", "recording-item")
   dropdownhtmlB.setAttribute("value", recordingName)
-  dropdownhtmlB.innerText = recordingName + recordingPrompt
+  title.innerHTML = recordingName
+  title.style.display = "inline-block"
+  title.style.width = "55%"
+  prompt.innerHTML = recordingPrompt
+  prompt.style.color = "#888"
+  dropdownhtmlB.append(title)
+  dropdownhtmlB.append(prompt)
   dropdownhtmlList.append(dropdownhtmlB)
   document.getElementById("recordings-list").append(dropdownhtmlList)
   dropdownhtmlB.addEventListener('click', function(event) {
     $(".item").remove();
     for (var i = 0; i < recordings.length; i++) {
-      if (recordings[i].title === recordingName) {
+      if (recordings[i].file_id === file_id) {
         createCard(recordings[i]);
       }
     }
@@ -364,6 +372,7 @@ function metaFilter(selected) {
   if (typeof promptFilt === "undefined") {
     promptFilt = "";
   }
+  document.getElementById("noFilt").style.display = "none";
   // Set global variable and run filter
   metaFilt = selected.value;
   filter(promptFilt)
@@ -446,7 +455,7 @@ function filter(name) {
          if (object.timestamp == recording.timestamp && object.file_id == recording.file_id) {
            count++;
            // createCard(recording);
-           createRecordingDropdown(recording.title, recording.prompt);
+           createRecordingDropdown(recording.title, recording.prompt, recording.file_id);
          }
        });
      });
@@ -471,7 +480,7 @@ function filter(name) {
       if (object.file_id == recording.file_id) {
         count++;
         // createCard(recording);
-        createRecordingDropdown(recording.title, recording.prompt);
+        createRecordingDropdown(recording.title, recording.prompt, recording.file_id);
       }
     });
   });
@@ -587,7 +596,7 @@ function searchTitle() {
   filteredRecordings.forEach(recording => {
     // createCard(recording)
     document.getElementById("recordings-list").innerHTML = "";
-    createRecordingDropdown(recording.title, recording.prompt);
+    createRecordingDropdown(recording.title, recording.prompt, recording.file_id);
   });
   // Display number of audio files
   document.getElementById("fileCount").innerHTML = "Number of files in this prompt: " + count;
