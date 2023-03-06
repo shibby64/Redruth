@@ -232,7 +232,7 @@
                     <form method="get" action="/updateCollectionDesc">
                         <div class="form-group">
                             <label for="update-collection-desc" class="control-label">Collection Description</label>
-                            <textarea class="form-control" id="update-collection-desc" name="desc"></textarea>
+                            <textarea class="form-control" id="update-collection-desc" rows="3" name="desc"></textarea>
                         </div>
                         <button class="btn btn-primary">Save</button>
                     </form>
@@ -332,7 +332,32 @@
                             </div>
                             <button class="btn btn-primary">Save</button>
                         </form>
-                        <details class="list-group-item">
+
+                        <h3>Required Metadata</h3>
+                        <form action="">
+                            <div class="checkbox">
+                                <label>
+                                  <input type="checkbox" class="metadata-edit"> First Name
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                  <input type="checkbox" class="metadata-edit"> Last Name
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                  <input type="checkbox" class="metadata-edit"> Email
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                  <input type="checkbox" class="metadata-edit"> Phone
+                                </label>
+                            </div>
+                        </form>
+
+                        <!-- <details class="list-group-item">
                             <summary>Add/delete metadata fields</summary>
                             <div class="row">
                                 <div class="input-group">
@@ -375,8 +400,7 @@
                                     </form>
                                 </div>
                             </div>
-    
-                        </details>
+                        </details> -->
                         <div class="input-group">
                             <form method="get" action="/swapCurrentPrompt">
                                 <button class="btn btn-outline-secondary promptToSwitch" name="promptToSwitch">Make
