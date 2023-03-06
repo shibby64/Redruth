@@ -278,7 +278,7 @@ function createRecordingDropdown(recordingName, recordingPrompt, file_id) {
   dropdownhtmlB.setAttribute("value", recordingName)
   title.innerHTML = recordingName
   title.style.display = "inline-block"
-  title.style.width = "55%"
+  title.style.width = "40%"
   prompt.innerHTML = recordingPrompt
   prompt.style.color = "#888"
   dropdownhtmlB.append(title)
