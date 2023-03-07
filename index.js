@@ -167,12 +167,13 @@ app.get('/swapCurrentCollection', (req, res) => {
 
 /* Change current collection title */
 app.get('/updateCollectionTitle', (req, res) => {
-    var newTitle = req.query.title;
+    var newTitle = req.query.collectionName;
     connection.query('SELECT 1 FROM t_collection WHERE title = ?', [newTitle], function (error, results, fields) {
         if (error) throw error;
         if (results.length > 0) {
             console.log(newTitle + ' already exists!');
         } else {
+            // console.log(newTitle);
             connection.query('UPDATE t_collection SET title = ? WHERE collection_id = (SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1)', [newTitle], function (error, results, fields) { 
                 if (error) throw error;
             });

@@ -68,14 +68,16 @@ async function getCurrentCollectionPrompt() {
       if (collection.success && collection.results) {
         document.getElementById("currentCollection").innerHTML = collection.results[0].title;
         document.getElementById("update-collection-name").setAttribute("value", collection.results[0].title);
+        // document.getElementById("update-collection-name").innerHTML = collection.results[0].title;
         document.getElementById("update-collection-desc").innerHTML = collection.results[0].description;
         document.getElementById("currentPrompt").innerHTML = "Current prompt: <b>" + collection.results[0].prompt + "</b>";
-        if (collection.results[0].isPublic) {
-          document.getElementById("promptLink").innerHTML = "Use this link to share your collection: <b>localhost:3000/?promptid=" + collection.results[0].promptID + "</b>";
-        } else {
-          document.getElementById("promptLink").innerHTML = "Anyone with a link will be able to add stories to this collection";
-        }
+        // if (collection.results[0].isPublic) {
+        //   document.getElementById("promptLink").innerHTML = "Use this link to share your collection: <b>localhost:3000/?promptid=" + collection.results[0].promptID + "</b>";
+        // } else {
+        //   document.getElementById("promptLink").innerHTML = "Anyone with a link will be able to add stories to this collection";
+        // }
       }
+      // updatePageView();
     });
 }
 
