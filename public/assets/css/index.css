@@ -274,3 +274,14 @@ h3 {
 .w-85 {
   width: 85% !important;
 }
+
+.tableScroll {
+  height: 250px;
+  overflow: scroll;
+}
+
+#table {
+  /* position: sticky; */
+  top: 0;
+  width: 100%;
+}
