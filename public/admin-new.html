@@ -214,21 +214,33 @@
         </div>
     </div>
     <div id="publish" style="display: none">
-        <div class="container">            
+        <div class="container">
+            <h3>Collection Status</h3>
+            <div class="input-group">
+                <form method="get" action="/updatePublicCollection">
+                    <button class="btn btn-outline-secondary" id="collectionPublicBtn">
+                        Closed
+                    </button>
+                </form>
+                <button style="display: none" class="btn btn-outline-secondary" id="promptLink" name="button">
+                    <i class="fa-sharp fa-solid fa-external-link"></i>
+                </button>
+            </div>
+            <h3>Prompts</h3>
             <form action="/swapCurrentPrompt">
                 <input style="display:none" id="swap-collection-title" name="swapCollection"/>
-                <table class="table table-hover align-middle">
+                <table class="table align-middle">
                     <thead>
                         <tr>
                             <th class="w-75">Title</th>
-                            <th>Record Status</th>
+                            <th id="promptStatusHdr" style="display: none">Record Status</th>
                         </tr>
                     </thead>
                     <tbody id="publish-prompts-list">
                         <tr id="publish-prompt-item" style="display: none">
                             <td class="publish-prompt-item">Template</td>
-                            <td>
-                                <button class="btn btn-outline-secondary publish-prompt-item promptToSwitch" name="promptToSwitch">Record Status</button>
+                            <td class="promptStatus" style="display: none">
+                                <button class="btn btn-outline-secondary publish-prompt-item" name="promptToSwitch">Record Status</button>
                             </td>
                         </tr>
                     </tbody>    

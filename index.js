@@ -161,13 +161,22 @@ app.get('/swapCurrentCollection', (req, res) => {
         if (error) throw error;
     });
 
+    connection.query('SELECT prompt_id FROM t_prompt WHERE public_flg = 1 AND collection_id = (SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1)', function (error, results, fields) {
+        if (error) throw error;
+        if (results.length > 0) {
+            var currentPrompt = results[0].prompt_id;
+            connection.query('UPDATE t_admin_cache SET prompt_id = ? WHERE user_id = 1', [currentPrompt], function (error, results, fields) {
+                if (error) throw error;
+            });
+        }
+    });
+
     res.redirect('/admin-new.html');
-    //res.sendFile(path.join(__dirname, 'public/admin-new.html'));
 });
 
 /* Change current collection title */
 app.get('/updateCollectionTitle', (req, res) => {
-    var newTitle = req.query.title;
+    var newTitle = req.query.collectionName;
     connection.query('SELECT 1 FROM t_collection WHERE title = ?', [newTitle], function (error, results, fields) {
         if (error) throw error;
         if (results.length > 0) {
@@ -179,9 +188,7 @@ app.get('/updateCollectionTitle', (req, res) => {
         }
 
     });
-
     res.redirect('/admin-new.html');
-    // res.sendFile(path.join(__dirname, 'public/admin-new.html'));
 });
 
 /* Change current collection description */
@@ -204,6 +211,7 @@ app.get('/updatePublicCollection', (req, res) => {
             connection.query('UPDATE t_collection SET public_flg = 1 WHERE collection_id = (SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1)');
         }
     });
+    res.redirect('/admin-new.html');
 });
 
 /* Add prompt to current collection */
@@ -245,9 +253,9 @@ app.get('/addPromptNew', (req, res) => {
                     if (error) throw error;
                 });
             }
-            connection.query('UPDATE t_admin_cache SET prompt_id = ?', [promptID], function (error, results, fields) {
-                if (error) throw error;
-            });
+            // connection.query('UPDATE t_admin_cache SET prompt_id = ?', [promptID], function (error, results, fields) {
+            //     if (error) throw error;
+            // });
         }
     }); 
 
