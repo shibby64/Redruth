@@ -256,6 +256,8 @@ app.get('/addPromptNew', (req, res) => {
     //res.sendFile(path.join(__dirname, 'public/admin-new.html'));
 });
 
+//function addPrompt()
+
 app.get('/swapCurrentPrompt', (req, res) => {
     var newPromptID = req.query.promptToSwitch;
     connection.query('UPDATE t_prompt SET public_flg = 0 WHERE public_flg = 1 AND user_id = 1', function (error, results, fields) {
@@ -484,7 +486,7 @@ app.post('/prompts', (req, res) => {
 });
 
 app.post('/promptMetadata', (req, res) => {
-    connection.query('SELECT metadata_name, t_prompt_metadata.prompt_id AS promptID FROM t_prompt_metadata JOIN t_prompt ON t_prompt_metadata.prompt_id = t_prompt.prompt_id WHERE collection_id = (SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1)', function (error, results, fields) {
+    connection.query('SELECT metadata_name AS name, required_flg, t_prompt_metadata.prompt_id AS prompt_id FROM t_prompt_metadata JOIN t_prompt ON t_prompt_metadata.prompt_id = t_prompt.prompt_id WHERE collection_id = (SELECT collection_id FROM t_admin_cache WHERE user_id = 1 LIMIT 1)', function (error, results, fields) {
         if (error) throw error;
         return res.json({ success: true, results});
     });

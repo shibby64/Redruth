@@ -181,22 +181,29 @@ async function getPrompts() {
             createPromptRow(object.results[i]);
           }
         }
-        createPromptCard(object.results[0]);
-      }
-    })
-    .catch((err) => console.error(err));
-
-    fetch('/promptMetadata', { method: 'POST' })
-    .then((object) => object.json())
-    .then((object) => {
-      if (object.success && object.results.length > 0) {
-        for (i = 0; i < object.results.length; i++) {
-          createMetadataOption(object.results[i]);
-        }
+        getPromptMetadata();
       }
     })
     .catch((err) => console.error(err));
 };
+
+function getPromptMetadata() {
+  fetch('/promptMetadata', { method: 'POST' })
+    .then((object) => object.json())
+    .then((mdObject) => {
+      if (mdObject.success && mdObject.results.length > 0) {
+        for (let i = 0; i < currentPrompts.length; i++) {
+          currentPrompts[i].metadata = [];
+        }
+        for (i = 0; i < mdObject.results.length; i++) {          
+          currentPrompts.find( 
+            promptOption => promptOption.prompt_id == mdObject.results[i].prompt_id
+          ).metadata.push(mdObject.results[i]);       
+        }
+      }
+    })
+    .catch((err) => console.error(err));
+}
 
 async function getmdtest(htmlElement){
   //document.getElementById("current").value = htmlElement.innerText
@@ -299,8 +306,6 @@ function createRecordingDropdown(recordingName, recordingPrompt, file_id) {
 
 /* Creates list item in Manage Prompts section for one prompt */
 function createPromptRow(promptObject) {
-  
-  // menu item
   let promptItem = document.getElementById("prompt-list-item").cloneNode(true);
   promptItem.setAttribute("id", "prompt-list-item-" + promptObject.prompt_id);
   promptItem.setAttribute("style", "cursor: pointer");
@@ -311,9 +316,8 @@ function createPromptRow(promptObject) {
   promptItemAttrs[2].setAttribute("value", promptObject.prompt_id); 
   
   promptItem.addEventListener("click", function(event){
-    document.getElementById("promptCard").remove();
-    //console.log(currentPrompt);
-    //currentPrompt.remove();
+    let prevCard = document.getElementById("promptCard");
+    if (prevCard) prevCard.remove();
     createPromptCard(currentPrompts.find( 
       promptOption => promptOption.prompt_id == promptObject.prompt_id
     ));
@@ -329,8 +333,18 @@ function createPromptCard(promptObject) {
   promptCard.getElementsByClassName("promptText")[0].innerText = promptObject.prompt;
   promptCard.getElementsByClassName("promptToSwitch")[0].setAttribute("value", promptObject.prompt_id);
   promptCard.getElementsByClassName("promptToEdit")[0].setAttribute("value", promptObject.prompt_id);
-  promptCard.getElementsByClassName("promptToAddMeta")[0].setAttribute("value", promptObject.prompt_id);
-  promptCard.getElementsByClassName("promptToDeleteMeta")[0].setAttribute("value", promptObject.prompt_id);   
+  
+  let metadataNames = ["First Name", "Last Name", "Email", "Phone"];
+  for (let i = 0; i < 4; i++) {
+    if (currentPrompts.find(promptOption => 
+      promptOption.prompt_id == promptObject.prompt_id && 
+      promptOption.metadata.find(mdOption => mdOption.name == metadataNames[i] && mdOption.required_flg)
+    )) {
+      promptCard.getElementsByClassName("metadata-edit")[i].setAttribute("checked", "");
+    } 
+  }
+  //promptCard.getElementsByClassName("promptToDeleteMeta")[0].setAttribute("value", promptObject.prompt_id);   
+  
   document.getElementById("promptList").appendChild(promptCard);
 }
 
