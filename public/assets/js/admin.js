@@ -70,16 +70,28 @@ async function getCurrentCollectionPrompt() {
         document.getElementById("update-collection-name").setAttribute("value", collection.results[0].title);
         // document.getElementById("update-collection-name").innerHTML = collection.results[0].title;
         document.getElementById("update-collection-desc").innerHTML = collection.results[0].description;
-        document.getElementById("currentPrompt").innerHTML = "Current prompt: <b>" + collection.results[0].prompt + "</b>";
-        // if (collection.results[0].isPublic) {
-        //   document.getElementById("promptLink").innerHTML = "Use this link to share your collection: <b>localhost:3000/?promptid=" + collection.results[0].promptID + "</b>";
-        // } else {
-        //   document.getElementById("promptLink").innerHTML = "Anyone with a link will be able to add stories to this collection";
-        // }
+        
+        let promptLinkBtn = document.getElementById("promptLink");
+        promptLinkBtn.addEventListener("click", function(event){
+          navigator.clipboard.writeText("localhost:3000/?promptid=" + collection.results[0].promptID);
+        });
+        if (collection.results[0].isPublic) {
+          document.getElementById("collectionPublicBtn").setAttribute("class", "btn btn-outline-success");
+          document.getElementById("collectionPublicBtn").innerHTML = "Open";
+          promptLinkBtn.style.display = "";
+
+          document.getElementById("promptStatusHdr").style.display = "";
+          let btns = document.getElementsByClassName("promptStatus");
+          for (var i = 0; i < btns.length; i++) {
+            btns[i].style.display = "";
+          }
+          
+        }
       }
-      // updatePageView();
     });
 }
+
+
 
 /* Update user's current page display */
 function displayHome(event) {
@@ -179,6 +191,7 @@ async function getPrompts() {
           if (!object.results[i].deleted_flg) {
             currentPrompts.push(object.results[i]);
             createPromptRow(object.results[i]);
+            createPublishPromptRow(object.results[i]);
           }
         }
         getPromptMetadata();
@@ -304,16 +317,16 @@ function createRecordingDropdown(recordingName, recordingPrompt, file_id) {
   })
 }
 
-/* Creates list item in Manage Prompts section for one prompt */
+/* Creates list item on edit page for one prompt */
 function createPromptRow(promptObject) {
   let promptItem = document.getElementById("prompt-list-item").cloneNode(true);
   promptItem.setAttribute("id", "prompt-list-item-" + promptObject.prompt_id);
   promptItem.setAttribute("style", "cursor: pointer");
   let promptItemAttrs = promptItem.getElementsByClassName("prompt-list-item");
   promptItemAttrs[0].innerText = promptObject.prompt;
-  promptItemAttrs[1].setAttribute("class", "prompt-list-item col-5 btn " + (promptObject.public_flg ? "btn-outline-success" : "btn-outline-secondary"));
-  promptItemAttrs[1].innerText = promptObject.public_flg ? "Open" : "Closed";
-  promptItemAttrs[2].setAttribute("value", promptObject.prompt_id); 
+  //promptItemAttrs[1].setAttribute("class", "prompt-list-item col-5 btn " + (promptObject.public_flg ? "btn-outline-success" : "btn-outline-secondary"));
+  //promptItemAttrs[1].innerText = promptObject.public_flg ? "Open" : "Closed";
+  promptItemAttrs[1].setAttribute("value", promptObject.prompt_id); 
   
   promptItem.addEventListener("click", function(event){
     let prevCard = document.getElementById("promptCard");
@@ -331,7 +344,6 @@ function createPromptCard(promptObject) {
   promptCard.setAttribute("id", "promptCard");
   promptCard.setAttribute("style", "");
   promptCard.getElementsByClassName("promptText")[0].innerText = promptObject.prompt;
-  promptCard.getElementsByClassName("promptToSwitch")[0].setAttribute("value", promptObject.prompt_id);
   promptCard.getElementsByClassName("promptToEdit")[0].setAttribute("value", promptObject.prompt_id);
   
   let metadataNames = ["First Name", "Last Name", "Email", "Phone"];
@@ -346,6 +358,19 @@ function createPromptCard(promptObject) {
   //promptCard.getElementsByClassName("promptToDeleteMeta")[0].setAttribute("value", promptObject.prompt_id);   
   
   document.getElementById("promptList").appendChild(promptCard);
+}
+
+/* Creates list item on publish page for one prompt */
+function createPublishPromptRow(promptObject) {
+  let promptItem = document.getElementById("publish-prompt-item").cloneNode(true);
+  promptItem.setAttribute("id", "publish-prompt-item-" + promptObject.prompt_id);
+  promptItem.setAttribute("style", "");
+  let promptItemAttrs = promptItem.getElementsByClassName("publish-prompt-item");
+  promptItemAttrs[0].innerText = promptObject.prompt;
+  promptItemAttrs[1].setAttribute("class", "publish-prompt-item col-5 btn " + (promptObject.public_flg ? "btn-outline-success" : "btn-outline-secondary"));
+  promptItemAttrs[1].setAttribute("value", promptObject.prompt_id); 
+  promptItemAttrs[1].innerText = promptObject.public_flg ? "Open" : "Closed";
+  document.getElementById("publish-prompts-list").append(promptItem);
 }
 
 function createMetadataOption(mdItem) {  

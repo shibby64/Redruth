@@ -214,7 +214,39 @@
         </div>
     </div>
     <div id="publish" style="display: none">
-        Pubpubpubpub
+        <div class="container">
+            <h3>Collection Status</h3>
+            <div class="input-group">
+                <form method="get" action="/updatePublicCollection">
+                    <button class="btn btn-outline-secondary" id="collectionPublicBtn">
+                        Closed
+                    </button>
+                </form>
+                <button style="display: none" class="btn btn-outline-secondary" id="promptLink" title="Copy collection link to clipboard">
+                    <i class="fa-sharp fa-solid fa-external-link"></i>
+                </button>
+            </div>
+            <h3>Prompts</h3>
+            <form action="/swapCurrentPrompt">
+                <input style="display:none" id="swap-collection-title" name="swapCollection"/>
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th class="w-75">Title</th>
+                            <th id="promptStatusHdr" style="display: none">Record Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="publish-prompts-list">
+                        <tr id="publish-prompt-item" style="display: none">
+                            <td class="publish-prompt-item">Template</td>
+                            <td class="promptStatus" style="display: none">
+                                <button class="btn btn-outline-secondary publish-prompt-item" name="promptToSwitch">Record Status</button>
+                            </td>
+                        </tr>
+                    </tbody>    
+                </table>  
+            </form>
+        </div>
     </div>
     <div id="edit" style="display: none">
         <div class="left">
@@ -270,19 +302,18 @@
                     <!-- <table class="table table-hover align-middle">
                         <thead>
                             <tr>
-                                <th class="w-50">Title</th>
-                                <th>Record Status</th>
+                                <th class="w-75">Title</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody id="prompts-list">
                             <tr id="prompt-list-item" style="display: none">
                                 <td class="prompt-list-item">Template</td>
-                                <td>
+                                <!-- <td>
                                     <button type="button" class="prompt-list-item" disabled>
                                         Record status
                                     </button>
-                                </td>
+                                </td> -->
                                 <td>
                                     <form method="get" action="/deletePrompt">
                                         <input style="display:none" class="prompt-list-item" name="promptToDelete" value="template">
@@ -350,10 +381,11 @@
             </div>
         </div>
         <div class="right">
-            <div class="row row-cols-auto g-4 justify-content-between">
+            <div >
                 <div class="list-group" id="promptList">
                     <div class="list-group-item" id="promptTemplate" style="display:none">              
                         <form method="get" action="/updatePromptText">
+                            <h3>Title</h3>
                             <div class="input-group">
                                 <input style="display:none" class="promptToEdit" name="promptToEdit"
                                     value="template"></input>
@@ -430,12 +462,13 @@
                                 </div>
                             </div>
                         </details> -->
-                        <div class="input-group">
+
+                        <!-- <div class="input-group">
                             <form method="get" action="/swapCurrentPrompt">
                                 <button class="btn btn-outline-secondary promptToSwitch" name="promptToSwitch">Make
                                     current</button>
                             </form>
-                        </div>
+                        </div> -->
                         
     
                     </div>
