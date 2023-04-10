@@ -23,28 +23,28 @@
   color: #ff9d00d7;
   font-weight: bold;
 }
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+/*.modal {
+  display: none; /* Hidden by default 
+  position: fixed; /* Stay in place 
+  z-index: 1; /* Sit on top 
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  width: 100%; /* Full width 
+  height: 100%; /* Full height 
+  overflow: auto; /* Enable scroll if needed 
+  background-color: rgb(0,0,0); /* Fallback color 
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity 
 }
-/* Modal Content/Box */
+/* Modal Content/Box 
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
+  margin: 15% auto; /* 15% from the top and centered 
   padding: 20px;
   border: 1px solid #888;
-  width: 50%; /* Could be more or less, depending on screen size */
+  width: 50%; /* Could be more or less, depending on screen size 
 }
 
-/* The Close Button */
+/* The Close Button 
 .close {
   color: #aaa;
   float: right;
@@ -57,7 +57,7 @@
   color: black;
   text-decoration: none;
   cursor: pointer;
-}
+}*/
 #myBtn {
   margin-top: 30px;
   margin-left:46%;
@@ -138,21 +138,150 @@
   
 } */
 
-.search-container {
-  max-width: 600px;
-  margin-bottom: 20px;
+#selectPrompt {
+  font-size: 16px;
+}
+
+.search-container form {
+  display: flex;
+  flex-direction: row;
+  justify-content:center;
+  width: 100%;
+}
+
+#metadataFilter {
+  font-size: 16px;
+}
+
+.search-container .label-display {
+  width: 100%;
+}
+
+.search-container .label-display #filterBtn {
+  font-size: 16px;
+  text-align: right;
+  padding: 5px;
 }
 
 .search-container input[type="text"] {
   display: block;
-  width: calc(100% - 24px);
   width: 100%;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  padding: 10px;
+  padding: 8px;
   border: 1px solid #000000;
   margin-bottom: 20px;
 }
 
+.label-display {
+  display: block;
+}
 
+.banner {
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+  color: #fff;
+  background-color: #2F4050;
+  height: 60px;
+}
 
+.banner h1 {
+  padding: 10px;
+  font-family: 'Inter';
+  font-style: italic;
+  display: flex;
+  text-transform: uppercase;
+  font-weight: 665;
+  font-size: 24px;
+  line-height: 29px;
+}
+
+#sidebar {
+  position: absolute;
+  background-color: #2F4050;
+  height: 100%;
+  width: 80px;
+}
+
+#sidebar li:hover {
+  background-color: #fff;
+}
+
+#sidebar li:hover button {
+  background-color: #fff;
+  color: #2F4050;
+}
+
+#sidebar button {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  background-color: #2F4050;
+  color: #fff;
+  border: none;
+  font-size: large;
+}
+
+#currentCollection {
+  text-align: center;
+}
+
+#inbox {
+  margin-left: 10%;
+  height: 100%;
+}
+
+#edit {
+  margin-left: 10%;
+  height: 100%;
+}
+
+.left {
+  width: 50%;
+  float: left;
+}
+
+.right {
+  width: 50%;
+  height: 700px;
+  float: right;
+  background-color: #f3f3f3;
+  padding: 10px;
+}
+
+#recordings-list {
+  list-style: none;
+  padding-left: 0;
+  width: 100%;
+  overflow: scroll;
+  max-height: 300px;
+}
+
+h3 {
+  font-size: medium;
+  font-weight: bold;
+}
+
+#fileCount {
+  text-align: center;
+}
+
+#thColor {
+  color: #888;
+}
+
+.w-85 {
+  width: 85% !important;
+}
+
+.tableScroll {
+  height: 250px;
+  overflow: scroll;
+}
+
+#table {
+  /* position: sticky; */
+  top: 0;
+  width: 100%;
+}

@@ -10,7 +10,7 @@
 
 
 const prompts = new Set();
-let allPrompts = [];
+let currentPrompts = [];
 let recordings = [];
 let filteredRecordings = [];
 let collections = [];
@@ -33,12 +33,13 @@ async function getRecordings() {
         // for all objects set up cards and add to various arrays
         for (i = 0; i < object.results.length; i++) {
           recordings.push(object.results[i]);
-          createCard(object.results[i]);
+          // createCard(object.results[i]);
+          createRecordingDropdown(object.results[i].title, object.results[i].prompt, object.results[i].file_id);
           prompts.add(object.results[i].prompt)
         }
       }
       // Display number of audio files
-      document.getElementById("fileCount").innerHTML = "Number of files: " + object.results.length;
+      document.getElementById("fileCount").innerHTML = "Number of files in this prompt: " + object.results.length;
     })
     .then((object) => {prompts.forEach(createListElement)})
     .catch((err) => console.error(err));
@@ -50,12 +51,13 @@ async function getCollections() {
     .then((object) => object.json())
     .then((object) => {
       if (object.success && object.results) {
-        object.results.forEach(collection => {
-          collections.push(collection.title)
-        });
+        object.results.forEach(
+          //collections.push(collection.title)
+          createCollectionDropdownItem
+        );
       }
     })
-    .then((object) => {collections.forEach(createCollectionDropdownItem)})
+    //.then((object) => {collections.forEach(createCollectionDropdownItem)})
     .catch((err) => console.error(err));
 };
 
@@ -65,16 +67,106 @@ async function getCurrentCollectionPrompt() {
     .then((collection) => {
       if (collection.success && collection.results) {
         document.getElementById("currentCollection").innerHTML = collection.results[0].title;
-        document.getElementById("currentPrompt").innerHTML = "Current prompt: <b>" + collection.results[0].prompt + "</b>";
+        document.getElementById("update-collection-name").setAttribute("value", collection.results[0].title);
+        // document.getElementById("update-collection-name").innerHTML = collection.results[0].title;
+        document.getElementById("update-collection-desc").innerHTML = collection.results[0].description;
+        
+        let promptLinkBtn = document.getElementById("promptLink");
+        promptLinkBtn.addEventListener("click", function(event){
+          navigator.clipboard.writeText("localhost:3000/?promptid=" + collection.results[0].promptID);
+        });
         if (collection.results[0].isPublic) {
-          document.getElementById("promptLink").innerHTML = "Use this link to share your collection: <b>localhost:3000/?promptid=" + collection.results[0].promptID + "</b>";
-        } else {
-          document.getElementById("promptLink").innerHTML = "Anyone with a link will be able to add stories to this collection";
+          document.getElementById("collectionPublicBtn").setAttribute("class", "btn btn-outline-success");
+          document.getElementById("collectionPublicBtn").innerHTML = "Open";
+          promptLinkBtn.style.display = "";
+
+          document.getElementById("promptStatusHdr").style.display = "";
+          let btns = document.getElementsByClassName("promptStatus");
+          for (var i = 0; i < btns.length; i++) {
+            btns[i].style.display = "";
+          }
+          
         }
       }
     });
 }
 
+
+
+/* Update user's current page display */
+function displayHome(event) {
+  localStorage.setItem('home', 'true');
+  localStorage.setItem('inbox', 'false');
+  localStorage.setItem('publish', 'false');
+  localStorage.setItem('edit', 'false');
+  updatePageView();
+}
+
+function displayInbox(event) {
+  localStorage.setItem('home', 'false');
+  localStorage.setItem('inbox', 'true');
+  localStorage.setItem('publish', 'false');
+  localStorage.setItem('edit', 'false');
+  updatePageView();
+}
+
+function displayPublish(event) {
+  localStorage.setItem('home', 'false');
+  localStorage.setItem('inbox', 'false');
+  localStorage.setItem('publish', 'true');
+  localStorage.setItem('edit', 'false');
+  updatePageView();
+}
+
+function displayEdit(event) {
+  localStorage.setItem('home', 'false');
+  localStorage.setItem('inbox', 'false');
+  localStorage.setItem('publish', 'false');
+  localStorage.setItem('edit', 'true');
+  updatePageView();
+}
+
+/* Store user's current page display */
+window.onload = function() {
+  var home = localStorage.getItem('home');
+  var inbox = localStorage.getItem('inbox');
+  var publish = localStorage.getItem('publish');
+  var edit = localStorage.getItem('edit');
+
+  if (home === 'true') {
+    document.getElementById("inbox").style.display = "none";
+    document.getElementById("publish").style.display = "none";
+    document.getElementById("edit").style.display = "none";
+    document.getElementById("home").style.display = "";
+    document.getElementById("home-btn").style.backgroundColor = "#fff";
+    document.getElementById("home-btn").style.color = "#2F4050";
+    document.getElementById("h-element").style.backgroundColor = "#fff";
+  } else if (inbox === 'true') {
+    document.getElementById("home").style.display = "none";
+    document.getElementById("publish").style.display = "none";
+    document.getElementById("edit").style.display = "none";
+    document.getElementById("inbox").style.display = "";
+    document.getElementById("inbox-btn").style.backgroundColor = "#fff";
+    document.getElementById("inbox-btn").style.color = "#2F4050";
+    document.getElementById("i-element").style.backgroundColor = "#fff";
+  } else if (publish === 'true') {
+    document.getElementById("home").style.display = "none";
+    document.getElementById("inbox").style.display = "none";
+    document.getElementById("edit").style.display = "none";
+    document.getElementById("publish").style.display = "";
+    document.getElementById("publish-btn").style.backgroundColor = "#fff";
+    document.getElementById("publish-btn").style.color = "#2F4050";
+    document.getElementById("p-element").style.backgroundColor = "#fff";
+  } else {
+    document.getElementById("home").style.display = "none";
+    document.getElementById("inbox").style.display = "none";
+    document.getElementById("publish").style.display = "none";
+    document.getElementById("edit").style.display = "";
+    document.getElementById("edit-btn").style.backgroundColor = "#fff";
+    document.getElementById("edit-btn").style.color = "#2F4050";
+    document.getElementById("e-element").style.backgroundColor = "#fff";
+  }
+}
 
 /* Updates current collection to collection user clicked on in dropdown */
 function currentCollectionUpdate(htmlElement){
@@ -90,13 +182,19 @@ function currentCollectionUpdate(htmlElement){
 }
 
 async function getPrompts() {
+  currentPrompts = [];
   fetch('/prompts', { method: 'POST' })
     .then((object) => object.json())
     .then((object) => {
       if (object.success && object.results.length > 0) {
         for (i = 0; i < object.results.length; i++) {
-          createPromptItem(object.results[i]);
+          if (!object.results[i].deleted_flg) {
+            currentPrompts.push(object.results[i]);
+            createPromptRow(object.results[i]);
+            createPublishPromptRow(object.results[i]);
+          }
         }
+        getPromptMetadata();
       }
     })
     .catch((err) => console.error(err));
@@ -108,11 +206,40 @@ async function getPrompts() {
         for (i = 0; i < object.results.length; i++) {
           createMetadataOption(object.results[i]);
         }
+        getPromptMetadata();
       }
     })
     .catch((err) => console.error(err));
 };
 
+async function getPrompts() {
+  currentPrompts = [];
+  fetch('/prompts', { method: 'POST' })
+    .then((object) => object.json())
+    .then((object) => {
+      if (object.success && object.results.length > 0) {
+        for (i = 0; i < object.results.length; i++) {
+          if (!object.results[i].deleted_flg) {
+            currentPrompts.push(object.results[i]);
+            createPromptRow(object.results[i]);
+            createPublishPromptRow(object.results[i]);
+          }
+        }
+        getPromptMetadata();
+      }
+    })
+    .catch((err) => console.error(err));
+};
+
+async function getmdtest(htmlElement){
+  //document.getElementById("current").value = htmlElement.innerText
+  fetch('/promptMetadata', { method: 'POST' })
+    .then((object) => object.json())
+    .then((mdObject) => {
+      console.log(mdObject);
+    });
+  updatePageView();
+}
 
 /**
  * Updates the input#promptUpdate's value to whatever the user clicked on in the dropdown
@@ -150,29 +277,122 @@ function createListElement(collectionPrompt){
  * called multiple times for each item in the lists
  * @param {String} collectionName 
  */
-function createCollectionDropdownItem(collectionName){
-  //update collection dropdown
-  const dropdownhtmlList = document.createElement("li");
-  const dropdownhtmlB = document.createElement("button");
-  dropdownhtmlB.setAttribute("class", "dropdown-item")
-  dropdownhtmlB.setAttribute("name", "newCollection")
-  dropdownhtmlB.setAttribute("value", collectionName)
-  dropdownhtmlB.innerText = collectionName
-  dropdownhtmlList.append(dropdownhtmlB)
-  document.getElementById("collections-dropdown-menu").append(dropdownhtmlList)
+function createCollectionDropdownItem(collectionObject){
+
+  let collectionItem = document.getElementById("collectionItem").cloneNode(true);
+  collectionItem.setAttribute("id", collectionObject.title);
+  collectionItem.setAttribute("style", "cursor: pointer");
+
+  collectionItem.addEventListener("click", function(event){
+    document.getElementById("swap-collection-title").setAttribute("value", collectionObject.title);
+    document.getElementById("swap-current-collection").submit();
+    event.preventDefault();
+  });
+
+  let colItemAttrs = collectionItem.getElementsByClassName("collection-item");
+  
+  colItemAttrs[0].innerText = collectionObject.title;
+  colItemAttrs[1].innerText = collectionObject.num_recordings;
+
+  colItemAttrs[2].setAttribute("class", "collection-item col-5 btn " + (collectionObject.is_public ? "btn-outline-success" : "btn-outline-secondary"));
+  colItemAttrs[2].innerText = collectionObject.is_public ? "Open" : "Closed";
+
+  colItemAttrs[3].setAttribute("class", "collection-item col-6 btn " + (collectionObject.has_public_recordings ? "btn-outline-primary" : "btn-outline-secondary"));
+  colItemAttrs[3].innerText = collectionObject.has_public_recordings ? "Published" : "Draft";
+
+  document.getElementById("collections-dropdown-menu").append(collectionItem);
 }
 
-/* Creates list item in Manage Prompts section for one prompt */
-function createPromptItem(object) {
-  let newPromptItem = document.getElementById("promptTemplate").cloneNode(true);
-  newPromptItem.setAttribute("id", object.prompt_id);
-  newPromptItem.setAttribute("style", "");
-  newPromptItem.getElementsByClassName("promptTitle")[0].innerText = object.prompt;
-  newPromptItem.getElementsByClassName("promptToSwitch")[0].setAttribute("value", object.prompt_id);
-  newPromptItem.getElementsByClassName("promptToEdit")[0].setAttribute("value", object.prompt_id);
-  newPromptItem.getElementsByClassName("promptToAddMeta")[0].setAttribute("value", object.prompt_id);
-  newPromptItem.getElementsByClassName("promptToDeleteMeta")[0].setAttribute("value", object.prompt_id);   
-  document.getElementById("promptList").appendChild(newPromptItem);
+function createRecordingDropdown(recordingName, recordingPrompt, file_id) {
+  const dropdownhtmlList = document.createElement("li");
+  const dropdownhtmlB = document.createElement("button");
+  const prompt = document.createElement("span");
+  const title = document.createElement("span");
+  dropdownhtmlB.setAttribute("class", "dropdown-item")
+  dropdownhtmlB.setAttribute("id", "recording-item")
+  dropdownhtmlB.setAttribute("value", recordingName)
+  title.innerHTML = recordingName
+  title.style.display = "inline-block"
+  title.style.width = "40%"
+  prompt.innerHTML = recordingPrompt
+  prompt.style.color = "#888"
+  dropdownhtmlB.append(title)
+  dropdownhtmlB.append(prompt)
+  dropdownhtmlList.append(dropdownhtmlB)
+  document.getElementById("recordings-list").append(dropdownhtmlList)
+  dropdownhtmlB.addEventListener('click', function(event) {
+    $(".item").remove();
+    for (var i = 0; i < recordings.length; i++) {
+      if (recordings[i].file_id === file_id) {
+        createCard(recordings[i]);
+      }
+    }
+  })
+}
+
+/* Creates list item on edit page for one prompt */
+function createPromptRow(promptObject) {
+  let promptItem = document.getElementById("prompt-list-item").cloneNode(true);
+  promptItem.setAttribute("id", "prompt-list-item-" + promptObject.prompt_id);
+  promptItem.setAttribute("style", "cursor: pointer");
+  let promptItemAttrs = promptItem.getElementsByClassName("prompt-list-item");
+  promptItemAttrs[0].innerText = promptObject.prompt;
+  //promptItemAttrs[1].setAttribute("class", "prompt-list-item col-5 btn " + (promptObject.public_flg ? "btn-outline-success" : "btn-outline-secondary"));
+  //promptItemAttrs[1].innerText = promptObject.public_flg ? "Open" : "Closed";
+  promptItemAttrs[1].setAttribute("value", promptObject.prompt_id); 
+  
+  promptItem.addEventListener("click", function(event){
+    let prevCard = document.getElementById("promptCard");
+    if (prevCard) prevCard.remove();
+    createPromptCard(currentPrompts.find( 
+      promptOption => promptOption.prompt_id == promptObject.prompt_id
+    ));
+  });
+
+  document.getElementById("prompts-list").append(promptItem);
+}
+
+function createPromptCard(promptObject) {
+  let promptCard = document.getElementById("promptTemplate").cloneNode(true);
+  promptCard.setAttribute("id", "promptCard");
+  promptCard.setAttribute("style", "");
+  promptCard.getElementsByClassName("promptText")[0].innerText = promptObject.prompt;
+  promptCard.getElementsByClassName("promptToEdit")[0].setAttribute("value", promptObject.prompt_id);
+  
+  let metadataNames = ["First Name", "Last Name", "Email", "Phone"];
+  for (let i = 0; i < 4; i++) {
+    if (currentPrompts.find(promptOption => 
+      promptOption.prompt_id == promptObject.prompt_id && 
+      promptOption.metadata.find(mdOption => mdOption.name == metadataNames[i] && mdOption.required_flg)
+    )) {
+      promptCard.getElementsByClassName("metadata-edit")[i].setAttribute("checked", "");
+    } 
+  }
+  //promptCard.getElementsByClassName("promptToDeleteMeta")[0].setAttribute("value", promptObject.prompt_id);   
+  
+  document.getElementById("promptList").appendChild(promptCard);
+}
+
+/* Creates list item on publish page for one prompt */
+function createPublishPromptRow(promptObject) {
+  let promptItem = document.getElementById("publish-prompt-item").cloneNode(true);
+  promptItem.setAttribute("id", "publish-prompt-item-" + promptObject.prompt_id);
+  promptItem.setAttribute("style", "");
+  let promptItemAttrs = promptItem.getElementsByClassName("publish-prompt-item");
+  promptItemAttrs[0].innerText = promptObject.prompt;
+  promptItemAttrs[1].setAttribute("class", "publish-prompt-item col-5 btn " + (promptObject.public_flg ? "btn-outline-success" : "btn-outline-secondary"));
+  promptItemAttrs[1].setAttribute("value", promptObject.prompt_id); 
+  promptItemAttrs[1].innerText = promptObject.public_flg ? "Open" : "Closed";
+  document.getElementById("publish-prompts-list").append(promptItem);
+}
+
+function createMetadataOption(mdItem) {  
+  let promptItem = document.getElementById(mdItem.promptID);
+  let metaName = mdItem.metadata_name;
+  let metaOption = document.createElement("option");
+  metaOption.setAttribute("value", metaName);
+  metaOption.innerHTML = metaName;
+  promptItem.getElementsByClassName("delete-md-list")[0].appendChild(metaOption);
 }
 
 function createMetadataOption(mdItem) {  
@@ -215,6 +435,7 @@ function metaFilter(selected) {
   if (typeof promptFilt === "undefined") {
     promptFilt = "";
   }
+  document.getElementById("noFilt").style.display = "none";
   // Set global variable and run filter
   metaFilt = selected.value;
   filter(promptFilt)
@@ -291,16 +512,18 @@ function filter(name) {
    // if no filter show all, sort by metadata filter
    if (name == "") {
      $(".item").remove();
+     document.getElementById("recordings-list").innerHTML = "";
      sorted.forEach(object => {
        recordings.forEach(recording => {
          if (object.timestamp == recording.timestamp && object.file_id == recording.file_id) {
            count++;
-           createCard(recording);
+           // createCard(recording);
+           createRecordingDropdown(recording.title, recording.prompt, recording.file_id);
          }
        });
      });
      // Display number of audio files
-     document.getElementById("fileCount").innerHTML = "Number of files: " + count;
+     document.getElementById("fileCount").innerHTML = "Number of files in this prompt: " + count;
      return;
    }
  
@@ -312,19 +535,21 @@ function filter(name) {
      }
    });
    $(".item").remove();
+   document.getElementById("recordings-list").innerHTML = "";
  
    // Track number of audio files in prompt and display
    sorted.forEach(object => {
     filteredRecordings.forEach(recording => {
       if (object.file_id == recording.file_id) {
         count++;
-        createCard(recording);
+        // createCard(recording);
+        createRecordingDropdown(recording.title, recording.prompt, recording.file_id);
       }
     });
   });
 
   // Display number of audio files
-  document.getElementById("fileCount").innerHTML = "Number of files: " + count;
+  document.getElementById("fileCount").innerHTML = "Number of files in this prompt: " + count;
 }
 
 /**
@@ -386,10 +611,10 @@ function compare(type, array1, array2) {
  * 
  */ 
 
-var submit = document.getElementById("searchSubmit");
-submit.addEventListener('click', search);
+// var submit = document.getElementById("searchSubmit");
+// submit.addEventListener('click', search);
 
-function search() {
+function searchTitle() {
   // If prompt filter hasn't been selected, make it all prompts
   if (typeof promptFilt === "undefined") {
     promptFilt = "";
@@ -432,12 +657,15 @@ function search() {
   $(".item").remove();
   // create a card for each recording
   filteredRecordings.forEach(recording => {
-    createCard(recording)
+    // createCard(recording)
+    document.getElementById("recordings-list").innerHTML = "";
+    createRecordingDropdown(recording.title, recording.prompt, recording.file_id);
   });
   // Display number of audio files
-  document.getElementById("fileCount").innerHTML = "Number of files: " + count;
+  document.getElementById("fileCount").innerHTML = "Number of files in this prompt: " + count;
   // if no recordings match title value, inform user
   if (count == 0) {
+    document.getElementById("recordings-list").innerHTML = "";
     document.getElementById("noResult").innerHTML = "No file named '" + input + "' found.";
   }
 }
@@ -451,6 +679,7 @@ function createCard(object) {
   const htmlNode = document.createElement("div");
   htmlNode.setAttribute('id', object.file_id)
   htmlNode.setAttribute('class', "col item")
+  htmlNode.style.marginLeft = "25%";
   //Clone the hidden template from the html
   var newCard = $('#cardTemplate').clone().attr("id", object.file_id);
 
