@@ -68,7 +68,6 @@ async function getCurrentCollectionPrompt() {
       if (collection.success && collection.results) {
         document.getElementById("currentCollection").innerHTML = collection.results[0].title;
         document.getElementById("update-collection-name").setAttribute("value", collection.results[0].title);
-        // document.getElementById("update-collection-name").innerHTML = collection.results[0].title;
         document.getElementById("update-collection-desc").innerHTML = collection.results[0].description;
         
         let promptLinkBtn = document.getElementById("promptLink");
@@ -198,38 +197,25 @@ async function getPrompts() {
       }
     })
     .catch((err) => console.error(err));
+};
 
-    fetch('/promptMetadata', { method: 'POST' })
+function getPromptMetadata() {
+  fetch('/promptMetadata', { method: 'POST' })
     .then((object) => object.json())
-    .then((object) => {
-      if (object.success && object.results.length > 0) {
-        for (i = 0; i < object.results.length; i++) {
-          createMetadataOption(object.results[i]);
+    .then((mdObject) => {
+      if (mdObject.success && mdObject.results.length > 0) {
+        for (let i = 0; i < currentPrompts.length; i++) {
+          currentPrompts[i].metadata = [];
         }
-        getPromptMetadata();
+        for (i = 0; i < mdObject.results.length; i++) {          
+          currentPrompts.find( 
+            promptOption => promptOption.prompt_id == mdObject.results[i].prompt_id
+          ).metadata.push(mdObject.results[i]);       
+        }
       }
     })
     .catch((err) => console.error(err));
-};
-
-async function getPrompts() {
-  currentPrompts = [];
-  fetch('/prompts', { method: 'POST' })
-    .then((object) => object.json())
-    .then((object) => {
-      if (object.success && object.results.length > 0) {
-        for (i = 0; i < object.results.length; i++) {
-          if (!object.results[i].deleted_flg) {
-            currentPrompts.push(object.results[i]);
-            createPromptRow(object.results[i]);
-            createPublishPromptRow(object.results[i]);
-          }
-        }
-        getPromptMetadata();
-      }
-    })
-    .catch((err) => console.error(err));
-};
+}
 
 async function getmdtest(htmlElement){
   //document.getElementById("current").value = htmlElement.innerText
@@ -313,7 +299,7 @@ function createRecordingDropdown(recordingName, recordingPrompt, file_id) {
   dropdownhtmlB.setAttribute("value", recordingName)
   title.innerHTML = recordingName
   title.style.display = "inline-block"
-  title.style.width = "40%"
+  title.style.width = "55%"
   prompt.innerHTML = recordingPrompt
   prompt.style.color = "#888"
   dropdownhtmlB.append(title)
@@ -384,15 +370,6 @@ function createPublishPromptRow(promptObject) {
   promptItemAttrs[1].setAttribute("value", promptObject.prompt_id); 
   promptItemAttrs[1].innerText = promptObject.public_flg ? "Open" : "Closed";
   document.getElementById("publish-prompts-list").append(promptItem);
-}
-
-function createMetadataOption(mdItem) {  
-  let promptItem = document.getElementById(mdItem.promptID);
-  let metaName = mdItem.metadata_name;
-  let metaOption = document.createElement("option");
-  metaOption.setAttribute("value", metaName);
-  metaOption.innerHTML = metaName;
-  promptItem.getElementsByClassName("delete-md-list")[0].appendChild(metaOption);
 }
 
 function createMetadataOption(mdItem) {  
