@@ -198,6 +198,11 @@
   line-height: 29px;
 }
 
+.bannner a {
+  text-decoration: none;
+  color: #fff;
+}
+
 #sidebar {
   position: absolute;
   background-color: #2F4050;
