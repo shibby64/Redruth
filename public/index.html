@@ -2,6 +2,15 @@
 <html lang="en" class="h-100">
 
 <head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-12CZNGHQJ6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-12CZNGHQJ6');
+</script>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -28,7 +37,8 @@
 
     gtag('config', 'G-GNBV24KT1T');
   </script>
-  <script onload="updatePrompt()"></script>
+  <script onload="recordingPrompts()"></script>
+  <script onload="getCurrentCollection()"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -65,13 +75,19 @@
     <div class="container">
       <div class="row justify-content-around align-content-center flex-wrap main-content">
         <div class="col-12 col-lg-6 text-center">
-          <h5 class="mt-5" id="project">The Redruth Reading Room Project</h5>
-          <h4 class="my-5 showPrompt" style="z-index: 2;">
+          <h5 class="mt-5" id="project"></h5>
+          <!-- <h4 class="my-5 showPrompt" style="z-index: 2;"> -->
+            <div class="listCenter">
+              <details class="promptDetails">
+                <summary id="currentPromptList"></summary>
+                <ul class="promptList" id="recordPrompts"></ul>
+              </details>
+            </div>
+              <!-- <br>
               <br>
-              <br>
-          </h4>
+          </h4> -->
         </div>
-        <div class="col-12 text-center">
+        <div class="col-12 text-center" id="mobileMode">
           <!-- recordButton -->
           <a href="#" id="recordButton" class="mx-auto buttonGradient" onclick="record()" ontap>
             <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-mic-fill"
