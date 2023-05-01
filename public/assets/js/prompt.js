@@ -20,6 +20,7 @@ getCurrentCollection()
 //         });
 // }
 const promptList = [];
+var id = '';
 
 function recordingPrompts() {
     var selection = document.getElementById('recordPrompts');
@@ -48,6 +49,7 @@ function recordingPrompts() {
                     }
                 }
                 promptList.push(prompts.results[i]);
+                id = prompts.results[i].prompt_id;
                 var current = document.getElementById('currentPromptList').innerHTML;
                 if (current === '') {
                     if (prompts.results[i].public_flg) {
@@ -57,7 +59,7 @@ function recordingPrompts() {
                 dropdownhtmlB.addEventListener('click', function(event) {
                     //alert(dropdownhtmlB.innerHTML);
                     for (var i = 0; i < promptList.length; i++) {
-                        if (promptList[i].prompt === dropdownhtmlB.innerHTML) {
+                        if (promptList[i].prompt_id === id) {
                             sessionStorage.setItem('currentPrompt', '' + promptList[i].prompt);
                             window.location.href = "https://readingroom.herokuapp.com/?promptid=" + promptList[i].prompt_id;
                         }
