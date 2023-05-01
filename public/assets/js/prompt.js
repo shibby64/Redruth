@@ -42,7 +42,9 @@ function recordingPrompts() {
                 dropdownhtmlList.append(dropdownhtmlB);
                 if (prompts.results[i].prompt_id !== 1) {
                     if (!prompts.results[i].deleted_flg) {
-                        selection.append(dropdownhtmlList);
+                        if (prompts.results[i].prompt !== sessionStorage.getItem('currentPrompt')) {
+                            selection.append(dropdownhtmlList);
+                        }
                     }
                 }
                 promptList.push(prompts.results[i]);
