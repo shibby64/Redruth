@@ -20,7 +20,6 @@ getCurrentCollection()
 //         });
 // }
 const promptList = [];
-var id = '';
 
 function recordingPrompts() {
     var selection = document.getElementById('recordPrompts');
@@ -35,6 +34,7 @@ function recordingPrompts() {
                 dropdownhtmlB.setAttribute("id", "dropdown-styling")
                 //dropdownhtmlBA.setAttribute("href", 'localhost:3000/?promptid=' + prompts.results[i].prompt_id)
                 // dropdownhtmlBA.innerHTML = prompts.results[i].prompt;
+                dropdownhtmlB.setAttribute('value', prompts.results[i].prompt_id);
                 if (prompts.results[i].prompt.length >= 52) {
                     dropdownhtmlB.innerHTML = prompts.results[i].prompt.substring(0, 53) + '...';
                 } else {
@@ -49,7 +49,6 @@ function recordingPrompts() {
                     }
                 }
                 promptList.push(prompts.results[i]);
-                id = prompts.results[i].prompt_id;
                 var current = document.getElementById('currentPromptList').innerHTML;
                 if (current === '') {
                     if (prompts.results[i].public_flg) {
@@ -59,7 +58,7 @@ function recordingPrompts() {
                 dropdownhtmlB.addEventListener('click', function(event) {
                     //alert(dropdownhtmlB.innerHTML);
                     for (var i = 0; i < promptList.length; i++) {
-                        if (promptList[i].prompt_id === id) {
+                        if (promptList[i].prompt_id === dropdownhtmlB.getAttribute('value')) {
                             sessionStorage.setItem('currentPrompt', '' + promptList[i].prompt);
                             window.location.href = "https://readingroom.herokuapp.com/?promptid=" + promptList[i].prompt_id;
                         }
