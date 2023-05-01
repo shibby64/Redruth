@@ -37,7 +37,9 @@ function recordingPrompts() {
                 dropdownhtmlB.innerHTML = prompts.results[i].prompt;
                 dropdownhtmlList.append(dropdownhtmlB);
                 if (prompts.results[i].prompt_id !== 1) {
-                    selection.append(dropdownhtmlList);
+                    if (!prompts.results[i].delete_flg) {
+                        selection.append(dropdownhtmlList);
+                    }
                 }
                 promptList.push(prompts.results[i]);
                 var current = document.getElementById('currentPromptList').innerHTML;
