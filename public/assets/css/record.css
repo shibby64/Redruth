@@ -144,6 +144,7 @@ h2 {
     display: inline-block;
     box-shadow:  0px 0px 39px 14px rgb(38, 55, 81);
     -webkit-box-shadow:  0px 0px 39px 14px rgb(38, 55, 81);
+    margin-top: 30px;
 }
 
 #stopButton {
@@ -421,4 +422,59 @@ color: var(--blue-text-light);
   }
   .slider-control-next {
     right: 20px;
+  }
+
+  .promptDetails {
+    color: #dee5f3;
+    font-size: 18px;
+    width: 30%;
+    margin-left: 35%;
+    overflow: hidden;
+  }
+
+  #mobileMode {
+    margin-top: 20%;
+}
+
+  @media screen and (max-width: 450px){
+    .promptDetails {
+        width: 50%;
+        margin-left: 25%;
+        overflow: hidden;
+    }
+    #mobileMode {
+        margin-top: 50%;
+    }
+  }
+
+  .promptDetails ul {
+    padding: 0;
+    margin: 0;
+  }
+
+  .promptList li {
+    text-align: center;
+    list-style: none; 
+  }
+
+  #dropdown-styling {
+    text-align: center;
+    list-style: none;
+    background-color:#1b1c1f;
+    background-size: 30%;
+    color: var(--blue-text-dark);
+  }
+
+  #dropdown-styling:hover {
+    text-align: center;
+    list-style: none;
+    color:#dee5f3;
+  }
+
+  .listCenter {
+    text-align: center;
+    position: absolute;
+    right: 0%;
+    width: 100%;
+    height: 300px;
   }
