@@ -40,18 +40,22 @@ function recordingPrompts() {
                     selection.append(dropdownhtmlList);
                 }
                 promptList.push(prompts.results[i]);
-                if (prompts.results[i].public_flg) {
-                    document.getElementById('currentPromptList').innerHTML = prompts.results[i].prompt;
+                var current = document.getElementById('currentPromptList').innerHTML;
+                if (current === '') {
+                    if (prompts.results[i].public_flg) {
+                        localStorage.setItem('currentPrompt', '' + prompts.results[i].prompt);
+                    }
                 }
                 dropdownhtmlB.addEventListener('click', function(event) {
                     //alert(dropdownhtmlB.innerHTML);
                     for (var i = 0; i < promptList.length; i++) {
                         if (promptList[i].prompt === dropdownhtmlB.innerHTML) {
+                            localStorage.setItem('currentPrompt', '' + promptList[i].prompt);
                             window.location.href = "https://readingroom.herokuapp.com/?promptid=" + promptList[i].prompt_id;
-                            document.getElementById('currentPromptList').innerHTML = promptList[i].prompt;
                         }
                     }
                   })
+                document.getElementById('currentPromptList').innerHTML = localStorage.getItem('currentPrompt');
             }
         })
 }
