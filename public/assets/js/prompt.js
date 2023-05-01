@@ -29,12 +29,16 @@ function recordingPrompts() {
             for (i = 0; i < prompts.results.length; i++) {
                 const dropdownhtmlList = document.createElement("li");
                 const dropdownhtmlB = document.createElement("button");
-                const dropdownhtmlBA = document.createElement("a");
+                //const dropdownhtmlBA = document.createElement("a");
                 dropdownhtmlB.setAttribute("class", "dropdown-item")
                 dropdownhtmlB.setAttribute("id", "dropdown-styling")
-                dropdownhtmlBA.setAttribute("href", 'localhost:3000/?promptid=' + prompts.results[i].prompt_id)
-                dropdownhtmlBA.innerHTML = prompts.results[i].prompt;
-                dropdownhtmlB.innerHTML = prompts.results[i].prompt;
+                //dropdownhtmlBA.setAttribute("href", 'localhost:3000/?promptid=' + prompts.results[i].prompt_id)
+                // dropdownhtmlBA.innerHTML = prompts.results[i].prompt;
+                if (prompts.results[i].prompt.length >= 52) {
+                    dropdownhtmlB.innerHTML = prompts.results[i].prompt.substring(0, 53) + '...';
+                } else {
+                    dropdownhtmlB.innerHTML = prompts.results[i].prompt;
+                }
                 dropdownhtmlList.append(dropdownhtmlB);
                 if (prompts.results[i].prompt_id !== 1) {
                     if (!prompts.results[i].deleted_flg) {
