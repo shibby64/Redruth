@@ -485,7 +485,7 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
     let audio = {
         title: req.body.title,
         comments: req.body.comments,
-        prompt: req.body.prompt,
+        prompt: req.body.promptVal,
         project: req.body.project,
         postCode: req.body.postCode,
         fullName: req.body.fullName,

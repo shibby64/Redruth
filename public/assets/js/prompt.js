@@ -63,10 +63,10 @@ function recordingPrompts() {
                     for (var i = 0; i < promptList.length; i++) {
                         if (promptList[i].prompt_id == dropdownhtmlB.getAttribute('value')) {
                             alert(prompts.results[i].prompt_id);
-                            getURLParam();
                             document.getElementById('prompt_id_val').innerHTML = promptList[i].prompt_id;
                             sessionStorage.setItem('currentPrompt', '' + promptList[i].prompt);
                             window.location.href = "https://readingroom.herokuapp.com/?promptid=" + promptList[i].prompt_id;
+                            getURLParam();
                         }
                     }
                   })
@@ -87,6 +87,6 @@ function getCurrentCollection() {
 
 function getURLParam() {
     var sPageURL = window.location.search.substring(10);
-    document.getElementById('prompt').setAttribute('value', sPageURL);
-    alert("sub" + sPageURL);
+    document.getElementById('promptVal').setAttribute('value', sPageURL);
+    alert("sub " + sPageURL);
   }
