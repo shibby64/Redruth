@@ -510,7 +510,7 @@ app.post('/insert', upload.single('audio'), async(req, res, next) => {
       return;
     }
     var prompt_id_value = req.body.prompt_id_val;
-    alert(prompt_id_value);
+    //alert(prompt_id_value);
     connection.query('INSERT INTO t_audio_file (prompt_id, filepath, timestamp, title, remarks, public_flg, email, name, phone_num, postal_code) VALUES (?, ?, CURRENT_TIMESTAMP(), ?, ?, ?, ?, ?, ?, ?)', [prompt_id_value, audio.link, audio.title, audio.comments, audio.public, audio.email, audio.fullName, audio.phone, audio.postCode ], function (error, results, fields) { // TODO create a sproc to do this
             if (error) throw error;
     });
