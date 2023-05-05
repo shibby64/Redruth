@@ -66,7 +66,6 @@ async function getCurrentCollectionPrompt() {
     .then((object) => object.json())
     .then((collection) => {
       if (collection.success && collection.results) {
-        alert(collection.results[0]);
         document.getElementById("currentCollection").innerHTML = collection.results[0].title;
         document.getElementById("update-collection-name").setAttribute("value", collection.results[0].title);
         document.getElementById("update-collection-desc").innerHTML = collection.results[0].description;
