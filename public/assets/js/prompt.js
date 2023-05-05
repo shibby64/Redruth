@@ -86,7 +86,7 @@ function getCurrentCollection() {
 }
 
 function getURLParam() {
-    var sPageURL = window.location.search.substring(44);
+    var sPageURL = window.location.search.substring(30);
     document.getElementById('prompt').setAttribute('value', sPageURL);
-    alert(sPageURL);
+    alert("sub" + sPageURL);
   }
