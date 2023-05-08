@@ -446,6 +446,9 @@ color: var(--blue-text-light);
     #mobileMode {
         margin-top: 70%;
     }
+    #headNav {
+        margin-bottom: 20px;
+    }
   }
 
   .promptDetails ul {
