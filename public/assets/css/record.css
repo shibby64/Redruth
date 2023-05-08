@@ -438,8 +438,8 @@ color: var(--blue-text-light);
 
   @media screen and (max-width: 450px){
     .promptDetails {
-        width: 70%;
-        margin-left: 15%;
+        width: 90%;
+        margin-left: 5%;
         overflow: hidden;
     }
     #mobileMode {
