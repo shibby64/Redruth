@@ -437,7 +437,7 @@ color: var(--blue-text-light);
 }
 
 #headNav {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
   @media screen and (max-width: 450px){
