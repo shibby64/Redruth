@@ -52,7 +52,7 @@ function recordingPrompts() {
                 var current = document.getElementById('currentPromptList').innerHTML;
                 if (current === '') {
                     if (prompts.results[i].public_flg) {
-                        alert(prompts.results[i].prompt_id);
+                        //alert(prompts.results[i].prompt_id);
                         getURLParam();
                         document.getElementById('prompt_id_val').innerHTML = prompts.results[i].prompt_id;
                         window.location.href = "https://readingroom.herokuapp.com/?promptid=" + prompts.results[i].prompt_id;
@@ -63,7 +63,7 @@ function recordingPrompts() {
                     //alert(dropdownhtmlB.getAttribute('value'));
                     for (var i = 0; i < promptList.length; i++) {
                         if (promptList[i].prompt_id == dropdownhtmlB.getAttribute('value')) {
-                            alert(prompts.results[i].prompt_id);
+                            //alert(prompts.results[i].prompt_id);
                             document.getElementById('prompt_id_val').innerHTML = promptList[i].prompt_id;
                             sessionStorage.setItem('currentPrompt', '' + promptList[i].prompt);
                             window.location.href = "https://readingroom.herokuapp.com/?promptid=" + promptList[i].prompt_id;
@@ -91,6 +91,6 @@ function getURLParam() {
     sessionStorage.setItem("currentID", sPageURL);
     document.getElementById('prompt').value =  sessionStorage.getItem('currentID');
     document.getElementById('prompt').setAttribute("value", sessionStorage.getItem('currentID'));
-    alert("sub " + document.getElementById('prompt').value);
+    //alert("sub " + document.getElementById('prompt').value);
     //return sPageURL;
   }
