@@ -91,6 +91,6 @@ function getURLParam() {
     sessionStorage.setItem("currentID", sPageURL);
     document.getElementById('prompt').value =  sessionStorage.getItem('currentID');
     document.getElementById('prompt').setAttribute("value", sessionStorage.getItem('currentID'));
-    alert("sub " + sessionStorage.getItem('currentID'));
+    alert("sub " + document.getElementById('prompt').value);
     //return sPageURL;
   }
