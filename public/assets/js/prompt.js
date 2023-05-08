@@ -89,6 +89,7 @@ function getURLParam() {
     var sPageURL = window.location.search.substring(10);
     sessionStorage.setItem("currentID", sPageURL);
     document.getElementById('prompt').value =  sessionStorage.getItem('currentID');
+    document.getElementById('prompt').setAttribute("value", sessionStorage.getItem('currentID'));
     alert("sub " + sessionStorage.getItem('currentID'));
     //return sPageURL;
   }
