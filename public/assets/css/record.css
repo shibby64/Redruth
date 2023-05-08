@@ -440,7 +440,8 @@ color: var(--blue-text-light);
     .promptDetails {
         width: 90%;
         margin-left: 5%;
-        overflow: scroll;
+        font-size: 14px;
+        overflow: hidden;
     }
     #mobileMode {
         margin-top: 70%;
