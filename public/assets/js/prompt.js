@@ -55,7 +55,7 @@ function recordingPrompts() {
                         //alert(prompts.results[i].prompt_id);
                         getURLParam();
                         document.getElementById('prompt_id_val').innerHTML = prompts.results[i].prompt_id;
-                        window.location.href = "https://readingroom.herokuapp.com/?promptid=" + prompts.results[i].prompt_id;
+                        //window.location.href = "https://readingroom.herokuapp.com/?promptid=" + prompts.results[i].prompt_id;
                         sessionStorage.setItem('currentPrompt', '' + prompts.results[i].prompt);
                     }
                 }
