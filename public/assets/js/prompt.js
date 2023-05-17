@@ -51,16 +51,17 @@ function recordingPrompts() {
                 promptList.push(prompts.results[i]);
                 var current = document.getElementById('currentPromptList').innerHTML;
                 if (current === '') {
-                    if (prompts.results[i].public_flg) {
-                        //alert(prompts.results[i].prompt_id);
-                        //getURLParam();
-                        //document.getElementById('prompt_id_val').innerHTML = prompts.results[i].prompt_id;
-                        //window.location.href = "https://readingroom.herokuapp.com/?promptid=" + prompts.results[i].prompt_id;
-                        //sessionStorage.setItem('currentPrompt', '' + prompts.results[i].prompt);
-                        sessionStorage.setItem('currentPrompt', '' + 'Choose a prompt!');
-                        //document.getElementById('prompt').value =  sessionStorage.getItem('currentID');
-                        //document.getElementById('prompt').setAttribute("value", sessionStorage.getItem('currentID'));
-                    }
+                    sessionStorage.setItem('currentPrompt', '' + 'Choose a prompt!');
+                    // if (prompts.results[i].public_flg) {
+                    //     //alert(prompts.results[i].prompt_id);
+                    //     //getURLParam();
+                    //     //document.getElementById('prompt_id_val').innerHTML = prompts.results[i].prompt_id;
+                    //     //window.location.href = "https://readingroom.herokuapp.com/?promptid=" + prompts.results[i].prompt_id;
+                    //     //sessionStorage.setItem('currentPrompt', '' + prompts.results[i].prompt);
+                    //     sessionStorage.setItem('currentPrompt', '' + 'Choose a prompt!');
+                    //     //document.getElementById('prompt').value =  sessionStorage.getItem('currentID');
+                    //     //document.getElementById('prompt').setAttribute("value", sessionStorage.getItem('currentID'));
+                    // }
                 }
                 dropdownhtmlB.addEventListener('click', function(event) {
                     //alert(dropdownhtmlB.getAttribute('value'));
