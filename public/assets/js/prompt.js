@@ -50,7 +50,7 @@ function recordingPrompts() {
                 }
                 promptList.push(prompts.results[i]);
                 var current = document.getElementById('currentPromptList').innerHTML;
-                if (current === '') {
+                if (getURLParam() === '') {
                     sessionStorage.setItem('currentPrompt', '' + 'Choose a prompt!');
                     // if (prompts.results[i].public_flg) {
                     //     //alert(prompts.results[i].prompt_id);
