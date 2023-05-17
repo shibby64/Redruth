@@ -72,7 +72,8 @@ async function getCurrentCollectionPrompt() {
         
         let promptLinkBtn = document.getElementById("promptLink");
         promptLinkBtn.addEventListener("click", function(event){
-          navigator.clipboard.writeText("https://readingroom.herokuapp.com/?promptid=" + collection.results[0].promptID);
+          navigator.clipboard.writeText("https://readingroom.herokuapp.com/");
+          //navigator.clipboard.writeText("https://readingroom.herokuapp.com/?promptid=" + collection.results[0].promptID);
         });
         if (collection.results[0].isPublic) {
           document.getElementById("collectionPublicBtn").setAttribute("class", "btn btn-outline-success");
