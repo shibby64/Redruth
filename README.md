@@ -26,7 +26,7 @@ only be used by project researchers and administrators for requests to participa
 
 ## Release History
 
-* 0.0.1
+* 1.0
   * Work in progress
 
 
